@@ -1,11 +1,7 @@
-language: node_js
-node_js:
-	- "0.11"
-	- "0.10"
-  	- "0.8"
-  	- "0.6"
-  	- "iojs"
-before_script: 
-	- npm install -g grunt-cli jasmine
-env:
-- NODE_ENV=test
+deploy:
+  provider: heroku
+  api_key:
+    secure: gPzf/2Ih3g34comqeAS7LgypCEqXHK36GXAm0qmkmPppXR+H5z6S7JM+vXmGCJpCbDo8S4ylHquHBHj+9HVm561YFkfD5tS3bPeYz9/DBNNZ+OLLqeBDSN2SyolxaIWPsPKbek9KzDBMVn/z4QF/g0Lv6/vt6EFxEAAznCAddRHyARlDpDmtyqW27/RARHWuKkVBavy14rr+Ss5GXzmu0fyWA8UjX9umYxLmTGi5ORJVYe9deq92oi6hSadUXQ+Y6q8DpG0uFieCSI6TAHyphh+YSLNXeGpZXuuSxkjtC0b/M//QIULzZKgf4ULgzhVrOiSUShCuerfhUZrUGgN1doG2lBft66whteM3DTaFwCWD7cx/L6DJYGAKt3sN5I7q3UXI5j25APcCtd24q6U4/qgoa+8ik+prBzcg8YKjnLnpDYsO2ic0ehr27J0ZW8VuYA4bnN/CD3IwLHp6fSql4K2Ia2aEkiWa55fgoUAObLxmpH3H86rR264epea43dYIUQc55+XaxCADyt8MvCGBCLfpAyB6za5KW1bENPeTslPmEI6rVoKLIDY0skdyAkm2yAYdkrpKuQVb757r8l/MNer6YThfq3buumx17ygi1ltzkikPqvhZ3RjTZxrecfEzAovWlZXEP2FYCRkn1oqu4DZPBRR+uennqu33hfOIG+4=
+  app: logicaladdressd
+  on:
+    repo: LogicalAddress/logicaladdressd
