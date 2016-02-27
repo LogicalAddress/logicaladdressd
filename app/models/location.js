@@ -28,7 +28,6 @@ util.inherits(Location, EventEmitter);
 Location.prototype.create = function(data, callback, context) {
 
 	context = (context ? context : this);
-	var that = this;
 
 	if (_.isObject(data) && _.has(data,'user_ref') && 
 		_.has(data, 'location_type')) {
@@ -37,7 +36,7 @@ Location.prototype.create = function(data, callback, context) {
 
 			locationModel.save(function (err, record) {
 				if (record) {
-					that.emit('location_created', record.toObject());
+					process.emit('location_created', record.toObject());
 					return (_.isFunction(callback) ? callback.apply(context, 
 						[null, record.toObject()]) : null);
 				}else{
@@ -174,7 +173,7 @@ Location.prototype.delete = function(user) {
 
 locationContext = new Location();
 
-locationContext.on('location_created', function(location){
+process.on('location_created', function(location){
 	// LocationModel.findOneAndUpdate( {_id: location._id},
 	// 	{$set: {trace_id: hash(location._id.toString())}}).exec();
 	LocationModel.findOneAndUpdate({_id: location._id}, {$set: 
@@ -187,7 +186,7 @@ locationContext.on('location_created', function(location){
 	});
 });
 
-locationContext.on('user_deleted', function(user){
+process.on('user_deleted', function(user){
 	LocationModel.remove({user_ref: user._id}).exec();
 });
 

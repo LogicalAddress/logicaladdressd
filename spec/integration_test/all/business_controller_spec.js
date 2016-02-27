@@ -1,7 +1,6 @@
 var hat = require('hat');
 var Request = require('request');
-
-var host = "https://paygis-retnan.c9.io";
+var host = require('../../helpers/host')();
 
 var test_user_one = hat();
 var access_token_user_one = null;
@@ -9,9 +8,9 @@ var access_token_user_one = null;
 var test_user_two = hat();
 var access_token_user_two = null;
 
-console.log = function(data){
+// console.log = function(data){
   
-};
+// };
 
 
 describe("Create Test Users", function(){
@@ -128,7 +127,7 @@ describe("Create Test Users", function(){
 
         httpResponse = body;
         httpStatusCode = res.statusCode;
-        access_token_user_one = (httpResponse.access_token_user_one) ? httpResponse.access_token_user_one.toString() : null;
+        access_token_user_one = (httpResponse.access_token) ? httpResponse.access_token.toString() : null;
 
         console.log("_____________________________________________________");
         console.log("------------------POST /user/login-------------------");
@@ -172,7 +171,7 @@ describe("Create Test Users", function(){
 
         httpResponse = body;
         httpStatusCode = res.statusCode;
-        access_token_user_two = (httpResponse.access_token_user_one) ? httpResponse.access_token_user_one.toString() : null;
+        access_token_user_two = (httpResponse.access_token) ? httpResponse.access_token.toString() : null;
 
         console.log("_____________________________________________________");
         console.log("------------------POST /user/login-------------------");
@@ -230,7 +229,7 @@ describe("Create a Business", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/business----------------------");
+        console.log("---------------POST /api/v1/business----------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -278,7 +277,7 @@ describe("Case #1 Create Patient Zero Business II", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/business----------------------");
+        console.log("---------------POST /api/v1/business----------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -325,7 +324,7 @@ describe("Case #1 Create Patient One Business", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/business----------------------");
+        console.log("---------------POST /api/v1/business----------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -493,7 +492,7 @@ describe("Update Business Details", function(){
   var httpResponse = null;
   var httpStatusCode = null;
 
-  describe("Case #1 Update Patient Zero Work Details", function(){
+  describe("Case #1 Update Patient Zero Business Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -543,7 +542,7 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #2 Update Patient One Work Details", function(){
+  describe("Case #2 Update Patient One Business Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -590,7 +589,7 @@ describe("Update Business Details", function(){
 
   });
 
-  describe("Case #3 Update Patient Zero Work Location Details", function(){
+  describe("Case #3 Update Patient Zero Business Location Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -696,10 +695,10 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #5 Update Patient Zero Complete Work Info", function(){
+  describe("Case #5 Update Patient Zero Complete Business Info", function(){
     beforeEach(function(done) {
       Request.put({
-        url: host + '/api/v1/work',
+        url: host + '/api/v1/business',
         headers: {
           'Accept': 'application/json',
           'X-Auth-Token': access_token_user_one
@@ -751,7 +750,7 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #6 Update Patient One Complete Work Info", function(){
+  describe("Case #6 Update Patient One Complete Business Info", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',

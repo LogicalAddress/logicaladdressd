@@ -30,7 +30,6 @@ util.inherits(Work, EventEmitter);
 Work.prototype.save = function(user, data, callback, context) {
 
 	context = (context ? context : this);
-	var that = this;
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') && 
 		_.has(data, 'location_ref') && _.has(data, 'trace_id')) {
@@ -46,7 +45,7 @@ Work.prototype.save = function(user, data, callback, context) {
 
 					record_model.save(function(err, record){
 						if (record) {
-							that.emit("work_created", record.toObject());
+							process.emit("work_created", record.toObject());
 							return (_.isFunction(callback) ? callback.apply(context, 
 								[null, record.toObject()]) : null );
 						}else{
@@ -80,12 +79,11 @@ Work.prototype.save = function(user, data, callback, context) {
 Work.prototype.createRecord = function(user, callback, context) {
 
 	context = (context ? context : this);
-
-	if (_.isObject(user) && _.has(user,'user_ref') && 
-		_.isString(user.user_ref)) {
+	
+	if (_.isObject(user) && _.has(user,'_id') ){
 
 		Location.findRecord({
-			user_ref: user.user_ref.toString(), location_type: 'work'}, 
+			user_ref: user._id.toString(), location_type: 'work'}, 
 			function(err, record){
 
 			if (record) {
@@ -93,7 +91,7 @@ Work.prototype.createRecord = function(user, callback, context) {
 					["Can't Save, Record Exists"]) : null);
 			}
 
-			Location.create({user_ref: user.user_ref, 
+			Location.create({user_ref: user._id, 
 				location_type: 'work'}, function(err, response){	
 
 				if (err) {
@@ -103,8 +101,8 @@ Work.prototype.createRecord = function(user, callback, context) {
 
 				var trace_id = hash(response._id.toString());
 
-				this.save({_id: user.user_ref}, {
-					user_ref: user.user_ref, 
+				this.save(user, {
+					user_ref: user._id, 
 					location_ref: response._id, 
 					trace_id: trace_id
 				}, function(err, response){
@@ -239,13 +237,13 @@ Work.prototype.delete = function(user) {
 
 var workContext = new Work();
 
-workContext.on('location_created', function(location){
+process.on('location_created', function(location){
 	if (location.location_type == "work") {
 		// Do something something if you care
 	}
 });
 
-workContext.on('user_created', function(user){
+process.on('user_created', function(user){
 	workContext.createRecord(user, function(err, response){
 		if (err) {
 			console.log(err);
@@ -253,11 +251,11 @@ workContext.on('user_created', function(user){
 	}, workContext);
 });
 
-workContext.on('user_deleted', function(user){
+process.on('user_deleted', function(user){
 	WorkModel.remove({user_ref: user._id}).exec();
 });
 
-workContext.on('work_created', function(work){
+process.on('work_created', function(work){
 	// faire quelques chose ici quand tu veux
 });
 

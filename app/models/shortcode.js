@@ -190,7 +190,6 @@ ShortCode.prototype.registerDefault = function(data) {
 
 ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 	context = (context ? context : this);
-	var that = this;
 	if (_.isObject(data) && _.has(data, 'trace_id') && 
 		_.has(data, 'user_ref')) {
 		Payment.findRecord({user_ref: data.user_ref, active: true, 
@@ -204,7 +203,7 @@ ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 				record_model.code_type = 'memorable';
 				record_model.save(function(err, record){
 					if (record) {
-						that.emit("flag_payment", paymentRecord);
+						process.emit("flag_payment", paymentRecord);
 						return (_.isFunction(callback) ? callback.apply(context, 
 							[null, record.toObject()]) : null);
 					}else{
@@ -227,7 +226,6 @@ ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 
 ShortCode.prototype.registerCustom = function(data, callback, context) {
 	context = (context ? context : this);
-	var that = this;
 	if (_.isObject(data) && _.has(data, 'trace_id')	&& 
 		_.has(data, 'user_ref') && _.has(data, 'custom')) {
 		Payment.findRecord({user_ref: data.user_ref, active: true, 
@@ -241,7 +239,7 @@ ShortCode.prototype.registerCustom = function(data, callback, context) {
 				record_model.code_type = 'custom';
 				record_model.save(function(err, record){
 					if (record) {
-						that.emit("flag_payment", paymentRecord);
+						process.emit("flag_payment", paymentRecord);
 						return (_.isFunction(callback) ? callback.apply(context, 
 							[null, record.toObject()]) : null);
 					}else{
