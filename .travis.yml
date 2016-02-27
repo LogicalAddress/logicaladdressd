@@ -1,6 +1,6 @@
 language: node_js
 before_script:
-	- npm install -g grunt-cli jasmine
+ - npm install -g grunt-cli jasmine
 deploy:
   provider: heroku
   api_key:
