@@ -3,6 +3,8 @@ before_script:
  - npm install -g grunt-cli jasmine
 env:
  - NODE_ENV=test
+node_js:
+ - "4"
 deploy:
   provider: heroku
   api_key:
