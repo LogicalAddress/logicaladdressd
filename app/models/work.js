@@ -27,9 +27,9 @@ util.inherits(Work, EventEmitter);
 * 
 **/
 
-Work.prototype.save = function(user, data) {
+Work.prototype.save = function(user, data, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') && 
@@ -77,9 +77,9 @@ Work.prototype.save = function(user, data) {
 * 
 **/
 
-Work.prototype.createRecord = function(user) {
+Work.prototype.createRecord = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'user_ref') && 
 		_.isString(user.user_ref)) {
@@ -134,7 +134,7 @@ Work.prototype.createRecord = function(user) {
 
 Work.prototype.findRecordByUserId = function(user, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'user_ref') &&
 		_.isString(user.user_ref) && !_.isEmpty(user.user_ref.trim())) {
@@ -165,7 +165,7 @@ Work.prototype.findRecordByUserId = function(user, callback, context) {
 
 Work.prototype.update = function(user, data, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	// Make Sure, this fields are not included in the update.
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') &&
@@ -202,7 +202,7 @@ Work.prototype.update = function(user, data, callback, context) {
 
 Work.prototype.updateLocation = function(user, data, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	// Make Sure, this fields are not included in the update.
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id')) {

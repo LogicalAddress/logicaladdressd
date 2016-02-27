@@ -23,8 +23,8 @@ util.inherits(Payment, EventEmitter);
 * 
 **/
 
-Payment.prototype.register = function(user_id, code_type, amount) {
-	var context = (context ? context : this);
+Payment.prototype.register = function(user_id, code_type, amount, callback, context) {
+	context = (context ? context : this);
 	if ( user_id && _.isString(code_type) && _.isNumber(amount) ) {
 		var record_model = new PaymentModel();
 		record_model.user_ref = user_id;
@@ -47,7 +47,7 @@ Payment.prototype.register = function(user_id, code_type, amount) {
 
 
 Payment.prototype.findRecord = function(query, callback, context) {
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	if ( _.isObject(query) ) {
 		PaymentModel.findOne(query).lean().exec(function(err, row){
 			if (row) {
@@ -66,7 +66,7 @@ Payment.prototype.findRecord = function(query, callback, context) {
 
 
 Payment.prototype.findAll = function(query, callback, context) {
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	if ( _.isObject(query) ) {
 		PaymentModel.find(query).lean().exec(function(err, row){
 			if (row) {

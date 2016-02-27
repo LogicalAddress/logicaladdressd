@@ -28,7 +28,7 @@ util.inherits(User, EventEmitter);
 
 User.prototype.register = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 
 	if (_.isObject(user) && _.has(user,'username') && 
@@ -74,7 +74,7 @@ User.prototype.register = function(user, callback, context) {
 
 User.prototype.findUserByUsername = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'username') &&
 		!_.isEmpty(user.username.trim())) {
@@ -105,7 +105,7 @@ User.prototype.findUserByUsername = function(user, callback, context) {
 
 User.prototype.auth = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'username') &&
 		_.has(user,'password') && !_.isEmpty(user.username.trim()) && 
@@ -135,7 +135,7 @@ User.prototype.auth = function(user, callback, context) {
 
 User.prototype.delete = function(user) {
 	UserModel.remove({_id: user._id}).exec();
-	this.emit('user_deleted', user));
+	this.emit('user_deleted', user);
 };
 
 var userContext = new User();

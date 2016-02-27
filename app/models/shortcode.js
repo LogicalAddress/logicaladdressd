@@ -189,7 +189,7 @@ ShortCode.prototype.registerDefault = function(data) {
 
 
 ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 	if (_.isObject(data) && _.has(data, 'trace_id') && 
 		_.has(data, 'user_ref')) {
@@ -226,7 +226,7 @@ ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 
 
 ShortCode.prototype.registerCustom = function(data, callback, context) {
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 	if (_.isObject(data) && _.has(data, 'trace_id')	&& 
 		_.has(data, 'user_ref') && _.has(data, 'custom')) {
@@ -270,7 +270,7 @@ ShortCode.prototype.registerCustom = function(data, callback, context) {
 
 ShortCode.prototype.findRecordByLongShortCode = function(longorshortcode, 
 	callback, context) {
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	if (_.isString(longorshortcode) && !_.isEmpty(longorshortcode.trim())) {
 		ShortCodeModel.findOne( {
 			enabled: true, 

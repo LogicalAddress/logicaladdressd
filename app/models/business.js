@@ -28,9 +28,9 @@ util.inherits(Business, EventEmitter);
 * 
 **/
 
-Business.prototype.save = function(user, data) {
+Business.prototype.save = function(user, data, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') && 
@@ -73,9 +73,9 @@ Business.prototype.save = function(user, data) {
 * 
 **/
 
-Business.prototype.createRecord = function(user, businessData) {
+Business.prototype.createRecord = function(user, businessData, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.isObject(businessData) && 
 		_.has(user,'user_ref') && _.isString(user.user_ref)) {
@@ -121,7 +121,7 @@ Business.prototype.createRecord = function(user, businessData) {
 
 Business.prototype.findRecordsByUserId = function(user, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'user_ref') &&
 		_.isString(user.user_ref) && !_.isEmpty(user.user_ref.trim())) {
@@ -156,7 +156,7 @@ Business.prototype.findRecordsByUserId = function(user, callback, context) {
 
 Business.prototype.findRecordByTraceId = function(trace_id, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (!_.isEmpty(trace_id)) {
 		BusinessModel.findOne(
@@ -190,7 +190,7 @@ Business.prototype.findRecordByTraceId = function(trace_id, callback, context) {
 
 Business.prototype.findByUserAndId = function(user_id, busId, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (!_.isNull(user_id) && !_.isNull(busId)) {
 		BusinessModel.findOne({user_ref: user_id,
@@ -220,7 +220,7 @@ Business.prototype.findByUserAndId = function(user_id, busId, callback, context)
 
 Business.prototype.update = function(user, bId, data, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') &&
 		!_.has(data, 'location_ref') && !_.has(data, 'user_ref') && 
@@ -252,7 +252,7 @@ Business.prototype.update = function(user, bId, data, callback, context) {
 				return (_.isFunction(callback) ? callback.apply(context, 
 					["Record doesnt exist: " + err]) : null);
 			}
-		}
+		});
 
 	}else{
 		return (_.isFunction(callback) ? callback.apply(context, 
@@ -267,7 +267,7 @@ Business.prototype.update = function(user, bId, data, callback, context) {
 
 Business.prototype.updateLocation = function(user, bId, data, callback, context){
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') &&
 		_.isString(bId) && !_.isNull(bId)) {
@@ -306,18 +306,6 @@ Business.prototype.updateLocation = function(user, bId, data, callback, context)
 };
 
 
-Business.on('location_created', function(location){
-	if (location.location_type == "business") {
-		// Do something something if you care
-	}
-});
-
-
-Business.on('user_deleted', function(user){
-	BusinessModel.remove({user_ref: user._id}).exec();
-});
-
-
 Business.prototype.delete = function(user, trace_id) {
 	BusinessModel.remove({user_ref: user._id, trace_id: trace_id}).exec();
 };
@@ -328,8 +316,18 @@ Business.prototype.deleteAll = function(user) {
 
 var businessContext = new Business();
 
+businessContext.on('location_created', function(location){
+	if (location.location_type == "business") {
+		// Do something something if you care
+	}
+});
+
 businessContext.on('user_created', function(user){
 	// Faire quelques chose ici quand to veux
+});
+
+businessContext.on('user_deleted', function(user){
+	BusinessModel.remove({user_ref: user._id}).exec();
 });
 
 businessContext.on('business_created', function(business){

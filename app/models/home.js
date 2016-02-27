@@ -27,9 +27,9 @@ util.inherits(Home, EventEmitter);
 * 
 **/
 
-Home.prototype.save = function(user, data) {
+Home.prototype.save = function(user, data, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') && 
@@ -78,7 +78,7 @@ Home.prototype.save = function(user, data) {
 
 Home.prototype.createRecord = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'user_ref') && 
 		_.isString(user.user_ref)){
@@ -139,7 +139,7 @@ Home.prototype.createRecord = function(user, callback, context) {
 
 Home.prototype.findRecordByUserId = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(user) && _.has(user,'user_ref') &&
 		_.isString(user.user_ref) && !_.isEmpty(user.user_ref.trim())) {
@@ -170,7 +170,7 @@ Home.prototype.findRecordByUserId = function(user, callback, context) {
 
 Home.prototype.update = function(user, data, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	// these fields are not included in the update.
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') &&
@@ -206,7 +206,7 @@ Home.prototype.update = function(user, data, callback, context) {
 
 Home.prototype.updateLocation = function(user, data, callback, context) {
 	
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	// These fields are not included in the update.
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id')) {

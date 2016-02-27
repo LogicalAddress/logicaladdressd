@@ -27,7 +27,7 @@ util.inherits(Location, EventEmitter);
 
 Location.prototype.create = function(data, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	var that = this;
 
 	if (_.isObject(data) && _.has(data,'user_ref') && 
@@ -37,9 +37,9 @@ Location.prototype.create = function(data, callback, context) {
 
 			locationModel.save(function (err, record) {
 				if (record) {
-					that.emit('location_created', record.toObject()));
+					that.emit('location_created', record.toObject());
 					return (_.isFunction(callback) ? callback.apply(context, 
-						[null, record.toObject()]) : null;
+						[null, record.toObject()]) : null);
 				}else{
 					return (_.isFunction(callback) ? callback.apply(context, 
 						[err]) : null);
@@ -62,7 +62,7 @@ Location.prototype.create = function(data, callback, context) {
 
 Location.prototype.findRecordByUserId = function(user, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 	
 	if (_.isObject(user) && _.has(user,'user_ref') &&
 		!_.isEmpty(user.user_ref.trim())) {
@@ -82,7 +82,7 @@ Location.prototype.findRecordByUserId = function(user, callback, context) {
 
 	}else{
 		return (_.isFunction(callback) ? callback.apply(context, 
-			['Invalid Parameters']) : null));
+			['Invalid Parameters']) : null);
 	}
 
 };
@@ -99,7 +99,7 @@ Location.prototype.findRecordByUserId = function(user, callback, context) {
 
 Location.prototype.findRecord = function(query, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	if (_.isObject(query)) {
 
@@ -128,7 +128,7 @@ Location.prototype.findRecord = function(query, callback, context) {
 
 Location.prototype.update = function(location_ref, data, callback, context) {
 
-	var context = (context ? context : this);
+	context = (context ? context : this);
 
 	// These fields are not included in the update.
 	if (_.isString(location_ref) && _.isObject(data) &&
@@ -168,7 +168,13 @@ Location.prototype.update = function(location_ref, data, callback, context) {
 
 };
 
-Location.on('location_created', function(location){
+Location.prototype.delete = function(user) {
+	LocationModel.remove({user_ref: user._id}).exec();
+};
+
+locationContext = new Location();
+
+locationContext.on('location_created', function(location){
 	// LocationModel.findOneAndUpdate( {_id: location._id},
 	// 	{$set: {trace_id: hash(location._id.toString())}}).exec();
 	LocationModel.findOneAndUpdate({_id: location._id}, {$set: 
@@ -181,12 +187,8 @@ Location.on('location_created', function(location){
 	});
 });
 
-Location.on('user_deleted', function(user){
+locationContext.on('user_deleted', function(user){
 	LocationModel.remove({user_ref: user._id}).exec();
 });
 
-Location.prototype.delete = function(user) {
-	LocationModel.remove({user_ref: user._id}).exec();
-};
-
-module.exports = new Location();
+module.exports = locationContext;

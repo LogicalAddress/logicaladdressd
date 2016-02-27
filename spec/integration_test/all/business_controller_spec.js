@@ -215,7 +215,7 @@ describe("Create a Business", function(){
           'X-Auth-Token': access_token_user_one
         },
         json: {
-          mobile_number: "08161730129"
+          mobile_number: "08161730129",
           address: "Rukuba Road, Jos",
           city: "Jos",
           business_name: "First Bank Nigeria Ltd",
@@ -263,7 +263,7 @@ describe("Case #1 Create Patient Zero Business II", function(){
           'X-Auth-Token': access_token_user_one
         },
         json: {
-          mobile_number: "08036504287"
+          mobile_number: "08036504287",
           address: "Nimpco Filling Station, Jabi",
           city: "Abuja",
           business_name: "Auto Lady Nigeria Ltd",
@@ -310,7 +310,7 @@ describe("Case #1 Create Patient One Business", function(){
           'X-Auth-Token': access_token_user_two
         },
         json: {
-          mobile_number: "08077746115"
+          mobile_number: "08077746115",
           address: "3rd Floor TAEN Business Complex",
           city: "Jos",
           business_name: "Logical Address Inc",
