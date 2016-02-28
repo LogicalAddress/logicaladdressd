@@ -248,7 +248,7 @@ describe("Fetch Work Details", function(){
 
   });
 
- describe("Case #6 Fetch Patient Zero Home Details", function(){
+ describe("Case #6 Fetch Patient Zero Work Details", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/work',
@@ -290,7 +290,7 @@ describe("Fetch Work Details", function(){
 
   });
 
- describe("Case #1 Fetch Patient One Home Details", function(){
+ describe("Case #1 Fetch Patient One Work Details", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/work',
