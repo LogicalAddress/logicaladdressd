@@ -21,45 +21,6 @@ function ShortCode(){
 util.inherits(ShortCode, EventEmitter);
 
 
-// /*
-// * Save The short code against the currently logged in user
-// * @Method save
-// * 
-// **/
-
-// ShortCode.prototype.registerBusinessDefault = function(data) {
-// 	var context = (context ? context : this);
-// 	if (_.isObject(data) && _.has(data, 'trace_id')) {
-// 		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'}, 
-// 			function (err, record) {
-// 			if (!record) {
-// 				var record_model = new ShortCodeModel();
-// 				record_model.user_ref = data.user_ref;
-// 				record_model.location_ref = data.location_ref;
-// 				record_model.trace_id = data.trace_id;
-// 				record_model.short_code = getBusDefaultCode();
-// 				record_model.code_type = 'default';
-// 				record_model.save(function(err, record){
-// 					if (record) {
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							[null, record.toObject()]) : null);
-// 					}else{
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							["Can't Save: " + err]) : null);
-// 					}
-// 				});
-// 			}else{
-// 				return (_.isFunction(callback) ? callback.apply(context, 
-// 					['Duplicate Entry']) : null);
-// 			}
-// 		});
-// 	}else{
-// 		return (_.isFunction(callback) ? callback.apply(context, 
-// 			['Invalid Parameters']) : null);
-// 	}
-// };
-
-
 /*
 * Save The short code against the currently logged in user
 * @Method save
@@ -68,11 +29,14 @@ util.inherits(ShortCode, EventEmitter);
 
 ShortCode.prototype.registerBusinessDefault = function(data) {
 
-	if (_.isObject(data) && _.has(data, 'trace_id')) {
+	if (_.isObject(data) && _.has(data, 'trace_id') && _.has(data, 'user_ref')) {
 
 		var that = this;
 
-		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'},
+		// TODO: Validate the trace_id to make sure is of type, "business"
+
+		ShortCodeModel.findOne({user_ref: data.user_ref,
+			trace_id: data.trace_id, code_type: 'default'},
 		 function (err, record) {
 
 				if (!record) {
@@ -114,11 +78,14 @@ ShortCode.prototype.registerBusinessDefault = function(data) {
 
 ShortCode.prototype.registerDefault = function(data) {
 
-	if (_.isObject(data) && _.has(data, 'trace_id')) {
+	if (_.isObject(data) && _.has(data, 'trace_id')  && _.has(data, 'user_ref')) {
 
 		var that = this;
 
-		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'},
+		// TODO: Validate the trace_id to make sure is of type, "business"
+
+		ShortCodeModel.findOne({user_ref: data.user_ref,
+			trace_id: data.trace_id, code_type: 'default'},
 		 function (err, record) {
 
 				if (!record) {
@@ -147,45 +114,6 @@ ShortCode.prototype.registerDefault = function(data) {
 		return this.emit("create_shortcode_complete", 'Invalid Parameters');
 	}
 };
-
-
-// /*
-// * Save The short code against the currently logged in user
-// * @Method save
-// * 
-// **/
-
-// ShortCode.prototype.registerDefault = function(data) {
-// 	var context = (context ? context : this);
-// 	if (_.isObject(data) && _.has(data, 'trace_id')) {
-// 		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'}, 
-// 			function (err, record) {
-// 			if (!record) {
-// 				var record_model = new ShortCodeModel();
-// 				record_model.user_ref = data.user_ref;
-// 				record_model.location_ref = data.location_ref;
-// 				record_model.trace_id = data.trace_id;
-// 				record_model.short_code = getDefaultShortCode();
-// 				record_model.code_type = 'default';
-// 				record_model.save(function(err, record){
-// 					if (record) {
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							[null, record.toObject()]) : null);
-// 					}else{
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							["Can't Save: " + err]) : null);
-// 					}
-// 				});
-// 			}else{
-// 				return (_.isFunction(callback) ? callback.apply(context, 
-// 					['Duplicate Entry']) : null);
-// 			}
-// 		});
-// 	}else{
-// 		return (_.isFunction(callback) ? callback.apply(context, 
-// 			['Invalid Parameters']) : null);
-// 	}
-// };
 
 
 ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
