@@ -1,6 +1,9 @@
 language: node_js
 before_script:
 - npm install -g grunt-cli jasmine
+- npm start
+services:
+- mongodb
 env:
 - NODE_ENV=test
 node_js:
