@@ -5,6 +5,7 @@ services:
 - mongodb
 env:
 - NODE_ENV=test
+- CXX=g++-4.8
 node_js:
 - '0.12'
 - '4.1'
