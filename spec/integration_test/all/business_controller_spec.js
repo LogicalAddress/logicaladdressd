@@ -8,6 +8,8 @@ var access_token_user_one = null;
 var test_user_two = hat();
 var access_token_user_two = null;
 
+var busId, busId2, busId3;
+
 // console.log = function(data){
   
 // };
@@ -435,6 +437,16 @@ describe("Fetch Businesses Registered", function(){
     it(":User I", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.length).toEqual(2);
+      if (httpResponse.data[0].mobile_number == "08036504287") {
+        expect(httpResponse.data[0].business_name).toEqual("Auto Lady Nigeria Ltd");
+        expect(httpResponse.data[1].business_name).toEqual("First Bank Nigeria Ltd");
+      }else{
+        expect(httpResponse.data[1].business_name).toEqual("Auto Lady Nigeria Ltd");
+        expect(httpResponse.data[0].business_name).toEqual("First Bank Nigeria Ltd");
+      }
+      busId = httpResponse.data[0]._id;
+      busId2 = httpResponse.data[1]._id;
       done();
     });
 
@@ -477,6 +489,9 @@ describe("Fetch Businesses Registered", function(){
     it("User II:", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.length).toEqual(1);
+      expect(httpResponse.data[0].business_name).toEqual("Logical Address Inc");
+      busId3 = httpResponse.data[0]._id;
       done();
     });
 
@@ -492,7 +507,7 @@ describe("Update Business Details", function(){
   var httpResponse = null;
   var httpStatusCode = null;
 
-  describe("Case #1 Update Patient Zero Business Details", function(){
+  describe("Case #1 Update Patient Zero Business Details Fake ID", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -534,8 +549,57 @@ describe("Update Business Details", function(){
     });
 
     it(":User I", function(done){
+      expect(httpStatusCode).toEqual(404);
+      expect(httpResponse.status).toEqual(false);
+      done();
+    });
+
+  });
+
+  describe("Case #1 Update Patient Zero Business Details", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/business',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+            _id: busId,
+            business: {
+              address: "Rukuba Road, Jos",
+              city: "Jos",
+              business_name: "Daser Bank of Nigeria Ltd",
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/business----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.business.business_name).toEqual("Daser Bank of Nigeria Ltd");
       done();
     });
 
@@ -551,7 +615,7 @@ describe("Update Business Details", function(){
           'X-Auth-Token': access_token_user_two
         },
         json: {
-            _id: "xxxxxxxxxxxxxxxxxxxxx",
+            _id: busId3,
             business: {
               address: "Angwan Rukuba, Jos",
               city: "Abuja"
@@ -584,6 +648,8 @@ describe("Update Business Details", function(){
     it(":User II", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.business.address).toEqual("Angwan Rukuba, Jos");
+      expect(httpResponse.business.city).toEqual("Abuja");
       done();
     });
 
@@ -598,7 +664,7 @@ describe("Update Business Details", function(){
           'X-Auth-Token': access_token_user_one
         },
         json: {
-            _id: "xxxxxxxxxxxxxxxxxxxxx",
+            _id: busId,
             location: {
               altitude: '6.3',
               speed: '6.2',
@@ -651,7 +717,7 @@ describe("Update Business Details", function(){
           'X-Auth-Token': access_token_user_two
         },
         json: {
-            _id: "xxxxxxxxxxxxxxxxxxxxx",
+            _id: busId3,
             location: {
               altitude: '3.6',
               speed: '2.6',
@@ -704,7 +770,7 @@ describe("Update Business Details", function(){
           'X-Auth-Token': access_token_user_one
         },
         json: {
-          _id: "xxxxxxxxxxxxxxxxxxxxx",
+          _id: busId,
           business: {
             address: "D.B Zang Way Road",
             city: "Kaduna",
@@ -759,7 +825,7 @@ describe("Update Business Details", function(){
           'X-Auth-Token': access_token_user_two
         },
         json: {
-          _id: "xxxxxxxxxxxxxxxxxxxxx",
+          _id: busId3,
           business: {
             address: "Angwan Rimi",
             city: "Ilorin"
@@ -798,6 +864,61 @@ describe("Update Business Details", function(){
     it(":User II", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+
+  describe("Case #6 Patient One to Update Patient Zero Bus info", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/business',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_two
+        },
+        json: {
+          _id: busId,
+          business: {
+            address: "Angwan Rimi",
+            city: "Ilorin"
+          },
+          location: {
+            gps: { longitude: '4.3', latitude: '2.6'},
+            altitude: "3.0",
+            altitude_accuracy: '5.5',
+            speed: '3.4'
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/business----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User II", function(done){
+      expect(httpStatusCode).toEqual(404);
+      expect(httpResponse.status).toEqual(false);
       done();
     });
 

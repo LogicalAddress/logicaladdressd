@@ -134,7 +134,7 @@ User.prototype.auth = function(user, callback, context) {
 
 User.prototype.delete = function(user) {
 	UserModel.remove({_id: user._id}).exec();
-	this.emit('user_deleted', user);
+	process.emit('user_deleted', user);
 };
 
 var userContext = new User();
