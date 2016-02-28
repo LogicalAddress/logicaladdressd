@@ -6,7 +6,8 @@ services:
 env:
 - NODE_ENV=test
 node_js:
-- '4'
+- '0.12'
+- '4.1'
 deploy:
   provider: heroku
   api_key:
