@@ -1,6 +1,6 @@
 var hat = require('hat');
 var Request = require('request');
-var host = require('../../helpers/host')();
+var host = require('../helpers/host')();
 
 var test_user_one = hat();
 var access_token_user_one = null;
