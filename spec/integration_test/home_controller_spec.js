@@ -206,7 +206,7 @@ describe("Fetch Home Details", function(){
   var httpResponse = null;
   var httpStatusCode = null;
 
- describe("Case #5 Test Patient Zero with Fake Access Token", function(){
+ describe("Case #1 Test Patient Zero with Fake Access Token", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/home',
@@ -248,7 +248,7 @@ describe("Fetch Home Details", function(){
 
   });
 
- describe("Case #6 Fetch Patient Zero Home Details", function(){
+ describe("Case #2 Fetch Patient Zero Home Details", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/home',
@@ -290,7 +290,7 @@ describe("Fetch Home Details", function(){
 
   });
 
- describe("Case #1 Fetch Patient One Home Details", function(){
+ describe("Case #3 Fetch Patient One Home Details", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/home',

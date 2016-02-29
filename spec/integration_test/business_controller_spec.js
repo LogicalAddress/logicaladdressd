@@ -255,7 +255,7 @@ describe("Create a Business", function(){
   });
 
 
-describe("Case #1 Create Patient Zero Business II", function(){
+describe("Case #2 Create Patient Zero Business II", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/api/v1/business',
@@ -302,7 +302,7 @@ describe("Case #1 Create Patient Zero Business II", function(){
 
   });
 
-describe("Case #1 Create Patient One Business", function(){
+describe("Case #3 Create Patient One Business", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/api/v1/business',
@@ -358,7 +358,7 @@ describe("Fetch Businesses Registered", function(){
   var httpResponse = null;
   var httpStatusCode = null;
 
- describe("Case #5 Test Patient Zero with Fake Access Token", function(){
+ describe("Case #1 Test Patient Zero with Fake Access Token", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/business',
@@ -400,7 +400,7 @@ describe("Fetch Businesses Registered", function(){
 
   });
 
- describe("Case #6 Fetch Patient Zero Businesses", function(){
+ describe("Case #2 Fetch Patient Zero Businesses", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/business',
@@ -452,7 +452,7 @@ describe("Fetch Businesses Registered", function(){
 
   });
 
- describe("Case #1 Fetch Patient One Businesses", function(){
+ describe("Case #3 Fetch Patient One Businesses", function(){
     beforeEach(function(done) {
       Request.get({
         url: host + '/api/v1/business',
@@ -556,7 +556,7 @@ describe("Update Business Details", function(){
 
   });
 
-  describe("Case #1 Update Patient Zero Business Details", function(){
+  describe("Case #2 Update Patient Zero Business Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -606,7 +606,7 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #2 Update Patient One Business Details", function(){
+  describe("Case #3 Update Patient One Business Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -655,7 +655,7 @@ describe("Update Business Details", function(){
 
   });
 
-  describe("Case #3 Update Patient Zero Business Location Details", function(){
+  describe("Case #4 Update Patient Zero Business Location Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -708,7 +708,7 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #4 Update Patient One Location Details", function(){
+  describe("Case #5 Update Patient One Location Details", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -761,7 +761,7 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #5 Update Patient Zero Complete Business Info", function(){
+  describe("Case #6 Update Patient Zero Complete Business Info", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -816,7 +816,7 @@ describe("Update Business Details", function(){
   });
 
 
-  describe("Case #6 Update Patient One Complete Business Info", function(){
+  describe("Case #7 Update Patient One Complete Business Info", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
@@ -871,7 +871,7 @@ describe("Update Business Details", function(){
 
 
 
-  describe("Case #6 Patient One to Update Patient Zero Bus info", function(){
+  describe("Case #8 Patient One to Update Patient Zero Bus info", function(){
     beforeEach(function(done) {
       Request.put({
         url: host + '/api/v1/business',
