@@ -20,7 +20,7 @@ var config = {
       name: 'trace'
     },
     port: 3000,
-    db: process.env.TEST_DB_CONNECTION
+    db: process.env.TEST_DB_CONNECTION || 'mongodb://localhost:27017/logical_address'
   },
 
   production: {
