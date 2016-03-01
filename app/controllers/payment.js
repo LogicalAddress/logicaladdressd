@@ -141,6 +141,10 @@ HTTP/1.1 550 Permission Denied
 			var user = req.paygis.user;
 			var code_type = req.body.code_type.trim();
 			var amount = req.body.amount;
+
+			// TODO: Get in the body request the buyer's_transaction code 
+			// and auth with the third party payment server
+
 			if (code_type == 'memorable' ||	code_type == 'custom') {
 				Payment.register(user._id, code_type, amount, 
 					function(err, record){
