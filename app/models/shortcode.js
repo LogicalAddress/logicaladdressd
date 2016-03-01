@@ -53,8 +53,13 @@ ShortCode.prototype.registerBusinessDefault = function(data) {
 							that.emit("create_shortcode_complete", 
 								null, record.toObject());
 						}else{
-							that.emit("create_shortcode_complete", 
-								"Can't Save: " + err);
+							if (err.code === 11000) {
+								that.emit("create_shortcode_complete", 
+								'Duplicate Entry');
+							}else{
+								that.emit("create_shortcode_complete", 
+									"An unknown error occured");
+							}
 						}
 					});
 
@@ -102,8 +107,13 @@ ShortCode.prototype.registerDefault = function(data) {
 							that.emit("create_shortcode_complete", null, 
 								record.toObject());
 						}else{
-							that.emit("create_shortcode_complete", 
-								"Can't Save: " + err);
+							if (err.code === 11000) {
+								that.emit("create_shortcode_complete", 
+								'Duplicate Entry');
+							}else{
+								that.emit("create_shortcode_complete", 
+									"An unknown error occured");
+							}
 						}
 					});
 				}else{
@@ -135,8 +145,13 @@ ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 						return (_.isFunction(callback) ? callback.apply(context, 
 							[null, record.toObject()]) : null);
 					}else{
-						return (_.isFunction(callback) ? callback.apply(context, 
-							["Can't Save: " + err]) : null);
+						if (err.code === 11000) {
+							return (_.isFunction(callback) ? callback.apply(context, 
+								['Duplicate Entry']) : null);
+						}else{
+							return (_.isFunction(callback) ? callback.apply(context, 
+								["An unknown error occured"]) : null);
+						}
 					}
 				});
 			}else{
@@ -171,8 +186,13 @@ ShortCode.prototype.registerCustom = function(data, callback, context) {
 						return (_.isFunction(callback) ? callback.apply(context, 
 							[null, record.toObject()]) : null);
 					}else{
-						return (_.isFunction(callback) ? callback.apply(context, 
-							["Can't Save: " + err]) : null);
+						if (err.code === 11000) {
+							return (_.isFunction(callback) ? callback.apply(context, 
+								['Duplicate Entry']) : null);
+						}else{
+							return (_.isFunction(callback) ? callback.apply(context, 
+								["An unknown error occured"]) : null);
+						}
 					}
 				});
 			}else{
