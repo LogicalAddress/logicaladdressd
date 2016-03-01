@@ -161,22 +161,167 @@ describe("Fetch Home Details", function(){
 });
 
 
-describe("Request for ShortCode", function(){
+
+describe("Buy Custom Code and Memorable Code", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;
-  var shortcode = null;
 
- describe("Case #1 Home ShortCode", function(){
+ describe("Case #1 Home custom", function(){
     beforeEach(function(done) {
       Request.post({
-        url: host + '/api/v1/shortcode',
+        url: host + '/api/v1/payment',
         headers: {
           'Accept': 'application/json',
           'X-Auth-Token': access_token_user_one
         },
         json: {
-          trace_id: test_user_one_home_trace_id
+          code_type: 'custom',
+          amount: 4.99,
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/payment------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+  describe("Case #1 Home custom II", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/payment',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          code_type: 'custom',
+          amount: 4.99,
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/payment------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+ describe("Case #1 Home Memorable ShortCode", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/payment',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          code_type: 'memorable',
+          amount: 0.99,
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/payment------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+});
+
+
+
+
+describe("Request for user defined (custom) short code", function(){
+
+  var httpResponse = null;
+  var httpStatusCode = null;
+
+ describe("Case #1 Home User Defined Custom ShortCode", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/customshortcode',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          trace_id: test_user_one_home_trace_id,
+          custom_code: '1987'
         },
       }, 
       function(err, res, body){
@@ -205,27 +350,22 @@ describe("Request for ShortCode", function(){
     it(":User I", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
-      expect(httpResponse.data.short_code).not.toBe(null);
-      expect(httpResponse.data.short_code.length).toEqual(10);
-      expect(httpResponse.data.short_code.substr(0, 3)).toEqual("123");
-      expect(httpResponse.data.code_type).toEqual('default');
-      shortcode = httpResponse.data.short_code;
       done();
     });
 
   });
 
 
-  describe("Case #2 Get ShortCode", function(){
+ describe("Case #1 Home Memorable ShortCode", function(){
     beforeEach(function(done) {
-      Request.get({
-        url: host + '/api/v1/shortcode/' + test_user_one_home_trace_id,
+      Request.post({
+        url: host + '/api/v1/memorableshortcode',
         headers: {
           'Accept': 'application/json',
           'X-Auth-Token': access_token_user_one
         },
         json: {
-          
+          trace_id: test_user_one_home_trace_id,
         },
       }, 
       function(err, res, body){
@@ -254,24 +394,68 @@ describe("Request for ShortCode", function(){
     it(":User I", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
-      expect(httpResponse.data.short_code).not.toBe(null);
-      expect(shortcode).toEqual(httpResponse.data.short_code);
       done();
     });
 
   });
 
 
- describe("Case #3 Home ShortCode - Duplicate", function(){
+  describe("Case #1 Home Memorable ShortCode Again", function(){
     beforeEach(function(done) {
       Request.post({
-        url: host + '/api/v1/shortcode',
+        url: host + '/api/v1/memorableshortcode',
         headers: {
           'Accept': 'application/json',
           'X-Auth-Token': access_token_user_one
         },
         json: {
-          trace_id: test_user_one_home_trace_id
+          trace_id: test_user_one_home_trace_id,
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(404);
+      expect(httpResponse.status).toEqual(false);
+      expect(httpResponse.reason).toEqual('An unknown error occured');
+      expect(httpResponse.extra).toEqual('No active payment record found');
+      done();
+    });
+
+  });
+
+ describe("Case #1 Home User Defined Custom ShortCode: Same Code", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/customshortcode',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          trace_id: test_user_one_home_trace_id,
+          custom_code: '1987'
         },
       }, 
       function(err, res, body){
@@ -300,11 +484,111 @@ describe("Request for ShortCode", function(){
     it(":User I", function(done){
       expect(httpStatusCode).toEqual(403);
       expect(httpResponse.status).toEqual(false);
-      expect(httpResponse.reason).toEqual('Record exists');
+      expect(httpResponse.reason).toEqual("Record exists");
       done();
     });
 
   });
+
+ describe("Case #1 Get All Payments - 2 Used Up 1 remaining", function(){
+    beforeEach(function(done) {
+      Request.get({
+        url: host + '/api/v1/payment',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------GET /api/v1/payment------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.length).toEqual(3);
+      var usedCount = 0;
+      var unUsedCount = 0;
+      for (var i = httpResponse.data.length - 1; i >= 0; i--) {
+        if(httpResponse.data[i].active){
+          unUsedCount++;
+        }else{
+          usedCount++;
+        }
+      }
+      expect(usedCount).toEqual(2);
+      expect(unUsedCount).toEqual(1);
+      done();
+    });
+
+  });
+
+  describe("Case #1 Home User Defined Custom ShortCode", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/customshortcode',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          trace_id: test_user_one_home_trace_id,
+          custom_code: '1988'
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
 
 });
 

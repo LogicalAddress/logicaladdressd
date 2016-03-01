@@ -165,6 +165,7 @@ describe("Request for ShortCode", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;
+  var shortcode = null;
 
 
  describe("Case #1 Work ShortCode", function(){
@@ -209,6 +210,53 @@ describe("Request for ShortCode", function(){
       expect(httpResponse.data.short_code.length).toEqual(10);
       expect(httpResponse.data.short_code.substr(0, 3)).toEqual("123");
       expect(httpResponse.data.code_type).toEqual('default');
+      shortcode = httpResponse.data.short_code;
+      done();
+    });
+
+  });
+
+  describe("Case #2 Get ShortCode", function(){
+    beforeEach(function(done) {
+      Request.get({
+        url: host + '/api/v1/shortcode/' + test_user_one_work_trace_id,
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.short_code).not.toBe(null);
+      expect(shortcode).toEqual(httpResponse.data.short_code);
+      expect(shortcode).toEqual(httpResponse.data.short_code);
       done();
     });
 
