@@ -242,4 +242,10 @@ ShortCode.prototype.findRecordByLongShortCode = function(longorshortcode,
 	}
 };
 
-module.exports = new ShortCode();
+var shortCodeContext = new ShortCode();
+
+process.on('user_deleted', function(user){
+	ShortCodeModel.remove({user_ref: user._id}).exec();
+});
+
+module.exports = shortCodeContext;

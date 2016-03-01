@@ -101,4 +101,8 @@ process.on('flag_payment', function(paymentRecord){
 	});
 });
 
+process.on('user_deleted', function(user){
+	PaymentModel.remove({user_ref: user._id}).exec();
+});
+
 module.exports = paymentContext;
