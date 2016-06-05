@@ -26,8 +26,6 @@ module.exports = function (app) {
 							function(err, record){
 							if (record) {
 								var accessToken = UserLib.generateAccessToken(record);
-								console.log("generated access token voila");
-								console.log(accessToken);
 								res.status(200);
 								return res.json({status: true, access_token: accessToken, 
 									user: record});
