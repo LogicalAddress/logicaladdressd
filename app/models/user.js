@@ -132,6 +132,24 @@ User.prototype.auth = function(user, callback, context) {
 };
 
 
+User.prototype.accountKitAuth = function(accountId, callback, context) {
+	context = (context ? context : this);
+	if (_.isString(accountId) && !_.isEmpty(accountId.trim())) {
+		accountId = hash(accountId.trim().toLowerCase());
+		UserModel.findOne({username: accountId}).lean().exec(function(err, row){
+			if (row) {
+				row = _.omit(row, ['password','q_book','q_space','q_mother','q_animal']);
+				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
+			}else{
+				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+			}
+		});
+	}else{
+		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
+	}
+};
+
+
 User.prototype.delete = function(user) {
 	UserModel.remove({_id: user._id}).exec();
 	process.emit('user_deleted', user);
