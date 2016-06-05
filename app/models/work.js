@@ -252,7 +252,7 @@ process.on('user_created', function(user){
 });
 
 process.on('user_deleted', function(user){
-	WorkModel.remove({user_ref: user._id}).exec();
+	WorkModel.remove({user_ref: user._id.toString()}).exec();
 });
 
 process.on('work_created', function(work){

@@ -261,7 +261,7 @@ process.on('user_created', function(user){
 });
 
 process.on('user_deleted', function(user){
-	HomeModel.remove({user_ref: user._id}).exec();
+	HomeModel.remove({user_ref: user._id.toString()}).exec();
 });
 
 process.on('home_created', function(home){
