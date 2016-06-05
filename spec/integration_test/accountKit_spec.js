@@ -55,7 +55,7 @@ describe("AccountKit SMS Authentication", function(){
 
   });
 
-  describe("Case #2 - Valid Authentication", function(){
+  describe("Case #2 - Verification", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/accountKit',
@@ -98,10 +98,7 @@ describe("AccountKit SMS Authentication", function(){
     
   });
 
-});
-
-
-  describe("Case #2 - Verification Authentication", function(){
+  describe("Case #2 - Same As Previous", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/accountKit',
