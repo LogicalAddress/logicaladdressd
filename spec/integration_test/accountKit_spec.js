@@ -100,6 +100,52 @@ describe("AccountKit SMS Authentication", function(){
 
 });
 
+
+  describe("Case #2 - Verification Authentication", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/accountKit',
+        headers: {
+          'Accept': 'application/json',
+        },
+        json: {
+            accountId: test_user_one,
+        }, 
+      }, 
+      function(err, res, body){
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+        access_token_user_one = (httpResponse.access_token) ? httpResponse.access_token.toString() : null;
+
+        console.log("_____________________________________________________");
+        console.log("------------------POST /accountKit-------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(access_token_user_one).not.toBe(null);
+      done();
+    });
+    
+  });
+
+});
+
 describe("User Delete", function(){
 
   var httpResponse = null;
