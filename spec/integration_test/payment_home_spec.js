@@ -332,7 +332,7 @@ describe("Request for user defined (custom) short code", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("---------------POST /api/v1/customshortcode-----------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -466,7 +466,7 @@ describe("Request for user defined (custom) short code", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("---------------POST /api/v1/customshortcode------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
