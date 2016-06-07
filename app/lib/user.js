@@ -26,6 +26,8 @@ util.inherits(UserLib, EventEmitter);
 * 
 **/
 
+var secret = require('../../config/secret')();
+
 UserLib.prototype.generateAccessToken = function(user_object){
 
 	if (!_.isObject(user_object) || !_.has(user_object, '_id') || 
@@ -35,7 +37,7 @@ UserLib.prototype.generateAccessToken = function(user_object){
 
 	var payload = { user: user_object, salt: hat()};
 	
-	var accessToken = jwt.encode(payload, require('../../config/secret')());
+	var accessToken = jwt.encode(payload, secret);
 
 	return accessToken;
 };
