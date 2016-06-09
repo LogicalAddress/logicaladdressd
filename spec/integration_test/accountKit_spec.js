@@ -64,6 +64,7 @@ describe("AccountKit SMS Authentication", function(){
         },
         json: {
             accountId: test_user_one,
+            password: "yahweh"
         }, 
       }, 
       function(err, res, body){
