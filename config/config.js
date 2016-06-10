@@ -34,4 +34,6 @@ var config = {
   }
 };
 
-module.exports = config[env]; 
+config[env].special_users = ['logicaladdress','retnan','daser','lasociale'];
+
+module.exports = config[env];

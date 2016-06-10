@@ -15,6 +15,7 @@ db.on('error', function () {
 var app = express();
 
 require('./config/express')(app, config);
+require('./app/lib/bootstrap')();
 
 // Add push notifications
 var pushLibs= glob.sync(config.root + '/app/push_notification/*.js');
