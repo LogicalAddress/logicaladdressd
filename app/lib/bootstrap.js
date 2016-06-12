@@ -7,11 +7,15 @@ var UserLib = require('./user');
 var User = require('../models/user');
 var config = require('../../config/config');
 
-module.exports = function (req, res, next)
+module.exports = function ()
 {
-	Async.each(config.special_users, function(username, done){
+    /*
+    * Setup special system users. the users in the config should be consistent with that in
+    * https://github.com/LogicalAddress/LaSociale
+    */
+	Async.each(config.special_users, function(user, done){
 		User.register({
-			username: username,
+			username: user.username,
             password: hat(),
             q_animal: "Goat",
             q_mother: "B",
