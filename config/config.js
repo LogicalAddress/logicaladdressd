@@ -29,7 +29,7 @@ var config = {
     app: {
       name: 'trace'
     },
-    port: 3000,
+    port: 8080,
     db: process.env.PRODUCTION_DB_CONNECTION
   }
 };
