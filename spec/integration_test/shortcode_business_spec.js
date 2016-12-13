@@ -1,20 +1,19 @@
 var hat = require('hat');
 var Request = require('request');
-
-var host = "https://paygis-retnan.c9.io";
+var host = require('../helpers/host')();
 
 var test_user_one = hat();
 var access_token_user_one = null;
 
-var test_user_two = hat();
-var access_token_user_two = null;
+var test_user_one_bussiness_trace_id = null;
+var test_user_one_bussiness_trace_id2 = null;
 
-console.log = function(data){
+// console.log = function(data){
   
-};
+// };
 
 
-describe("Create Test Users", function(){
+describe("User Registration & Login", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;
@@ -64,54 +63,7 @@ describe("Create Test Users", function(){
 
   });
 
-
-  describe("Case #2 - Register Patient One", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-            username: test_user_two,
-            password: "yahweh",
-            q_animal: "Goat",
-            q_mother: "B",
-            q_space: "Moon",
-            q_book: "Digital Fortress",
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(201);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-
-  describe("Case #3 - Login Patient Zero", function(){
+  describe("Case #2 - Login Patient Zero", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/user/login',
@@ -128,7 +80,7 @@ describe("Create Test Users", function(){
 
         httpResponse = body;
         httpStatusCode = res.statusCode;
-        access_token_user_one = (httpResponse.access_token_user_one) ? httpResponse.access_token_user_one.toString() : null;
+        access_token_user_one = (httpResponse.access_token) ? httpResponse.access_token.toString() : null;
 
         console.log("_____________________________________________________");
         console.log("------------------POST /user/login-------------------");
@@ -155,27 +107,39 @@ describe("Create Test Users", function(){
     
   });
 
-  describe("Case #4 - Login Patient One", function(){
+});
+
+
+describe("Create a Business", function(){
+
+  var httpResponse = null;
+  var httpStatusCode = null;
+
+  describe("Case #1 Create Patient Zero Business", function(){
     beforeEach(function(done) {
       Request.post({
-        url: host + '/user/login',
+        url: host + '/api/v1/business',
         headers: {
           'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
         },
         json: {
-            username: test_user_two,
-            password: "yahweh",
-        }, 
+          mobile_number: "08161730129",
+          address: "Rukuba Road, Jos",
+          city: "Jos",
+          business_name: "First Bank Nigeria Ltd",
+          tags: ['atm', 'bank', 'money']
+        },
       }, 
       function(err, res, body){
+
         if (err) { throw err; }
 
         httpResponse = body;
         httpStatusCode = res.statusCode;
-        access_token_user_two = (httpResponse.access_token_user_one) ? httpResponse.access_token_user_one.toString() : null;
 
         console.log("_____________________________________________________");
-        console.log("------------------POST /user/login-------------------");
+        console.log("---------------POST /api/v1/business----------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -190,32 +154,134 @@ describe("Create Test Users", function(){
       httpResponse = null;
     });
 
-    it(":", function(done){
+    it(":User I", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
-      expect(access_token_user_two).not.toBe(null);
+      expect(httpResponse.data.trace_id).not.toBe(null);
+      expect(httpResponse.data.trace_id.length).toEqual(32);
+      test_user_one_bussiness_trace_id = httpResponse.data.trace_id;
       done();
     });
-    
+
+  });
+
+
+  describe("Case #2 Create Patient Zero Business II", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/business',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          mobile_number: "08036504287",
+          address: "Nimpco Filling Station, Jabi",
+          city: "Abuja",
+          business_name: "Auto Lady Nigeria Ltd",
+          tags: ['repairs', 'motor', 'car']
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/business----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.trace_id.length).toEqual(32);
+      test_user_one_bussiness_trace_id2 = httpResponse.data.trace_id;
+      done();
+    });
+
   });
 
 });
 
-
-describe("Fetch Work Details", function(){
+describe("Request for ShortCode", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;
+  var shortcode1 = null;
+  var shortcode2 = 500000;
 
- describe("Case #5 Test Patient Zero with Fake Access Token", function(){
+  describe("Case #1 Business ShortCode", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/shortcode',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          trace_id: test_user_one_bussiness_trace_id
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.short_code).not.toBe(null);
+      expect(httpResponse.data.short_code.length).toEqual(10);
+      expect(httpResponse.data.short_code.substr(0, 3)).toEqual("321");
+      expect(httpResponse.data.code_type).toEqual('default');
+      shortcode1 = httpResponse.data.short_code;
+      done();
+    });
+
+  });
+
+  describe("Case #2 Get The ShortCode", function(){
     beforeEach(function(done) {
       Request.get({
-        url: host + '/api/v1/work',
+        url: host + '/api/v1/shortcode/' + test_user_one_bussiness_trace_id,
         headers: {
           'Accept': 'application/json',
-          'X-Auth-Token': 'FAKE-ACCESS-TOKEN'
+          'X-Auth-Token': access_token_user_one
         },
         json: {
+          
         },
       }, 
       function(err, res, body){
@@ -226,7 +292,7 @@ describe("Fetch Work Details", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------GET /api/v1/work----------------------");
+        console.log("---------------GET /api/v1/shortcode------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -242,22 +308,119 @@ describe("Fetch Work Details", function(){
     });
 
     it(":User I", function(done){
-      expect(httpStatusCode).toEqual(400);
-      expect(httpResponse.message).toEqual('Access Token Expired');
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.short_code).not.toBe(null);
+      expect(shortcode1).toEqual(httpResponse.data.short_code);
       done();
     });
 
   });
 
- describe("Case #6 Fetch Patient Zero Home Details", function(){
+  describe("Case #2 Business ShortCode - Duplicate", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/shortcode',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          trace_id: test_user_one_bussiness_trace_id
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(403);
+      expect(httpResponse.status).toEqual(false);
+      expect(httpResponse.reason).toEqual('Record exists');
+      done();
+    });
+
+  });
+
+
+  describe("Case #3 Business II ShortCode", function(){
+    beforeEach(function(done) {
+      Request.post({
+        url: host + '/api/v1/shortcode',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          trace_id: test_user_one_bussiness_trace_id2
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------POST /api/v1/shortcode------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.short_code).not.toBe(null);
+      expect(httpResponse.data.short_code.length).toEqual(10);
+      expect(httpResponse.data.short_code.substr(0, 3)).toEqual("321");
+      expect(httpResponse.data.code_type).toEqual('default');
+      shortcode2 = httpResponse.data.short_code;
+      done();
+    });
+
+  });
+
+  describe("Case #2 Get The ShortCode", function(){
+
     beforeEach(function(done) {
       Request.get({
-        url: host + '/api/v1/work',
+        url: host + '/api/v1/shortcode/' + test_user_one_bussiness_trace_id2,
         headers: {
           'Accept': 'application/json',
           'X-Auth-Token': access_token_user_one
         },
         json: {
+          
         },
       }, 
       function(err, res, body){
@@ -268,7 +431,7 @@ describe("Fetch Work Details", function(){
         httpStatusCode = res.statusCode;
 
         console.log("_____________________________________________________");
-        console.log("---------------GET /api/v1/work----------------------");
+        console.log("---------------GET /api/v1/shortcode------------------");
         console.log("_____________________________________________________");
         console.log(httpResponse);
         console.log("_____________________________________________________");
@@ -286,361 +449,8 @@ describe("Fetch Work Details", function(){
     it(":User I", function(done){
       expect(httpStatusCode).toEqual(200);
       expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
- describe("Case #1 Fetch Patient One Home Details", function(){
-    beforeEach(function(done) {
-      Request.get({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_two
-        },
-        json: {
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------GET /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it("User II:", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-});
-
-describe("Update Work Details", function(){
-
-  var httpResponse = null;
-  var httpStatusCode = null;
-
-  describe("Case #1 Update Patient Zero Work Details", function(){
-    beforeEach(function(done) {
-      Request.put({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_one
-        },
-        json: {
-            work: {
-              address: "Rukuba Road, Jos",
-              city: "Jos",
-              work_name: "First Bank Nigeria Ltd",
-              tags: ['atm', 'bank', 'money']
-          }
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":User I", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-
-  describe("Case #2 Update Patient One Work Details", function(){
-    beforeEach(function(done) {
-      Request.put({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_two
-        },
-        json: {
-            work: {
-              address: "Angwan Rukuba, Jos",
-              city: "Abuja"
-          }
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":User II", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-  describe("Case #3 Update Patient Zero Work Location Details", function(){
-    beforeEach(function(done) {
-      Request.put({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_one
-        },
-        json: {
-            location: {
-              altitude: '6.3',
-              speed: '6.2',
-              altitude_accuracy: '0.1',
-              gps:{
-                longitude: '4.0',
-                latitude: '5.3'
-              }
-          }
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":User I", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-
-  describe("Case #4 Update Patient One Location Details", function(){
-    beforeEach(function(done) {
-      Request.put({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_two
-        },
-        json: {
-            location: {
-              altitude: '3.6',
-              speed: '2.6',
-              altitude_accuracy: '1.0',
-              gps:{
-                longitude: '0.4',
-                latitude: '3.5'
-              }
-          }
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":User II", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-
-  describe("Case #5 Update Patient Zero Complete Work Info", function(){
-    beforeEach(function(done) {
-      Request.put({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_one
-        },
-        json: {
-          work: {
-            address: "D.B Zang Way Road",
-            city: "Kaduna",
-            work_name: "Nignux Technologies",
-            tags: ['wedding', 'bank', 'money', 'market']
-          },
-          location: {
-            gps: { longitude: '3.4', latitude: '6.2'},
-            altitude: "0.3",
-            altitude_accuracy: '5.5',
-            speed: '4.3'
-          }
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":User I", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
-
-
-  describe("Case #6 Update Patient One Complete Work Info", function(){
-    beforeEach(function(done) {
-      Request.put({
-        url: host + '/api/v1/work',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_two
-        },
-        json: {
-          work: {
-            address: "Angwan Rimi",
-            city: "Ilorin"
-          },
-          location: {
-            gps: { longitude: '4.3', latitude: '2.6'},
-            altitude: "3.0",
-            altitude_accuracy: '5.5',
-            speed: '3.4'
-          }
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------PUT /api/v1/work----------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":User II", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
+      expect(httpResponse.data.short_code).not.toBe(null);
+      expect(shortcode2).toEqual(httpResponse.data.short_code);
       done();
     });
 
@@ -650,9 +460,7 @@ describe("Update Work Details", function(){
 
 
 
-
-
-describe("Delete The Test Users", function(){
+describe("User Delete", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;
@@ -701,48 +509,4 @@ describe("Delete The Test Users", function(){
 
   });
 
-
-  describe("Case #2 Delete Patient One", function(){
-    beforeEach(function(done) {
-      Request.del({
-        url: host + '/api/v1/user',
-        headers: {
-          'Accept': 'application/json',
-          'X-Auth-Token': access_token_user_two
-        },
-        json: {
-            username: test_user_two,
-            password: "yahweh",
-        },
-      }, 
-      function(err, res, body){
-
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-
-        console.log("_____________________________________________________");
-        console.log("---------------DELETE /api/v1/user-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(200);
-      expect(httpResponse.status).toEqual(true);
-      done();
-    });
-
-  });
 });

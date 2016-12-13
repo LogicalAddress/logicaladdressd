@@ -1,7 +1,6 @@
 var hat = require('hat');
 var Request = require('request');
-
-var host = "https://paygis-retnan.c9.io";
+var host = require('../helpers/host')();
 
 var test_user_one = hat();
 var access_token_user_one = null;
@@ -9,12 +8,12 @@ var access_token_user_one = null;
 var test_user_two = hat();
 var access_token_user_two = null;
 
-console.log = function(data){
+// console.log = function(data){
   
-};
+// };
 
 
-describe("User Registration & Login", function(){
+describe("Create Test Users", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;
@@ -64,271 +63,8 @@ describe("User Registration & Login", function(){
 
   });
 
-  describe("Case #2 - Register Duplicate User", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-            username: test_user_one,
-            password: "yahweh",
-            q_animal: "Goat",
-            q_mother: "B",
-            q_space: "Moon",
-            q_book: "Digital Fortress",
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
 
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(403);
-      expect(httpResponse.status).toEqual(false);
-      done();
-    });
-
-  });
-
-  describe("Case #3 - Register With Invalid Params I", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-            username: test_user_one,
-            password: "",
-            q_animal: "Goat",
-            q_mother: "B",
-            q_space: "Moon",
-            q_book: "Digital Fortress",
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(400);
-      expect(httpResponse.status).toEqual(false);
-      done();
-    });
-
-  });
-
-  describe("Case #4 - Register With Invalid Params II", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-          
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(400);
-      expect(httpResponse.status).toEqual(false);
-      done();
-    });
-
-  });
-
-
-  describe("Case #5 - Register With Invalid Params III", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-            username: "",
-            password: "",
-            q_animal: "Goat",
-            q_mother: "B",
-            q_space: "Moon",
-            q_book: "Digital Fortress",
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(400);
-      expect(httpResponse.status).toEqual(false);
-      done();
-    });
-
-  });
-
-  describe("Case #6 - Register With Patial Params I", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-            password: "",
-            q_animal: "Goat",
-            q_mother: "B",
-            q_space: "Moon",
-            q_book: "Digital Fortress",
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(400);
-      expect(httpResponse.status).toEqual(false);
-      done();
-    });
-
-  });
-
-  describe("Case #7 - Register With Patial Params II", function(){
-    beforeEach(function(done) {
-      Request.post({
-        url: host + '/user/register',
-        headers: {
-          'Accept': 'application/json',
-        },
-        json: {
-            username: test_user_one,
-            q_animal: "Goat",
-            q_mother: "B",
-            q_space: "Moon",
-            q_book: "Digital Fortress",
-        }, 
-      }, 
-      function(err, res, body){
-        if (err) { throw err; }
-
-        httpResponse = body;
-        httpStatusCode = res.statusCode;
-        console.log("_____________________________________________________");
-        console.log("----------------POST /user/register-------------------");
-        console.log("_____________________________________________________");
-        console.log(httpResponse);
-        console.log("_____________________________________________________");
-
-        done();
-      });
-    });
-            
-
-    afterEach(function(){
-      httpStatusCode = null;
-      httpResponse = null;
-    });
-
-    it(":", function(done){
-      expect(httpStatusCode).toEqual(400);
-      expect(httpResponse.status).toEqual(false);
-      done();
-    });
-
-  });
-
-  describe("Case #8 - Register Patient One", function(){
+  describe("Case #2 - Register Patient One", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/user/register',
@@ -374,7 +110,7 @@ describe("User Registration & Login", function(){
   });
 
 
-  describe("Case #9 - Login Patient Zero", function(){
+  describe("Case #3 - Login Patient Zero", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/user/login',
@@ -391,7 +127,7 @@ describe("User Registration & Login", function(){
 
         httpResponse = body;
         httpStatusCode = res.statusCode;
-        access_token_user_one = (httpResponse.access_token_user_one) ? httpResponse.access_token_user_one.toString() : null;
+        access_token_user_one = (httpResponse.access_token) ? httpResponse.access_token.toString() : null;
 
         console.log("_____________________________________________________");
         console.log("------------------POST /user/login-------------------");
@@ -418,7 +154,7 @@ describe("User Registration & Login", function(){
     
   });
 
-  describe("Case #10 - Login Patient One", function(){
+  describe("Case #4 - Login Patient One", function(){
     beforeEach(function(done) {
       Request.post({
         url: host + '/user/login',
@@ -435,7 +171,7 @@ describe("User Registration & Login", function(){
 
         httpResponse = body;
         httpStatusCode = res.statusCode;
-        access_token_user_two = (httpResponse.access_token_user_one) ? httpResponse.access_token_user_one.toString() : null;
+        access_token_user_two = (httpResponse.access_token) ? httpResponse.access_token.toString() : null;
 
         console.log("_____________________________________________________");
         console.log("------------------POST /user/login-------------------");
@@ -462,10 +198,460 @@ describe("User Registration & Login", function(){
     
   });
 
+});
+
+
+describe("Fetch Home Details", function(){
+
+  var httpResponse = null;
+  var httpStatusCode = null;
+
+ describe("Case #1 Test Patient Zero with Fake Access Token", function(){
+    beforeEach(function(done) {
+      Request.get({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': 'FAKE-ACCESS-TOKEN'
+        },
+        json: {
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------GET /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(400);
+      expect(httpResponse.message).toEqual('Access Token Expired');
+      done();
+    });
+
+  });
+
+ describe("Case #2 Fetch Patient Zero Home Details", function(){
+    beforeEach(function(done) {
+      Request.get({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------GET /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+ describe("Case #3 Fetch Patient One Home Details", function(){
+    beforeEach(function(done) {
+      Request.get({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_two
+        },
+        json: {
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------GET /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it("User II:", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
 
 });
 
-describe("User Delete", function(){
+describe("Update Home Details", function(){
+
+  var httpResponse = null;
+  var httpStatusCode = null;
+
+  describe("Case #1 Update Patient Zero Home Details", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+            home: {
+              address: "Rukuba Road, Jos",
+              city: "Jos"
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+  describe("Case #2 Update Patient One Home Details", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_two
+        },
+        json: {
+            home: {
+              address: "Angwan Rukuba, Jos",
+              city: "Abuja"
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User II", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+  describe("Case #3 Update Patient Zero Home Location Details", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+            location: {
+              altitude: '6.3',
+              speed: '6.2',
+              altitude_accuracy: '0.1',
+              gps:{
+                longitude: '4.0',
+                latitude: '5.3'
+              }
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+  describe("Case #4 Update Patient One Location Details", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_two
+        },
+        json: {
+            location: {
+              altitude: '3.6',
+              speed: '2.6',
+              altitude_accuracy: '1.0',
+              gps:{
+                longitude: '0.4',
+                latitude: '3.5'
+              }
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User II", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+  describe("Case #5 Update Patient Zero Complete Home Info", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_one
+        },
+        json: {
+          home: {
+            address: "D.B Zang Way Road",
+            city: "Kaduna"
+          },
+          location: {
+            gps: { longitude: '3.4', latitude: '6.2'},
+            altitude: "0.3",
+            altitude_accuracy: '5.5',
+            speed: '4.3'
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User I", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+
+  describe("Case #6 Update Patient One Complete Home Info", function(){
+    beforeEach(function(done) {
+      Request.put({
+        url: host + '/api/v1/home',
+        headers: {
+          'Accept': 'application/json',
+          'X-Auth-Token': access_token_user_two
+        },
+        json: {
+          home: {
+            address: "Angwan Rimi",
+            city: "Ilorin"
+          },
+          location: {
+            gps: { longitude: '4.3', latitude: '2.6'},
+            altitude: "3.0",
+            altitude_accuracy: '5.5',
+            speed: '3.4'
+          }
+        },
+      }, 
+      function(err, res, body){
+
+        if (err) { throw err; }
+
+        httpResponse = body;
+        httpStatusCode = res.statusCode;
+
+        console.log("_____________________________________________________");
+        console.log("---------------PUT /api/v1/home----------------------");
+        console.log("_____________________________________________________");
+        console.log(httpResponse);
+        console.log("_____________________________________________________");
+
+        done();
+      });
+    });
+            
+
+    afterEach(function(){
+      httpStatusCode = null;
+      httpResponse = null;
+    });
+
+    it(":User II", function(done){
+      expect(httpStatusCode).toEqual(200);
+      expect(httpResponse.status).toEqual(true);
+      done();
+    });
+
+  });
+
+});
+
+
+
+
+
+
+
+
+
+describe("Delete Test Users", function(){
 
   var httpResponse = null;
   var httpStatusCode = null;

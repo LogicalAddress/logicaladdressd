@@ -1,3 +1,3 @@
 module.exports = function() {
-  return 'super.super.secret.shhh';
+  return process.env.APPLICATION_SECRET || "HIGH-ENTROPY-SECRET-KEY";
 }

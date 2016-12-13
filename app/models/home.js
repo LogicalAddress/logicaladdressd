@@ -30,7 +30,6 @@ util.inherits(Home, EventEmitter);
 Home.prototype.save = function(user, data, callback, context) {
 
 	context = (context ? context : this);
-	var that = this;
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') && 
 		_.has(data, 'location_ref') && _.has(data, 'trace_id')) {
@@ -46,7 +45,7 @@ Home.prototype.save = function(user, data, callback, context) {
 
 					record_model.save(function(err, record){
 						if (record) {
-							that.emit("home_created", record.toObject());
+							process.emit("home_created", record.toObject());
 							return (_.isFunction(callback) ? callback.apply(context, 
 								[null, record.toObject()]) : null );
 						}else{
@@ -80,11 +79,10 @@ Home.prototype.createRecord = function(user, callback, context) {
 
 	context = (context ? context : this);
 
-	if (_.isObject(user) && _.has(user,'user_ref') && 
-		_.isString(user.user_ref)){
+	if (_.isObject(user) && _.has(user,'_id') ){
 
 		Location.findRecord({
-			user_ref: user.user_ref.toString(), location_type: 'home'}, 
+			user_ref: user._id, location_type: 'home'}, 
 			function(err, record){
 
 			if (record) {
@@ -94,7 +92,7 @@ Home.prototype.createRecord = function(user, callback, context) {
 				}
 			}
 
-			Location.create({user_ref: user.user_ref, 
+			Location.create({user_ref: user._id, 
 				location_type: 'home'}, function(err, response){	
 
 				if (err) {
@@ -104,8 +102,8 @@ Home.prototype.createRecord = function(user, callback, context) {
 
 				var trace_id = hash(response._id.toString());
 
-				this.save({_id: user.user_ref }, {
-					user_ref: user.user_ref, 
+				this.save(user, {
+					user_ref: user._id, 
 					location_ref: response._id, 
 					trace_id: trace_id 
 				}, function(err, response){
@@ -248,25 +246,25 @@ Home.prototype.delete = function(user) {
 
 var homeContext = new Home();
 
-homeContext.on('location_created', function(location){
+process.on('location_created', function(location){
 	if (location.location_type == "home") {
 		// Do something something if you care
 	}
 });
 
-homeContext.on('user_created', function(user){
+process.on('user_created', function(user){
 	homeContext.createRecord(user, function(err, response){
 		if (err) {
-			console.log(err);
+			// console.log(err);
 		}
 	}, homeContext);
 });
 
-homeContext.on('user_deleted', function(user){
-	HomeModel.remove({user_ref: user._id}).exec();
+process.on('user_deleted', function(user){
+	HomeModel.remove({user_ref: user._id.toString()}).exec();
 });
 
-homeContext.on('home_created', function(home){
+process.on('home_created', function(home){
 	// faire quelques chose ici quand tu veux
 });
 

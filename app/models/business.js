@@ -1,4 +1,3 @@
-// TODO: Write test for this module
 var UserModel = require('./user/user-db').UserModel;
 var BusinessModel = require('./business/business-db').BusinessModel;
 var Location = require('./location');
@@ -31,13 +30,12 @@ util.inherits(Business, EventEmitter);
 Business.prototype.save = function(user, data, callback, context) {
 
 	context = (context ? context : this);
-	var that = this;
 
 	if (_.isObject(user) && _.isObject(data) && _.has(user,'_id') && 
 		_.has(data, 'location_ref') && _.has(data, 'trace_id')) {
 
 		var record_model = new BusinessModel();
-		record_model.user_ref = data.user_ref;
+		record_model.user_ref = user._id;
 		record_model.location_ref = data.location_ref;
 		record_model.trace_id = data.trace_id;
 		record_model.business_name = data.business_name;
@@ -49,7 +47,7 @@ Business.prototype.save = function(user, data, callback, context) {
 
 		record_model.save(function(err, record){
 			if (record) {
-				that.emit("business_created", record.toObject());
+				process.emit("business_created", record.toObject());
 				return (_.isFunction(callback) ? callback.apply(context, 
 					[null, record.toObject()]) : null );
 			}else{
@@ -77,10 +75,9 @@ Business.prototype.createRecord = function(user, businessData, callback, context
 
 	context = (context ? context : this);
 
-	if (_.isObject(user) && _.isObject(businessData) && 
-		_.has(user,'user_ref') && _.isString(user.user_ref)) {
+	if (_.isObject(user) && _.isObject(businessData)) {
 
-			Location.create({user_ref: user.user_ref, 
+			Location.create({user_ref: user._id, 
 				location_type: 'business'}, function(err, response){	
 				if (err) {
 					return (_.isFunction(callback) ? callback.apply(context, 
@@ -89,11 +86,11 @@ Business.prototype.createRecord = function(user, businessData, callback, context
 
 				var trace_id = hash(response._id.toString());
 
-				businessData.user_ref = user.user_ref;
+				businessData.user_ref = user._id;
 				businessData.location_ref = response._id;
 				businessData.trace_id = trace_id;
 
-				this.save({_id: user.user_ref}, businessData, 
+				this.save(user, businessData, 
 					function(err, response){
 					if (err) {
 						return (_.isFunction(callback) ? callback.apply(context, 
@@ -123,18 +120,20 @@ Business.prototype.findRecordsByUserId = function(user, callback, context) {
 	
 	context = (context ? context : this);
 
-	if (_.isObject(user) && _.has(user,'user_ref') &&
-		_.isString(user.user_ref) && !_.isEmpty(user.user_ref.trim())) {
+	if (_.isObject(user) && _.has(user,'_id')) {
 		BusinessModel.find(
-			{user_ref: user.user_ref}).populate('location_ref').lean().exec(
-			function(err, row){
-			if (row) {
-				// row = _.omit(row, ['location_ref'/*,'user_ref'*/]);
-				var gps = {longitude: row.location_ref.gps[0], 
-					latitude: row.location_ref.gps[1]};
-				row.location_ref.gps = gps;
+			{user_ref: user._id}).populate('location_ref').lean().exec(
+			function(err, rows){
+			if (rows) {
+
+				for (var i = rows.length - 1; i >= 0; i--) {
+					var gps = {longitude: rows[i].location_ref.gps[0], 
+								latitude: rows[i].location_ref.gps[1]};
+					rows[i].location_ref.gps = gps;
+				}
+
 				return (_.isFunction(callback) ? callback.apply(context, 
-					[null, row]) : null);
+					[null, rows]) : null);
 			}else{
 				return (_.isFunction(callback) ? callback.apply(context, 
 					['No Record Found']) : null);
@@ -316,22 +315,23 @@ Business.prototype.deleteAll = function(user) {
 
 var businessContext = new Business();
 
-businessContext.on('location_created', function(location){
+process.on('location_created', function(location){
 	if (location.location_type == "business") {
 		// Do something something if you care
 	}
 });
 
-businessContext.on('user_created', function(user){
+process.on('user_created', function(user){
 	// Faire quelques chose ici quand to veux
 });
 
-businessContext.on('user_deleted', function(user){
+process.on('user_deleted', function(user){
 	BusinessModel.remove({user_ref: user._id}).exec();
 });
 
-businessContext.on('business_created', function(business){
+process.on('business_created', function(business){
 	// Faire quelques chose ici quand to veux
+	// console.log(business);
 });
 
 module.exports = businessContext;

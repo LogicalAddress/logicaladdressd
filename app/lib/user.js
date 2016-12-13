@@ -3,6 +3,7 @@ var _ = require('underscore');
 var hat = require('hat');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
+var secret = require('../../config/secret')();
 
 
 /*
@@ -35,7 +36,7 @@ UserLib.prototype.generateAccessToken = function(user_object){
 
 	var payload = { user: user_object, salt: hat()};
 	
-	var accessToken = jwt.encode(payload, require('../../config/secret')());
+	var accessToken = jwt.encode(payload, secret);
 
 	return accessToken;
 };
@@ -55,7 +56,7 @@ UserLib.prototype.accessTokenToUserObj = function(accessToken){
 	}
 
 	try {
-		var userObj = jwt.decode(accessToken, require('../../config/secret')());
+		var userObj = jwt.decode(accessToken, secret);
 		return userObj;
 	}catch(err){
 		return null;

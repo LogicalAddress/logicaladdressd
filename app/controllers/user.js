@@ -71,7 +71,7 @@ HTTP/1.1 404 Not Found
 			!_.isEmpty(req.body.username.trim()) && 
 			!_.isEmpty(req.body.password.trim())) {
 
-			User.once('register_complete', function(err, record){
+			User.register(req.body, function(err, record){
 				
 				if(record){
 					res.status(201);
@@ -86,9 +86,7 @@ HTTP/1.1 404 Not Found
 					return res.json({status: false, reason: 'An unknown error occured'});
 				}
 				
-			});
-
-			User.register(req.body);
+			});			
 
 		}else{
 			res.status(400);
@@ -147,7 +145,8 @@ HTTP/1.1 401 Unauthorized
 				if (record) {
 					var accessToken = UserLib.generateAccessToken(record);
 					res.status(200);
-					return res.json({status: true, access_token: accessToken, user: record});
+					return res.json({status: true, access_token: accessToken, 
+						user: record});
 				}else{
 					res.status(401);
 					return res.json({

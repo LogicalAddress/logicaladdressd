@@ -21,45 +21,6 @@ function ShortCode(){
 util.inherits(ShortCode, EventEmitter);
 
 
-// /*
-// * Save The short code against the currently logged in user
-// * @Method save
-// * 
-// **/
-
-// ShortCode.prototype.registerBusinessDefault = function(data) {
-// 	var context = (context ? context : this);
-// 	if (_.isObject(data) && _.has(data, 'trace_id')) {
-// 		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'}, 
-// 			function (err, record) {
-// 			if (!record) {
-// 				var record_model = new ShortCodeModel();
-// 				record_model.user_ref = data.user_ref;
-// 				record_model.location_ref = data.location_ref;
-// 				record_model.trace_id = data.trace_id;
-// 				record_model.short_code = getBusDefaultCode();
-// 				record_model.code_type = 'default';
-// 				record_model.save(function(err, record){
-// 					if (record) {
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							[null, record.toObject()]) : null);
-// 					}else{
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							["Can't Save: " + err]) : null);
-// 					}
-// 				});
-// 			}else{
-// 				return (_.isFunction(callback) ? callback.apply(context, 
-// 					['Duplicate Entry']) : null);
-// 			}
-// 		});
-// 	}else{
-// 		return (_.isFunction(callback) ? callback.apply(context, 
-// 			['Invalid Parameters']) : null);
-// 	}
-// };
-
-
 /*
 * Save The short code against the currently logged in user
 * @Method save
@@ -68,11 +29,14 @@ util.inherits(ShortCode, EventEmitter);
 
 ShortCode.prototype.registerBusinessDefault = function(data) {
 
-	if (_.isObject(data) && _.has(data, 'trace_id')) {
+	if (_.isObject(data) && _.has(data, 'trace_id') && _.has(data, 'user_ref')) {
 
 		var that = this;
 
-		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'},
+		// TODO: Validate the trace_id to make sure is of type, "business"
+
+		ShortCodeModel.findOne({user_ref: data.user_ref,
+			trace_id: data.trace_id, code_type: 'default'},
 		 function (err, record) {
 
 				if (!record) {
@@ -89,8 +53,13 @@ ShortCode.prototype.registerBusinessDefault = function(data) {
 							that.emit("create_shortcode_complete", 
 								null, record.toObject());
 						}else{
-							that.emit("create_shortcode_complete", 
-								"Can't Save: " + err);
+							if (err.code === 11000) {
+								that.emit("create_shortcode_complete", 
+								'Duplicate Entry');
+							}else{
+								that.emit("create_shortcode_complete", 
+									"An unknown error occured");
+							}
 						}
 					});
 
@@ -114,11 +83,14 @@ ShortCode.prototype.registerBusinessDefault = function(data) {
 
 ShortCode.prototype.registerDefault = function(data) {
 
-	if (_.isObject(data) && _.has(data, 'trace_id')) {
+	if (_.isObject(data) && _.has(data, 'trace_id')  && _.has(data, 'user_ref')) {
 
 		var that = this;
 
-		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'},
+		// TODO: Validate the trace_id to make sure is of type, "business"
+
+		ShortCodeModel.findOne({user_ref: data.user_ref,
+			trace_id: data.trace_id, code_type: 'default'},
 		 function (err, record) {
 
 				if (!record) {
@@ -135,8 +107,13 @@ ShortCode.prototype.registerDefault = function(data) {
 							that.emit("create_shortcode_complete", null, 
 								record.toObject());
 						}else{
-							that.emit("create_shortcode_complete", 
-								"Can't Save: " + err);
+							if (err.code === 11000) {
+								that.emit("create_shortcode_complete", 
+								'Duplicate Entry');
+							}else{
+								that.emit("create_shortcode_complete", 
+									"An unknown error occured");
+							}
 						}
 					});
 				}else{
@@ -149,48 +126,8 @@ ShortCode.prototype.registerDefault = function(data) {
 };
 
 
-// /*
-// * Save The short code against the currently logged in user
-// * @Method save
-// * 
-// **/
-
-// ShortCode.prototype.registerDefault = function(data) {
-// 	var context = (context ? context : this);
-// 	if (_.isObject(data) && _.has(data, 'trace_id')) {
-// 		ShortCodeModel.findOne({trace_id: data.trace_id, code_type: 'default'}, 
-// 			function (err, record) {
-// 			if (!record) {
-// 				var record_model = new ShortCodeModel();
-// 				record_model.user_ref = data.user_ref;
-// 				record_model.location_ref = data.location_ref;
-// 				record_model.trace_id = data.trace_id;
-// 				record_model.short_code = getDefaultShortCode();
-// 				record_model.code_type = 'default';
-// 				record_model.save(function(err, record){
-// 					if (record) {
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							[null, record.toObject()]) : null);
-// 					}else{
-// 						return (_.isFunction(callback) ? callback.apply(context, 
-// 							["Can't Save: " + err]) : null);
-// 					}
-// 				});
-// 			}else{
-// 				return (_.isFunction(callback) ? callback.apply(context, 
-// 					['Duplicate Entry']) : null);
-// 			}
-// 		});
-// 	}else{
-// 		return (_.isFunction(callback) ? callback.apply(context, 
-// 			['Invalid Parameters']) : null);
-// 	}
-// };
-
-
 ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 	context = (context ? context : this);
-	var that = this;
 	if (_.isObject(data) && _.has(data, 'trace_id') && 
 		_.has(data, 'user_ref')) {
 		Payment.findRecord({user_ref: data.user_ref, active: true, 
@@ -204,12 +141,17 @@ ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 				record_model.code_type = 'memorable';
 				record_model.save(function(err, record){
 					if (record) {
-						that.emit("flag_payment", paymentRecord);
+						process.emit("flag_payment", paymentRecord);
 						return (_.isFunction(callback) ? callback.apply(context, 
 							[null, record.toObject()]) : null);
 					}else{
-						return (_.isFunction(callback) ? callback.apply(context, 
-							["Can't Save: " + err]) : null);
+						if (err.code === 11000) {
+							return (_.isFunction(callback) ? callback.apply(context, 
+								['Duplicate Entry']) : null);
+						}else{
+							return (_.isFunction(callback) ? callback.apply(context, 
+								["An unknown error occured"]) : null);
+						}
 					}
 				});
 			}else{
@@ -227,7 +169,6 @@ ShortCode.prototype.registerRandomMemorable = function(data, callback, context){
 
 ShortCode.prototype.registerCustom = function(data, callback, context) {
 	context = (context ? context : this);
-	var that = this;
 	if (_.isObject(data) && _.has(data, 'trace_id')	&& 
 		_.has(data, 'user_ref') && _.has(data, 'custom')) {
 		Payment.findRecord({user_ref: data.user_ref, active: true, 
@@ -241,12 +182,17 @@ ShortCode.prototype.registerCustom = function(data, callback, context) {
 				record_model.code_type = 'custom';
 				record_model.save(function(err, record){
 					if (record) {
-						that.emit("flag_payment", paymentRecord);
+						process.emit("flag_payment", paymentRecord);
 						return (_.isFunction(callback) ? callback.apply(context, 
 							[null, record.toObject()]) : null);
 					}else{
-						return (_.isFunction(callback) ? callback.apply(context, 
-							["Can't Save: " + err]) : null);
+						if (err.code === 11000) {
+							return (_.isFunction(callback) ? callback.apply(context, 
+								['Duplicate Entry']) : null);
+						}else{
+							return (_.isFunction(callback) ? callback.apply(context, 
+								["An unknown error occured"]) : null);
+						}
 					}
 				});
 			}else{
@@ -296,4 +242,10 @@ ShortCode.prototype.findRecordByLongShortCode = function(longorshortcode,
 	}
 };
 
-module.exports = new ShortCode();
+var shortCodeContext = new ShortCode();
+
+process.on('user_deleted', function(user){
+	ShortCodeModel.remove({user_ref: user._id}).exec();
+});
+
+module.exports = shortCodeContext;

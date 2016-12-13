@@ -86,7 +86,7 @@ Payment.prototype.findAll = function(query, callback, context) {
 
 var paymentContext = new Payment();
 
-paymentContext.on('flag_payment', function(paymentRecord){
+process.on('flag_payment', function(paymentRecord){
 	
 	var data = {};
 	data.updated_at = new Date();
@@ -99,6 +99,10 @@ paymentContext.on('flag_payment', function(paymentRecord){
 			console.log(err);
 		}
 	});
+});
+
+process.on('user_deleted', function(user){
+	PaymentModel.remove({user_ref: user._id}).exec();
 });
 
 module.exports = paymentContext;

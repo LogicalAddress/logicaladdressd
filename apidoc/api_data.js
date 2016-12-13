@@ -1,6 +1,176 @@
 define({ "api": [
   {
     "type": "get",
+    "url": "/api/v1/business",
+    "title": "Get business information",
+    "name": "GetBusiness",
+    "group": "Business",
+    "description": "<p>Get user's business location</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-auth-token",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Response Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Array of user's business information</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data:\n\t[{\"_id\":\"56d1e83eb17166191e269771\",\n\t\t\"mobile_number\":\"08161730129\",\n\t\t\"trace_id\":\"bf27ac7c5d57f9ac1c1ce5ea0a5424d0\",\n\t\t\"location_ref\":{\"_id\":\"56d1e83eb17166191e269770\",\n\t\t\t\"user_ref\":\"56d1e83db17166191e269766\",\n\t\t\t\"location_type\":\"business\",\n\t\t\t\"verify_change\":\"########\",\n\t\t\t\"updated_at\":\"2016-02-27T18:17:34.356Z\",\n\t\t\t\"created_at\":\"2016-02-27T18:17:34.356Z\",\n\t\t\t\"enabled\":true,\n\t\t\t\"speed\":\"\",\n\t\t\t\"altitude_accuracy\":\"\",\n\t\t\t\"altitude\":\"\",\n\t\t\t\"gps\":{\"longitude\":0,\"latitude\":0},\"__v\":0,\n\t\t\t\"trace_id\":\"bf27ac7c5d57f9ac1c1ce5ea0a5424d0\"\n\t\t},\n\t\t\"user_ref\":\"56d1e83db17166191e269766\",\n\t\t\"updated_at\":\"2016-02-27T18:17:34.362Z\",\n\t\t\"created_at\":\"2016-02-27T18:17:34.362Z\",\n\t\t\"locked\":false,\"verified\":false,\n\t\t\"enabled\":true,\n\t\t\"tags\":[\"atm\",\"bank\",\"money\"],\n\t\t\"address\":\"Rukuba Road, Jos\",\n\t\t\"city\":\"Jos\",\n\t\t\"business_name\":\"Daser Bank of Nigeria\",\n\t\t\"nearby_trace_ids\":[],\"__v\":0\n\t},{\"_id\":\"56d1e83eb17166191e269773\",\n\t\t\"mobile_number\":\"08036504287\",\n\t\t\"trace_id\":\"71964581930782dafdc3013ba7b2e473\",\n\t\t\"location_ref\":{\"_id\":\"56d1e83eb17166191e269772\",\n\t\t\t\"user_ref\":\"56d1e83db17166191e269766\",\n\t\t\t\"location_type\":\"business\",\n\t\t\t\"verify_change\":\"########\",\n\t\t\t\"updated_at\":\"2016-02-27T18:17:34.406Z\",\n\t\t\t\"created_at\":\"2016-02-27T18:17:34.406Z\",\n\t\t\t\"enabled\":true,\n\t\t\t\"speed\":\"\",\n\t\t\t\"altitude_accuracy\":\"\",\n\t\t\t\"altitude\":\"\",\n\t\t\t\"gps\":{\"longitude\":0,\"latitude\":0},\"__v\":0,\n\t\t\t\"trace_id\":\"71964581930782dafdc3013ba7b2e473\"\n\t\t},\n\t\t\"user_ref\":\"56d1e83db17166191e269766\",\n\t\t\"updated_at\":\"2016-02-27T18:17:34.420Z\",\n\t\t\"created_at\":\"2016-02-27T18:17:34.420Z\",\n\t\t\"locked\":false,\"verified\":false,\n\t\t\"enabled\":true,\n\t\t\"tags\":[\"repairs\",\"motor\",\"car\"],\n\t\t\"address\":\"Nimpco Filling Station, Jabi\",\n\t\t\"city\":\"Abuja\",\n\t\t\"business_name\":\"Auto Lady Nigeria Ltd\",\n\t\t\"nearby_trace_ids\":[],\"__v\":0\n\t}]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: 'No Record Found'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/business.js",
+    "groupTitle": "Business"
+  },
+  {
+    "type": "post",
+    "url": "/api/v1/business",
+    "title": "Post business information",
+    "name": "PostBusiness",
+    "group": "Business",
+    "description": "<p>Create company's business location</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-auth-token",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Response Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>user submitted business information</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     mobile_number: '08036504287',\n     trace_id: 'efdd63c258f087370a4db694e5115dcf',\n     location_ref: '56d1ec3bd5eb63771f47d28c',\n     user_ref: '56d1ec3ad5eb63771f47d280',\n     _id: '56d1ec3bd5eb63771f47d28d',\n     updated_at: '2016-02-27T18:34:35.267Z',\n     created_at: '2016-02-27T18:34:35.267Z',\n     locked: false,\n     verified: false,\n     enabled: true,\n     tags: [ 'repairs', 'motor', 'car' ],\n     address: 'Nimpco Filling Station, Jabi',\n     city: 'Abuja',\n     business_name: 'Auto Lady Nigeria Ltd',\n     nearby_trace_ids: [] } }",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n\tmobile_number: \"08036504287\",\n\taddress: \"Nimpco Filling Station, Jabi\",\n\tcity: \"Abuja\",\n\tbusiness_name: \"Auto Lady Nigeria Ltd\",\n\ttags: ['repairs', 'motor', 'car']\n}",
+          "type": "json"
+        },
+        {
+          "title": "Request-Example:",
+          "content": "{\n\tmobile_number: \"08161730129\",\n\taddress: \"Rukuba Road, Jos\",\n\tcity: \"Jos\",\n\tbusiness_name: \"Daser Bank of Nigeria Ltd\",\n\ttags: ['atm', 'bank', 'money']\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: 'Invalid Parameters'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: 'An unknown error occured'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/business.js",
+    "groupTitle": "Business"
+  },
+  {
+    "type": "put",
+    "url": "/api/v1/business",
+    "title": "Update business information",
+    "name": "PutBusiness",
+    "group": "Business",
+    "description": "<p>Update the user's business location. Note that the request parameters must contain either business or location or both.</p>",
+    "version": "0.0.0",
+    "filename": "app/controllers/business.js",
+    "groupTitle": "Business"
+  },
+  {
+    "type": "get",
     "url": "/api/v1/home",
     "title": "Get home information",
     "name": "GetHome",
@@ -381,1032 +551,6 @@ define({ "api": [
     "groupTitle": "Home"
   },
   {
-    "type": "get",
-    "url": "/api/v1/mobile",
-    "title": "Get Active Origin",
-    "name": "GetMobile",
-    "group": "Mobile",
-    "description": "<p>Get user's active origin location information</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>User's mobile origin information.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.trace_id",
-            "description": "<p>User's mobile trace code (Logical Address). This would be wrapped up in QRcode.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.expires_at",
-            "description": "<p>Expiring Timestamp in milliseconds since 1990</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.location_ref",
-            "description": "<p>The location information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.location_ref.location_type",
-            "description": "<p>Location type, 'mobile' in this case</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.location_ref.altitude",
-            "description": "<p>The altitude G.P.S information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.location_ref.speed",
-            "description": "<p>The speed. G.P.S information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.location_ref.gps",
-            "description": "<p>The location object</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Float",
-            "optional": false,
-            "field": "data.location_ref.gps.longitude",
-            "description": "<p>The longitude</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Float",
-            "optional": false,
-            "field": "data.location_ref.gps.latitude",
-            "description": "<p>The latitude</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n\"status\":true,\n\"data\":{\n \"expires_at\":\"1437861805468\",\n \"trace_id\":\"21e0d89662d8c59189e36628f079dc43\",\n \"location_ref\":{\n  \"user_ref\":\"55b407a8dff6a38720a176fb\",\n  \"location_type\":\"mobile\",\n  \"_id\":\"55b407a8dff6a38720a17705\",\n  \"verify_change\":\"########\",\n  \"updated_at\":\"2015-07-25T22:03:20.463Z\",\n  \"created_at\":\"2015-07-25T22:03:20.463Z\",\n  \"enabled\":true,\n  \"speed\":\"\",\n  \"altitude_accuracy\":\"\",\n  \"altitude\":\"\",\n  \"gps\":{\"latitude\":0,\"longitude\":0},\n \"__v\":0},\n\"user_ref\":\"55b407a8dff6a38720a176fb\",\n\"_id\":\"55b407a8dff6a38720a17706\",\n\"updated_at\":\"2015-07-25T22:03:20.467Z\",\n\"created_at\":\"2015-07-25T22:03:20.467Z\",\n\"enabled\":true,\"\n__v\":0\n}\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "get",
-    "url": "/api/v1/mobile/active_targets",
-    "title": "Get Active Targets",
-    "name": "GetMobileActiveTargets",
-    "group": "Mobile",
-    "description": "<p>Get active targets to origin (List of Targets)</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object[]",
-            "optional": false,
-            "field": "data",
-            "description": "<p>List of accepted Targets who can track the Origin's Trace Code</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n\"status\":true,\n\"data\":[\n {\n  \"origin_trace_id\":\"21e0d89662d8c59189e36628f079dc43\",\n  \"location_ref\":\n   {\n    \"user_ref\":\"55b407a8dff6a38720a17700\",\n    \"location_type\":\"mobile\",\n    \"_id\":\"55b407a8dff6a38720a17709\",\n    \"verify_change\":\"########\",\n    \"updated_at\":\"2015-07-25T22:03:20.557Z\",\n    \"created_at\":\"2015-07-25T22:03:20.557Z\",\n    \"enabled\":true,\n    \"speed\":\"\",\n    \"altitude_accuracy\":\"\",\n    \"altitude\":\"\",\n    \"gps\":\n     {\n      \"latitude\":0,\n      \"longitude\":0\n     },\n    \"__v\":0\n   },\n  \"origin_ref\":\"55b407a8dff6a38720a17706\",\n  \"user_ref\":\"55b407a8dff6a38720a17700\",\n  \"_id\":\"55b407a8dff6a38720a1770a\",\n  \"updated_at\":\"2015-07-25T22:03:20.559Z\",\n  \"created_at\":\"2015-07-25T22:03:20.559Z\",\n  \"enabled\":true,\n  \"accepted\":true,\n  \"identifier\":\"Nelson Collins\",\n  \"__v\":0\n },\n {\n \"origin_trace_id\":\"21e0d89662d8c59189e36628f079dc43\",\n \"location_ref\":\n  {\n   \"user_ref\":\"55b407a8dff6a38720a176fb\",\n   \"location_type\":\"mobile\",\n   \"_id\":\"55b407a8dff6a38720a17707\",\n   \"verify_change\":\"########\",\n   \"updated_at\":\"2015-07-25T22:03:20.523Z\",\n   \"created_at\":\"2015-07-25T22:03:20.523Z\",\n   \"enabled\":true,\n   \"speed\":\"\",\n   \"altitude_accuracy\":\"\",\n   \"altitude\":\"\",\n   \"gps\":{\n    \"latitude\":0,\n    \"longitude\":0\n    },\n   \"__v\":0\n  },\n  \"origin_ref\":\"55b407a8dff6a38720a17706\",\n  \"user_ref\":\"55b407a8dff6a38720a176fb\",\n  \"_id\":\"55b407a8dff6a38720a17708\",\n  \"updated_at\":\"2015-07-25T22:03:20.528Z\",\n  \"created_at\":\"2015-07-25T22:03:20.528Z\",\n  \"enabled\":true,\n  \"accepted\":true,\n  \"identifier\":\"Nelson Collins\",\n  \"__v\":0\n  }\n ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "get",
-    "url": "/api/v1/mobile/pending",
-    "title": "Get Pending Requests",
-    "name": "GetMobilePending",
-    "group": "Mobile",
-    "description": "<p>Get Pending Requests to Origin</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object[]",
-            "optional": false,
-            "field": "data",
-            "description": "<p>List of Targets who requested access to Origin's Trace Code</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.origin_trace_id",
-            "description": "<p>Origin's mobile trace code (Logical Address).</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user_ref",
-            "description": "<p>User's unique identification who made the request</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "data.accepted",
-            "description": "<p>The state of the request</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "data._id",
-            "description": "<p>The request ID. To be used when accepting or rejecting request.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.identifier",
-            "description": "<p>The name of the user who made the request</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   [ { origin_trace_id: '21e0d89662d8c59189e36628f079dc43',\n       location_ref: '55b407a8dff6a38720a17709',\n       origin_ref: '55b407a8dff6a38720a17706',\n       user_ref: '55b407a8dff6a38720a17700',\n       _id: '55b407a8dff6a38720a1770a',\n       updated_at: '2015-07-25T22:03:20.559Z',\n       created_at: '2015-07-25T22:03:20.559Z',\n       enabled: true,\n       accepted: false,\n       identifier: 'Nelson Collins',\n       __v: 0 },\n     { origin_trace_id: '21e0d89662d8c59189e36628f079dc43',\n       location_ref: '55b407a8dff6a38720a17707',\n       origin_ref: '55b407a8dff6a38720a17706',\n       user_ref: '55b407a8dff6a38720a176fb',\n       _id: '55b407a8dff6a38720a17708',\n       updated_at: '2015-07-25T22:03:20.528Z',\n       created_at: '2015-07-25T22:03:20.528Z',\n       enabled: true,\n       accepted: false,\n       identifier: 'Nelson Collins',\n       __v: 0 } ] }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "post",
-    "url": "/api/v1/mobile",
-    "title": "Create Mobile Origin",
-    "name": "PostMobile",
-    "group": "Mobile",
-    "description": "<p>Generate a logical address (trace code) that would be used by those who have it to track the user</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response status, true means successful.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>The mobile trace information (Origin)</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.trace_id",
-            "description": "<p>The trace id, that others (Targets) would use to track this user</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.expires_at",
-            "description": "<p>Expiring Timestamp in milliseconds since 1990</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user_ref",
-            "description": "<p>Represents the unique identifier of the creator.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     expires_at: '1437861467868',\n     trace_id: 'dbd69d61c0804d9b99b612f28d98cfcb',\n     location_ref: '55b406568d393c3220c80d12',\n     user_ref: '55b406568d393c3220c80d08',\n     _id: '55b406568d393c3220c80d13',\n     updated_at: '2015-07-25T21:57:42.867Z',\n     created_at: '2015-07-25T21:57:42.867Z',\n     enabled: true } }",
-          "type": "json"
-        }
-      ]
-    },
-    "parameter": {
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "post",
-    "url": "/api/v1/mobile/authorize",
-    "title": "Authorize/Deny Request",
-    "name": "PostMobileAuthorize",
-    "group": "Mobile",
-    "description": "<p>Accept or Reject Request to Track</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "request_id",
-            "description": "<p>The Request ID (Accessible at /api/v1/mobile/pending)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Boolean",
-            "optional": false,
-            "field": "command",
-            "description": "<p>true to accept or false to deny request</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n\trequest_id: '55b407a8dff6a38720a1770a',\n\tcommand: true\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>The Authorized information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.accepted",
-            "description": "<p>The state of the request</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.identifier",
-            "description": "<p>The name of the user who made the request</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user_ref",
-            "description": "<p>The Unique identifier of the user who made the request</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { origin_trace_id: '21e0d89662d8c59189e36628f079dc43',\n     location_ref: '55b407a8dff6a38720a17707',\n     origin_ref: '55b407a8dff6a38720a17706',\n     user_ref: '55b407a8dff6a38720a176fb',\n     _id: '55b407a8dff6a38720a17708',\n     __v: 0,\n     updated_at: '2015-07-25T22:03:20.528Z',\n     created_at: '2015-07-25T22:03:20.528Z',\n     enabled: true,\n     accepted: true,\n     identifier: 'Nelson Collins' } }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: \"Invalid Parameters. Pass 'command' & 'request_id' in body request\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "post",
-    "url": "/api/v1/mobile/target",
-    "title": "Create a Target",
-    "name": "PostMobileTarget",
-    "group": "Mobile",
-    "description": "<p>Create a Target in order to track Origin</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "trace_id",
-            "description": "<p>The Request ID (created by other user at POST /api/v1/mobile)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "identifier",
-            "description": "<p>The name of the target. This would be shown to the user who would accept the request</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n\ttrace_id: 'dbd69d61c0804d9b99b612f28d98cfcb',\n\tidentifier: 'Nelson Collins'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>The Request information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.accepted",
-            "description": "<p>The state of the request</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.identifier",
-            "description": "<p>The name of the user who made the request (current user)</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user_ref",
-            "description": "<p>The Unique identifier of the user who made the request</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.origin_trace_id",
-            "description": "<p>Should be same as trace_id passed in the request</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     origin_trace_id: '21e0d89662d8c59189e36628f079dc43',\n     location_ref: '55b407a8dff6a38720a17709',\n     origin_ref: '55b407a8dff6a38720a17706',\n     user_ref: '55b407a8dff6a38720a17700',\n     _id: '55b407a8dff6a38720a1770a',\n     updated_at: '2015-07-25T22:03:20.559Z',\n     created_at: '2015-07-25T22:03:20.559Z',\n     enabled: true,\n     accepted: false,\n     identifier: 'Nelson Collins' } }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: \"Invalid Parameters. Pass 'trace_id' and 'identifier' in body request\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "put",
-    "url": "/api/v1/mobile",
-    "title": "Update Active Origin",
-    "name": "PutMobile",
-    "group": "Mobile",
-    "description": "<p>Update Location parameters for the Origin</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "location",
-            "description": "<p>The location object containing only fields that should be updated</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "location.altitude",
-            "description": "<p>GPS altitude information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "location.speed",
-            "description": "<p>GPS speed information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "location.altitude_accuracy",
-            "description": "<p>GPS altitude accuracy information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "location.gps",
-            "description": "<p>The GPS long and lat object</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Float",
-            "optional": true,
-            "field": "location.gps.longitude",
-            "description": "<p>GPS longitude information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Float",
-            "optional": true,
-            "field": "location.gps.latitude",
-            "description": "<p>GPS latitude information</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n\tlocation: {\n\t\taltitude: '50.6',\n\t\tspeed: '6.50',\n\t\taltitude_accuracy: '0.19',\n\t\tgps:{\n\t\t\tlongitude: 63.23,\n\t\t\tlatitude: 54.3\n\t\t}\n\t}\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>The updated location GPS mobile information.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.location_type",
-            "description": "<p>Location type, 'mobile' in this case</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.altitude",
-            "description": "<p>The altitude G.P.S information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.speed",
-            "description": "<p>The speed. G.P.S information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.gps",
-            "description": "<p>The location Object</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Float",
-            "optional": false,
-            "field": "data.gps.longitude",
-            "description": "<p>The longitude</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Float",
-            "optional": false,
-            "field": "data.gps.latitude",
-            "description": "<p>The latitude</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     _id: '55b407a8dff6a38720a17705',\n     location_type: 'mobile',\n     verify_change: '########',\n     updated_at: '2015-07-25T22:03:20.816Z',\n     created_at: '2015-07-25T22:03:20.463Z',\n     enabled: true,\n     speed: '6.50',\n     altitude_accuracy: '0.19',\n     altitude: '50.6',\n     gps: {\n\t\t\tlongitude: 63.23,\n\t\t\tlatitude: 54.3\n\t\t} } }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: \"Invalid Parameters. Pass 'location' object in the body request\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
-    "type": "put",
-    "url": "/api/v1/mobile/target",
-    "title": "Update Target",
-    "name": "PutMobiletarget",
-    "group": "Mobile",
-    "description": "<p>Update Location Parameters for the Target</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "trace_id",
-            "description": "<p>The trace code of the Origin current user is tracking.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "location",
-            "description": "<p>The location object containing only fields that should be updated</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "location.altitude",
-            "description": "<p>GPS altitude information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "location.speed",
-            "description": "<p>GPS speed information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "location.altitude_accuracy",
-            "description": "<p>GPS altitude accuracy information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "location.gps",
-            "description": "<p>The GPS long and lat object</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Float",
-            "optional": true,
-            "field": "location.gps.longitude",
-            "description": "<p>GPS longitude information</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Float",
-            "optional": true,
-            "field": "location.gps.latitude",
-            "description": "<p>GPS latitude information</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n\ttrace_id: '21e0d89662d8c59189e36628f079dc43',\n\tlocation: {\n\t\taltitude: '23.4',\n\t\tspeed: '1.82',\n\t\taltitude_accuracy: '19.09',\n\t\tgps:{\n\t\t\tlongitude: '34.4',\n\t\t\tlatitude: '73.8'\n\t\t}\n\t}\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>The updated location GPS mobile information.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.location_type",
-            "description": "<p>Location type, 'mobile' in this case</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.altitude",
-            "description": "<p>The altitude G.P.S information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.speed",
-            "description": "<p>The speed. G.P.S information</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.gps",
-            "description": "<p>The location Object</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Float",
-            "optional": false,
-            "field": "data.gps.longitude",
-            "description": "<p>The longitude</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Float",
-            "optional": false,
-            "field": "data.gps.latitude",
-            "description": "<p>The latitude</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     _id: '55b407a8dff6a38720a17707',\n     location_type: 'mobile',\n     verify_change: '########',\n     updated_at: '2015-07-25T22:03:20.852Z',\n     created_at: '2015-07-25T22:03:20.523Z',\n     enabled: true,\n     speed: '1.82',\n     altitude_accuracy: '19.09',\n     altitude: '23.4',\n     gps: {\n\t\t\tlongitude: '34.4',\n\t\t\tlatitude: '73.8'\n\t\t} } }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: \"Invalid Parameters. Pass 'trace_id' and 'location' object in body request\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: '{The actual reason}'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/mobile.js",
-    "groupTitle": "Mobile"
-  },
-  {
     "type": "post",
     "url": "/api/v1/payment",
     "title": "Pay for services",
@@ -1634,125 +778,6 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/v1/memorableshortcode",
-    "title": "Request a shortcode information",
-    "name": "CreateMemorableShortcode",
-    "group": "ShortCode",
-    "description": "<p>Request to have a short code instead of the long trace code.</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-auth-token",
-            "description": "<p>Users unique access-key.</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "trace_id",
-            "description": "<p>User's Logical Address</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n\ttrace_id: 537e2860cace54e137baee4a013bb653,\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Response Status</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>updated information.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.short_code",
-            "description": "<p>The requested shortcode</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.trace_id",
-            "description": "<p>The logical address in the request</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     _id: '55b3bd0720343cc60f6ad0af',\n     short_code: 564323,\n     code_type: 'memorable'\n     location_ref: '55b3bd0720343cc60f6ad0ae',\n     trace_id: '537e2860cace54e137baee4a013bb653',\n     user_ref: '55b3bd0720343cc60f6ad0ad',\n     updated_at: '2015-07-25T16:44:55.842Z',\n     created_at: '2015-07-25T16:44:55.340Z',\n     enabled: true, \n     },\n   }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "     HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Parameters'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "     HTTP/1.1 403 Not Found\n{\n\tstatus: false,\n\tmessage: 'Record exists'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: 'An unknown error occured'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 550 Permission Denied\n{\n\tstatus: false,\n\treason: 'Permission Denied!'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/controllers/shortcode.js",
-    "groupTitle": "ShortCode"
-  },
-  {
-    "type": "post",
     "url": "/api/v1/customshortcode",
     "title": "Request a shortcode information",
     "name": "CreateMemorableShortcode",
@@ -1835,6 +860,125 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     _id: '55b3bd0720343cc60f6ad0af',\n     short_code: 08161730129,\n     code_type: 'memorable'\n     location_ref: '55b3bd0720343cc60f6ad0ae',\n     trace_id: '537e2860cace54e137baee4a013bb653',\n     user_ref: '55b3bd0720343cc60f6ad0ad',\n     updated_at: '2015-07-25T16:44:55.842Z',\n     created_at: '2015-07-25T16:44:55.340Z',\n     enabled: true, \n     },\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "     HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Parameters'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "     HTTP/1.1 403 Not Found\n{\n\tstatus: false,\n\tmessage: 'Record exists'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\tstatus: false,\n\treason: 'An unknown error occured'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 550 Permission Denied\n{\n\tstatus: false,\n\treason: 'Permission Denied!'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Access Token Expired'\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\tstatus: false,\n\tmessage: 'Invalid Access Token or Key'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/controllers/shortcode.js",
+    "groupTitle": "ShortCode"
+  },
+  {
+    "type": "post",
+    "url": "/api/v1/memorableshortcode",
+    "title": "Request a shortcode information",
+    "name": "CreateMemorableShortcode",
+    "group": "ShortCode",
+    "description": "<p>Request to have a short code instead of the long trace code.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-auth-token",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "trace_id",
+            "description": "<p>User's Logical Address</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n\ttrace_id: 537e2860cace54e137baee4a013bb653,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Response Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>updated information.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.short_code",
+            "description": "<p>The requested shortcode</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.trace_id",
+            "description": "<p>The logical address in the request</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{ status: true,\n  data: \n   { __v: 0,\n     _id: '55b3bd0720343cc60f6ad0af',\n     short_code: 564323,\n     code_type: 'memorable'\n     location_ref: '55b3bd0720343cc60f6ad0ae',\n     trace_id: '537e2860cace54e137baee4a013bb653',\n     user_ref: '55b3bd0720343cc60f6ad0ad',\n     updated_at: '2015-07-25T16:44:55.842Z',\n     created_at: '2015-07-25T16:44:55.340Z',\n     enabled: true, \n     },\n   }",
           "type": "json"
         }
       ]
@@ -2446,7 +1590,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/v1/user/register",
+    "url": "/user/register",
     "title": "Register user",
     "name": "PostRegister",
     "group": "User",

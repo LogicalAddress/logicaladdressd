@@ -29,7 +29,6 @@ util.inherits(User, EventEmitter);
 User.prototype.register = function(user, callback, context) {
 
 	context = (context ? context : this);
-	var that = this;
 
 	if (_.isObject(user) && _.has(user,'username') && 
 		_.has(user, 'password') && !_.isEmpty(user.username) && 
@@ -52,7 +51,7 @@ User.prototype.register = function(user, callback, context) {
 						[err]) : null);
 				}
 			  	record.maskPassword();
-			  	that.emit("user_created", record.toObject());
+			  	process.emit("user_created", record.toObject());
 			  	return (_.isFunction(callback) ? callback.apply(context, 
 			  		[err, record.toObject()]) : null);
 			});
@@ -120,7 +119,7 @@ User.prototype.auth = function(user, callback, context) {
 
 			if (row) {
 				row = _.omit(row, ['password','q_book','q_space','q_mother','q_animal']);
-				return (_.isFunction(callback) ? callback.apply(context, [row]) : null);
+				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
 				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
 			}
@@ -133,14 +132,32 @@ User.prototype.auth = function(user, callback, context) {
 };
 
 
+User.prototype.accountKitAuth = function(accountId, callback, context) {
+	context = (context ? context : this);
+	if (_.isString(accountId) && !_.isEmpty(accountId.trim())) {
+		accountId = hash(accountId.trim().toLowerCase());
+		UserModel.findOne({username: accountId}).lean().exec(function(err, row){
+			if (row) {
+				row = _.omit(row, ['password','q_book','q_space','q_mother','q_animal']);
+				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
+			}else{
+				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+			}
+		});
+	}else{
+		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
+	}
+};
+
+
 User.prototype.delete = function(user) {
 	UserModel.remove({_id: user._id}).exec();
-	this.emit('user_deleted', user);
+	process.emit('user_deleted', user);
 };
 
 var userContext = new User();
 
-userContext.on('user_created', function(user){
+process.on('user_created', function(user){
 	// Faire quelques chose pour l'user
 });
 

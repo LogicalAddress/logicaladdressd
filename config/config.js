@@ -20,7 +20,7 @@ var config = {
       name: 'trace'
     },
     port: 3000,
-    db: process.env.TEST_DB_CONNECTION
+    db: process.env.TEST_DB_CONNECTION || 'mongodb://localhost:27017/logical_address'
   },
 
   production: {
@@ -34,4 +34,8 @@ var config = {
   }
 };
 
-module.exports = config[env]; 
+config[env].special_users = [{username: 'logicaladdress', handle: "Logical Address"},
+{username: 'retnan', handle: 'Retnan'},{username: 'daser', handle: "Daser"},
+{username: 'lasociale', handle: 'Lasociale'}];
+
+module.exports = config[env];

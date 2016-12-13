@@ -5,6 +5,6 @@
     "integration_test/**/*[sS]pec.js"
   ],
   "helpers": [
-    "helpers/**/*.js"
+    "helpers/start_server.js"
   ]
 }
