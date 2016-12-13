@@ -7,7 +7,6 @@ env:
 - NODE_ENV=test
 node_js:
 - '6.9.2'
->>>>>>> 136a8bc79017d4a9c6a5b9a2c0e7953f5d50252f
 deploy:
   provider: heroku
   api_key:
