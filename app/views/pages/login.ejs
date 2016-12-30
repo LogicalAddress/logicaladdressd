@@ -1,0 +1,55 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Login</li>
+            </ol>
+            <!--end breadcrumb-->
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
+                    <section class="page-title">
+                        <h1>Sign In</h1>
+                    </section>
+                    <!--end page-title-->
+                    <section>
+                        <form class="form inputs-underline" action="/login" method="post">
+                            <div class="form-group">
+                                <label for="email">Email/LogicalAddress/Mobile</label>
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Your email">
+                            </div>
+                            <!--end form-group-->
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Your password">
+                            </div>
+                            <div class="form-group center">
+                                <button type="submit" class="btn btn-primary width-100">Sign In</button>
+                            </div>
+                            <!--end form-group-->
+                        </form>
+
+                        <hr>
+
+                        <a href="#" data-modal-external-file="modal_reset_password.php" data-target="modal-reset-password">I have forgot my password</a>
+                    </section>
+                </div>
+                <!--col-md-4-->
+            </div>
+            <!--end ro-->
+        </div>
+        <!--end container-->
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<!--end page-wrapper-->
+<% include ../partials/footer %>

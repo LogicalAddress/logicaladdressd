@@ -1,0 +1,43 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        <div class="hero-section height-600px has-map">
+            <div class="map-wrapper">
+                <div class="map" id="map-homepage"></div>
+            </div>
+            <!--end map-wrapper-->
+
+            <div class="form search-form horizontal position-bottom inputs-dark">
+                <div class="container">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="keyword" placeholder="Enter keyword">
+                                </div>
+                                <!--end form-group-->
+                            </div>
+                        </div>
+                        <!--end row-->
+                    </form>
+                    <!--end form-hero-->
+                </div>
+                <!--end container-->
+            </div>
+            <!--end search-form-->
+
+        </div>
+        <!--end hero-section-->
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<!--end page-wrapper-->
+<% include ../partials/footer %>
