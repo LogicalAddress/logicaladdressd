@@ -1,6 +1,7 @@
-var accountKit = require('../../config/accountKit');
+var accountKit = require('../../config/accountKit')();
 var Querystring  = require('querystring');
 var Request = require('request');
+var crypto = require('crypto');
 
 module.exports = function (app) {
 
@@ -13,6 +14,9 @@ module.exports = function (app) {
 	});
 	
 	app.get('/login',function (req, res, next) {
+		console.log(accountKit.app_id);
+		console.log(accountKit.api_version);
+		console.log(req.csrfToken());
 		res.render('pages/login', {
 			title: "Logical Address | Login to Logical Address",
 			page: 'login',
@@ -24,34 +28,33 @@ module.exports = function (app) {
 	});
 	
 	app.post('/login',function (request, response, next) {
-		console.log('code: ' + request.body.code);
-		// CSRF check
-		if (request.body.csrf_nonce === req.body._csrf) {
-			var app_access_token = ['AA', accountKit.app_id, accountKit.app_secret].join('|');
-	    	var params = { grant_type: 'authorization_code', code: request.body.code,
-	    	access_token: app_access_token };
-	    	// exchange tokens
-	    	var token_exchange_url = accountKit.token_exchange_base_url + '?' + Querystring.stringify(params);
-	    	Request.get({url: token_exchange_url, json: true}, function(err, resp, respBody) {
-		    	var view = { user_access_token: respBody.access_token, expires_at: respBody.expires_at,
-		        	user_id: respBody.id, };
-	    		// get account details at /me endpoint
-	    		var me_endpoint_url = accountKit.me_endpoint_base_url + '?access_token=' + respBody.access_token;
-	    		Request.get({url: me_endpoint_url, json:true }, function(err, resp, respBody) {
-		        	// send login_success.html
-		        	if (respBody.phone) {
-		        		view.phone_num = respBody.phone.number;
-		        	} else if (respBody.email) {
-		        		view.email_addr = respBody.email.address;
-		        	}
-	        		response.send(view);
-	    		}); //End Request
-	    	});
-		} else {
-	    	// login failed
-	    	response.writeHead(200, {'Content-Type': 'text/html'});
-	    	response.end("Something went wrong. :( ");
+
+		if(request.body.csrf_nonce !== request.body._csrf){
+			response.send(500);	
 		}
+			
+		var app_access_token = ['AA', accountKit.app_id, accountKit.app_secret].join('|');
+		var appsecret_proof= crypto.createHmac('sha256', accountKit.app_secret).update(app_access_token).digest('hex');
+		var params = { grant_type: 'authorization_code', code: request.body.code, access_token: app_access_token};
+		    // exchange tokens
+		var token_exchange_url = accountKit.token_exchange_base_url + '?' + Querystring.stringify(params);
+		Request.get({url: token_exchange_url, json: true}, function(err, resp, respBody) {
+			console.log(respBody);
+			var view = { user_access_token: respBody.access_token, expires_at: respBody.expires_at,
+			user_id: respBody.id, };
+			var params = {access_token: respBody.access_token, appsecret_proof: appsecret_proof,};
+			var me_endpoint_url = accountKit.me_endpoint_base_url + '?' + Querystring.stringify(params);
+			Request.get({url: me_endpoint_url, json:true }, function(err, resp, respBody) {
+				// send login_success.html
+				console.log(respBody);
+				if (respBody.phone) {
+					view.phone_num = respBody.phone.number;
+				} else if (respBody.email) {
+					view.email_addr = respBody.email.address;
+				}
+				response.send(view);
+	    	}); //End Request
+	    });
 	});
 	
 	app.get('/register',function (req, res, next) {

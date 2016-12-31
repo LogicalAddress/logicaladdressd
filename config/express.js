@@ -65,6 +65,7 @@ module.exports = function(app, config) {
   }
 
   app.use(function (err, req, res, next) {
+    console.log("convinience");
     res.status(err.status || 500);
     console.log(err.message);
       res.render('error', {
@@ -74,7 +75,10 @@ module.exports = function(app, config) {
       });
   });
   app.use(function (err, req, res, next) {
-    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    if (err.code !== 'EBADCSRFTOKEN'){
+      console.log("bad token");
+      return next(err)
+    } 
     // handle CSRF token errors here
     res.status(403)
     res.send('Form tampered with')

@@ -20,7 +20,7 @@
                     </section>
                     <!--end page-title-->
                     <section>
-                        <form id="accountKit" class="form inputs-underline" action="/login" method="post">
+                        <form id="accountKitLogin" class="form inputs-underline" action="/login" method="post">
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             <input type="hidden" id="code" name="code">
                             <input type="hidden" id="csrf_nonce" name="csrf_nonce">
@@ -43,7 +43,7 @@
                                 <!--end col-md-6-->
                             </div>
                             <div class="form-group center">
-                                <button type="submit" onclick="phone_btn_onclick();" class="btn btn-primary width-100">Login via SMS</button>
+                                <button type="submit" id="AKLoginBtn" class="btn btn-primary width-100">Login via SMS</button>
                             </div>
                         </form>
                         <!--<hr>-->
@@ -93,43 +93,48 @@
 <!--end page-wrapper-->
 
 <script>
-  // initialize Account Kit with CSRF protection
-  AccountKit_OnInteractive = function(){
-    AccountKit.init(
-      {
-        appId:<%= FACEBOOK_APP_ID %>, 
-        state:"<%= csrfToken %>", 
-        version:"<%= ACCOUNT_KIT_API_VERSION %>"
+    // initialize Account Kit with CSRF protection
+      AccountKit_OnInteractive = function(){
+        AccountKit.init(
+          {
+            appId:<%= FACEBOOK_APP_ID %>, 
+            state:"<%= csrfToken %>", 
+            version:"<%= ACCOUNT_KIT_API_VERSION %>"
+          }
+        );
+      };
+      
+    $( document ).ready(function() {
+      // login callback
+      function loginCallback(response) {
+        console.log(response);
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+          document.getElementById("code").value = response.code;
+          document.getElementById("csrf_nonce").value = response.state;
+        //   alert("check console");
+          document.getElementById("accountKitLogin").submit();
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+          // handle authentication failure
+          console.log("NOT_AUTHENTICATED");
+        }
+        else if (response.status === "BAD_PARAMS") {
+          // handle bad parameters
+          console.log("NOT_AUTHENTICATED");
+        }
       }
-    );
-  };
-
-  // login callback
-  function loginCallback(response) {
-    console.log(response);
-    if (response.status === "PARTIALLY_AUTHENTICATED") {
-      document.getElementById("code").value = response.code;
-      document.getElementById("csrf_nonce").value = response.state;
-      document.getElementById("accountKit").submit();
-    }
-    else if (response.status === "NOT_AUTHENTICATED") {
-      // handle authentication failure
-      console.log("NOT_AUTHENTICATED");
-    }
-    else if (response.status === "BAD_PARAMS") {
-      // handle bad parameters
-      console.log("NOT_AUTHENTICATED");
-    }
-  }
-
-  // phone form submission handler
-  function phone_btn_onclick() {
-    var country_code = document.getElementById("country_code").value;
-    var ph_num = document.getElementById("phone_num").value;
-    AccountKit.login('PHONE', 
-      {countryCode: country_code, phoneNumber: ph_num}, // will use default values if this is not specified
-      loginCallback);
-  }
+    
+      // phone form submission handler
+      function phone_btn_onclick(evt) {
+        evt.preventDefault();
+        var country_code = document.getElementById("country_code").value;
+        var ph_num = document.getElementById("phone_num").value;
+        AccountKit.login('PHONE', 
+          {countryCode: country_code, phoneNumber: ph_num}, // will use default values if this is not specified
+          loginCallback);
+      }
+      $('#AKLoginBtn').on('click', phone_btn_onclick);
+    });
 
 </script>
 <% include ../partials/footer %>
