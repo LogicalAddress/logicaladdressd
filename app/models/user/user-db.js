@@ -4,6 +4,13 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
 	username : 	{type:String, required : true, unique : true, index: true},
 	password: 	{type:String, required : true},
+	
+	email: 	{type:String, required : true, unique : true, index: true},
+	first_name: {type:String},
+	last_name: {type:String},
+	mobile_number: {type:String, required : true, unique : true, index: true},
+	global_logical_address: {type:String, required : true, unique : true, index: true},
+	account_type: { type: String, default: 'personal'}, //or business
 
 	q_animal: { type: String, default: 'Goat'},
 	q_mother: { type: String, default: 'B'},

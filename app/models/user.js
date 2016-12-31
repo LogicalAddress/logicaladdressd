@@ -4,6 +4,7 @@ var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var hash = require('md5');
 var async = require('async');
+var generateGlobalLogicalAddress = require('../lib/generate_global_logical_address');
 
 
 /*
@@ -36,10 +37,13 @@ User.prototype.register = function(user, callback, context) {
 		
 		user.username = hash(user.username.trim().toLowerCase());
 		user.password = hash(user.password.trim().toLowerCase());
+		user.global_logical_address = generateGlobalLogicalAddress();
 		
-		this.findUserByUsername(user, function(err, record){
+		UserModel.find({ $or: [ {username: user.username}, 
+		{email: user.email}, {mobile_number: user.mobile_number}]}, 
+		function(err, record){
 
-			if (record) {
+			if (err || record.length > 0) { 
 				return (_.isFunction(callback) ? callback.apply(context, 
 					['Duplicate Entry']) : null);
 			}
@@ -71,7 +75,7 @@ User.prototype.register = function(user, callback, context) {
 *
 **/
 
-User.prototype.findUserByUsername = function(user, callback, context) {
+/*User.prototype.findUserByUsername = function(user, callback, context) {
 
 	context = (context ? context : this);
 
@@ -91,7 +95,7 @@ User.prototype.findUserByUsername = function(user, callback, context) {
 		return (_.isFunction(callback) ? callback.apply(context, [null]) : null);
 	}
 
-};
+};*/
 
 
 /*
@@ -110,21 +114,20 @@ User.prototype.auth = function(user, callback, context) {
 		_.has(user,'password') && !_.isEmpty(user.username.trim()) && 
 		!_.isEmpty(user.password.trim())) {
 
-		user.username = hash(user.username.trim().toLowerCase());
-		user.password = hash(user.password.trim().toLowerCase());
-
-		UserModel.findOne({username: user.username, password: user.password})
+		UserModel.find({ $or: [ {username: hash(user.username.trim().toLowerCase()), 
+		password: hash(user.password.trim().toLowerCase())}, 
+		{email: user.username, password: user.password}, 
+		{mobile_number: user.username, password: user.password},
+		{global_logical_address: user.username, password: user.password}] })
 		.lean().exec(
 			function(err, row){
-
-			if (row) {
-				row = _.omit(row, ['password','q_book','q_space','q_mother','q_animal']);
+			if (row && row.length == 0) {
+				row = _.omit(row[0], ['password','q_book','q_space','q_mother','q_animal']);
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
 				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
 			}
 		});
-
 	}else{
 		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
 	}
@@ -132,7 +135,7 @@ User.prototype.auth = function(user, callback, context) {
 };
 
 
-User.prototype.accountKitAuth = function(accountId, callback, context) {
+/*User.prototype.accountKitAuth = function(accountId, callback, context) {
 	context = (context ? context : this);
 	if (_.isString(accountId) && !_.isEmpty(accountId.trim())) {
 		accountId = hash(accountId.trim().toLowerCase());
@@ -147,7 +150,7 @@ User.prototype.accountKitAuth = function(accountId, callback, context) {
 	}else{
 		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
 	}
-};
+};*/
 
 
 User.prototype.delete = function(user) {

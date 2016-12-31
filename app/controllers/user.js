@@ -68,8 +68,11 @@ HTTP/1.1 404 Not Found
 	app.post('/user/register', function (req, res, next) {
 
 		if (_.has(req.body, 'username') && _.has(req.body, 'password') &&
+			_.has(req.body, 'email') && _.has(req.body, 'mobile_number') &&
 			!_.isEmpty(req.body.username.trim()) && 
-			!_.isEmpty(req.body.password.trim())) {
+			!_.isEmpty(req.body.password.trim()) &&
+			!_.isEmpty(req.body.email.trim()) && 
+			!_.isEmpty(req.body.mobile_number.trim())) {
 
 			User.register(req.body, function(err, record){
 				
