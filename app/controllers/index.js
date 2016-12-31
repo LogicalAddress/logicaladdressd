@@ -31,4 +31,12 @@ module.exports = function (app) {
 			app_title: "Logical Address"
 		});
 	});
+	
+	app.get('/password/recovery',function (req, res, next) {
+		res.render('pages/forgot-password', {
+			title: "Logical Address | Password Recovery",
+			page: 'forgot-password',
+			app_title: "Logical Address"
+		});
+	});
 };

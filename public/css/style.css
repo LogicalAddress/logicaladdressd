@@ -1,0 +1,20 @@
+.form.horizontal form {
+    background-color: #fff;
+}
+
+#keysearch{
+    font: 16px arial,sans-serif;
+    background-color: transparent;
+}
+
+#page-footer .footer-navigation {
+ background-color: #fafafa;
+ /*background-color: #f0f0f0;*/
+ color: #4611a7;
+ /*color: #aa6363;*/
+ /*background-color: #4611a7;*/
+}
+
+#page-footer .footer-navigation a {
+    color: #4611a7;
+}
