@@ -387,7 +387,7 @@ describe("User Registration & Login", function(){
           'Accept': 'application/json',
         },
         json: {
-            username: test_user_one,
+            username: "dretnan@logicaladdress.com",
             password: "yahweh",
         }, 
       }, 
