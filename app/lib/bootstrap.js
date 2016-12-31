@@ -16,6 +16,8 @@ module.exports = function ()
 	Async.each(config.special_users, function(user, done){
 		User.register({
 			username: user.username,
+			email: user.username,
+			mobile_number: user.username,
             password: hat(),
             q_animal: "Goat",
             q_mother: "B",

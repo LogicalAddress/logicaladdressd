@@ -121,7 +121,7 @@ User.prototype.auth = function(user, callback, context) {
 		{global_logical_address: user.username, password: user.password}] })
 		.lean().exec(
 			function(err, row){
-			if (row && row.length == 0) {
+			if (row && row.length === 1) {
 				row = _.omit(row[0], ['password','q_book','q_space','q_mother','q_animal']);
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
