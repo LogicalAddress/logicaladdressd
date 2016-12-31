@@ -7,10 +7,12 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compress = require('compression');
 var methodOverride = require('method-override');
+var csrf = require('csurf');
 
 var cor = require('../app/lib/cors');
 
 module.exports = function(app, config) {
+  
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'ejs');
 
@@ -27,6 +29,7 @@ module.exports = function(app, config) {
     extended: true
   }));
   app.use(cookieParser());
+  app.use(csrf({ cookie: true }));
   app.use(compress());
   app.use(express.static(config.root + '/public'));
   app.use('/internaldocs', express.static(config.root + '/docs'));
@@ -69,5 +72,11 @@ module.exports = function(app, config) {
         title: 'error'
       });
   });
+  app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    // handle CSRF token errors here
+    res.status(403)
+    res.send('Form tampered with')
+  })
 
 };
