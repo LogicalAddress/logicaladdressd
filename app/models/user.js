@@ -38,6 +38,9 @@ User.prototype.register = function(user, callback, context) {
 		user.username = hash(user.username.trim().toLowerCase());
 		user.password = hash(user.password.trim().toLowerCase());
 		user.global_logical_address = generateGlobalLogicalAddress();
+		if(!_.has(user, 'email')){
+			user.email = user.global_logical_address + '@logicaladdress.com';
+		}
 		
 		UserModel.find({ $or: [ {username: user.username}, 
 		{email: user.email}, {mobile_number: user.mobile_number}]}, 
