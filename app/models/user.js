@@ -44,6 +44,7 @@ User.prototype.register = function(user, callback, context) {
 		function(err, record){
 
 			if (err || record.length > 0) { 
+				//however it works. voodoo is real: see http://stackoverflow.com/questions/14492118/or-search-using-mongoose
 				return (_.isFunction(callback) ? callback.apply(context, 
 					['Duplicate Entry']) : null);
 			}
@@ -118,7 +119,7 @@ User.prototype.auth = function(user, callback, context) {
 		password: hash(user.password.trim().toLowerCase())}, 
 		{email: user.username, password: user.password}, 
 		{mobile_number: user.username, password: user.password},
-		{global_logical_address: user.username, password: user.password}] })
+		{global_logical_address: user.username, password: user.password}] });
 		
 		UserModel.find({ $or: [ {username: hash(user.username.trim().toLowerCase())}, 
 		{email: user.username}, {mobile_number: user.username}]}, 

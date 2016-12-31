@@ -28,6 +28,8 @@ describe("User Registration & Login", function(){
         json: {
             username: test_user_one,
             password: "yahweh",
+            mobile_number: "08036504287",
+            email: "dretnan@logicaladdress.com",
             q_animal: "Goat",
             q_mother: "B",
             q_space: "Moon",

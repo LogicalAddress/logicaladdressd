@@ -30,6 +30,8 @@ describe("Create Test Users", function(){
         json: {
             username: test_user_one,
             password: "yahweh",
+            mobile_number: "08161730129",
+            email: "d.retnan@nhubnigeria.com",
             q_animal: "Goat",
             q_mother: "B",
             q_space: "Moon",
@@ -76,6 +78,8 @@ describe("Create Test Users", function(){
         json: {
             username: test_user_two,
             password: "yahweh",
+            mobile_number: "08036504287",
+            email: "dretnan@logicaladdress.com",
             q_animal: "Goat",
             q_mother: "B",
             q_space: "Moon",
