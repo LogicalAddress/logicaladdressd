@@ -11,6 +11,7 @@ var methodOverride = require('method-override');
 var csrf = require('csurf');
 
 var cor = require('../app/lib/cors');
+var MongoStore = require('connect-mongo')(session);
 
 module.exports = function(app, config) {
   
@@ -34,6 +35,11 @@ module.exports = function(app, config) {
     secret:'lovely secrete code',
     resave: false,
     saveUninitialized: true,
+    store: new MongoStore({
+        url: require('./config').db,
+        ttl: 14 * 24 * 60 * 60,
+        // mongoOptions: advancedOptions
+    }),
     cookie: { secure: false, maxAge: 600000 },
   }));
   app.use(csrf({ cookie: true }));

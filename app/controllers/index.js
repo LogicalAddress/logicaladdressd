@@ -46,8 +46,8 @@ module.exports = function (app) {
 				User.findById(mobile_number, function(err, record){
 					if(record){
 						var accessToken = UserLib.generateAccessToken(record);
-						res.session.user = record;
-						return res.redirect('/dashboard');
+						req.session.user = record;
+						return res.redirect('/');
 					}else{
 						req.session.mobile_number = mobile_number;
 						return res.redirect('/register');
@@ -69,6 +69,7 @@ module.exports = function (app) {
 	});
 	
 	app.post('/register',function (req, res, next) {
+		
 		if ( ( (_.has(req.body, 'mobile_number') && !_.isEmpty(req.body.mobile_number.trim())) || 
 		_.has(req.session, 'mobile_number') ) && _.has(req.body, 'first_name') && 
 		_.has(req.body, 'last_name') && _.has(req.body, 'password') && 
@@ -79,24 +80,18 @@ module.exports = function (app) {
 				req.body.mobile_number = req.session.mobile_number;
 				req.body.username = req.session.mobile_number;
 			}
-			console.log(req.body);
+			
 			User.register(req.body, function(err, record){
-				
-				console.log("------------------------------");
-				console.log(err);
-				console.log(record);
-				console.log("------------------------------");
-				
+			
 				if(record){
 					var accessToken = UserLib.generateAccessToken(record);
-					res.session.user = record;
+					req.session.user = record;
 					delete req.session.mobile_number;
-					return res.redirect('/dashboard');//TODO redirect to previous url
+					return res.redirect('/');//TODO redirect to previous url
 				}
 
 				req.session.error = [];
-				req.session.error.push(err);
-					
+				
 				if (err == 'Duplicate Entry') {
 					req.session.error.push('Dublicate Entry');
 				}else{
