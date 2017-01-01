@@ -4,6 +4,7 @@ var glob = require('glob');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var compress = require('compression');
 var methodOverride = require('method-override');
@@ -29,6 +30,7 @@ module.exports = function(app, config) {
     extended: true
   }));
   app.use(cookieParser());
+  app.use(session({secret:'lovely secrete code'}));
   app.use(csrf({ cookie: true }));
   app.use(compress());
   app.use(express.static(config.root + '/public'));
