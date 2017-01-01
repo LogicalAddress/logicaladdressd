@@ -138,4 +138,9 @@ module.exports = function (app) {
 			user: _.has(req.session, 'user') ? req.session.user : false
 		});
 	});
+	
+	app.get('/logout',function (req, res, next) {
+		delete req.session.user;
+		res.redirect('/');
+	});
 };
