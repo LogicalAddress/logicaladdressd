@@ -117,15 +117,12 @@ User.prototype.auth = function(user, callback, context) {
 	if (_.isObject(user) && _.has(user,'username') &&
 		_.has(user,'password') && !_.isEmpty(user.username.trim()) && 
 		!_.isEmpty(user.password.trim())) {
-
+		
 		UserModel.find({ $or: [ {username: hash(user.username.trim().toLowerCase()), 
 		password: hash(user.password.trim().toLowerCase())}, 
 		{email: user.username, password: user.password}, 
 		{mobile_number: user.username, password: user.password},
-		{global_logical_address: user.username, password: user.password}] });
-		
-		UserModel.find({ $or: [ {username: hash(user.username.trim().toLowerCase())}, 
-		{email: user.username}, {mobile_number: user.username}]}, 
+		{global_logical_address: user.username, password: user.password}] }, 
 		function(err, record){
 			
 			if (err || record.length > 0) {
@@ -187,6 +184,26 @@ User.prototype.auth = function(user, callback, context) {
 		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
 	}
 };*/
+
+User.prototype.find = function(username, callback, context) {
+	context = (context ? context : this);
+	if (_.isString(username) && !_.isEmpty(username.trim())) {
+		
+		UserModel.find({ $or: [ {username: hash(username.trim().toLowerCase())}, 
+		{email: username}, {mobile_number: username}]}, 
+		function(err, record){
+			
+			if (err || record.length > 0) {
+				row = _.omit(record[0].toObject(), ['password','q_book','q_space','q_mother','q_animal']);
+				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
+			}else{
+				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+			}
+		});
+	}else{
+		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
+	}
+};
 
 
 User.prototype.delete = function(user) {
