@@ -12,6 +12,7 @@
                 <li class="active">Register</li>
             </ol>
             <!--end breadcrumb-->
+            <% if(mobile_number){ %>
             <div class="row">
                 <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
                     <section class="page-title">
@@ -77,6 +78,50 @@
                 </div>
                 <!--col-md-4-->
             </div>
+            <% } %>
+            
+            <% if(!mobile_number){ %>
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
+                    <section class="page-title">
+                        <h1>Register</h1>
+                    </section>
+                    <!--end page-title-->
+                    <section>
+                        <form id="accountKitLogin" class="form inputs-underline" action="/login" method="post">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <input type="hidden" id="code" name="code">
+                            <input type="hidden" id="csrf_nonce" name="csrf_nonce">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="form-group">
+                                        <!--<label for="country_code">Country Code:</label>-->
+                                        <input type="text" class="form-control" name="country_code"  id="country_code" placeholder="+234">
+                                    </div>
+                                    <!--end form-group-->
+                                </div>
+                                <!--end col-md-6-->
+                                <div class="col-md-9 col-sm-6">
+                                    <div class="form-group">
+                                        <!--<label for="phone_num">Mobile Number</label>-->
+                                        <input type="text" class="form-control" name="phone_num"  id="phone_num" placeholder="Your Mobile Number">
+                                    </div>
+                                    <!--end form-group-->
+                                </div>
+                                <!--end col-md-6-->
+                            </div>
+                            <div class="form-group center">
+                                <button type="submit" id="AKLoginBtn" class="btn btn-primary width-100">Next</button>
+                            </div>
+                        </form>
+                        <!--<hr>-->
+                        
+                        <!--<a data-modal-external-file="#" data-target="modal-sign-in" href="#">Use Alternative Login</a>-->
+                    </section>
+                </div>
+                <!--col-md-4-->
+            </div>
+            <% } %>
             <!--end ro-->
         </div>
         <!--end container-->
@@ -86,5 +131,57 @@
     <% include ../partials/page-footer %>
     <!--end page-footer-->
 </div>
+
+<script>
+    // initialize Account Kit with CSRF protection
+      AccountKit_OnInteractive = function(){
+        AccountKit.init(
+          {
+            appId:<%= FACEBOOK_APP_ID %>, 
+            state:"<%= csrfToken %>", 
+            version:"<%= ACCOUNT_KIT_API_VERSION %>"
+          }
+        );
+      };
+      
+    $( document ).ready(function() {
+      // login callback
+      function loginCallback(response) {
+        console.log(response);
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+          document.getElementById("code").value = response.code;
+          document.getElementById("csrf_nonce").value = response.state;
+          $('#AKLoginBtn').text('Bingo! Redirecting..');
+          document.getElementById("accountKitLogin").submit();
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+          // handle authentication failure
+          console.log("NOT_AUTHENTICATED");
+          $('#AKLoginBtn').removeAttr('disabled');
+          $('#AKLoginBtn').text('Login via SMS');
+        }
+        else if (response.status === "BAD_PARAMS") {
+          // handle bad parameters
+          console.log("NOT_AUTHENTICATED");
+          $('#AKLoginBtn').removeAttr('disabled');
+          $('#AKLoginBtn').text('Login via SMS');
+        }
+      }
+    
+      // phone form submission handler
+      function phone_btn_onclick(evt) {
+        $('#AKLoginBtn').attr('disabled', 'disabled');
+        $('#AKLoginBtn').text('Checking, Please wait..');
+        evt.preventDefault();
+        var country_code = document.getElementById("country_code").value;
+        var ph_num = document.getElementById("phone_num").value;
+        AccountKit.login('PHONE', 
+          {countryCode: country_code, phoneNumber: ph_num}, // will use default values if this is not specified
+          loginCallback);
+      }
+      $('#AKLoginBtn').on('click', phone_btn_onclick);
+    });
+
+</script>
 <!--end page-wrapper-->
 <% include ../partials/footer %>
