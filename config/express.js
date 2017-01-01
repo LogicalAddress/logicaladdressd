@@ -32,9 +32,9 @@ module.exports = function(app, config) {
   app.use(cookieParser('S3CRE7'));
   app.use(session({
     secret:'lovely secrete code',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    cookie: { secure: false, maxAge: 600000 },
   }));
   app.use(csrf({ cookie: true }));
   app.use(compress());
@@ -84,10 +84,11 @@ module.exports = function(app, config) {
   app.use(function (err, req, res, next) {
     if (err.code !== 'EBADCSRFTOKEN'){
       console.log("bad token");
-      return next(err)
+      return next(err);
     } 
     // handle CSRF token errors here
-    res.status(403)
+    res.status(403);
+    console.log('Form tampered with');
     res.send('Form tampered with')
   })
 

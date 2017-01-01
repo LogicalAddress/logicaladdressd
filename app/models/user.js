@@ -38,7 +38,7 @@ User.prototype.register = function(user, callback, context) {
 		user.username = hash(user.username.trim().toLowerCase());
 		user.password = hash(user.password.trim().toLowerCase());
 		user.global_logical_address = generateGlobalLogicalAddress();
-		if(!_.has(user, 'email')){
+		if(!_.has(user, 'email') || _.isEmpty(user.email) || user.email.trim().length === 0){
 			user.email = user.global_logical_address + '@logicaladdress.com';
 		}
 		

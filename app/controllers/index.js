@@ -42,15 +42,15 @@ module.exports = function (app) {
 			var me_endpoint_url = accountKit.me_endpoint_base_url + '?' + Querystring.stringify(params);
 			Request.get({url: me_endpoint_url, json:true }, function(err, resp, respBody) {
 				if (err) return res.send(err);
-				User.findById(respBody.phone.number, function(err, record){
+				var mobile_number = respBody.phone.number;
+				User.findById(mobile_number, function(err, record){
 					if(record){
 						var accessToken = UserLib.generateAccessToken(record);
 						res.session.user = record;
-						res.status(200);
-						return res.send({status: true, access_token: accessToken, user: record});
+						return res.redirect('/dashboard');
 					}else{
-						req.session.partialRegistration = respBody.phone.number;
-						res.redirect('/register');
+						req.session.mobile_number = mobile_number;
+						return res.redirect('/register');
 					}
 				});
 	    	}); //End Request
@@ -58,11 +58,53 @@ module.exports = function (app) {
 	});
 	
 	app.get('/register',function (req, res, next) {
+		console.log(req.session.error);
 		res.render('pages/register', {
 			title: "Logical Address | Register your Logical Address",
 			page: 'register',
-			app_title: "Logical Address"
+			csrfToken: req.csrfToken(),
+			app_title: "Logical Address",
+			mobile_number: _.has(req.session, 'mobile_number') ? req.session.mobile_number : '',
 		});
+	});
+	
+	app.post('/register',function (req, res, next) {
+		if ( ( (_.has(req.body, 'mobile_number') && !_.isEmpty(req.body.mobile_number.trim())) || 
+		_.has(req.session, 'mobile_number') ) && _.has(req.body, 'first_name') && 
+		_.has(req.body, 'last_name') && _.has(req.body, 'password') && 
+		!_.isEmpty(req.body.first_name.trim()) && 
+			!_.isEmpty(req.body.password.trim())) {
+
+			if(_.has(req.session, 'mobile_number')) {
+				req.body.mobile_number = req.session.mobile_number;
+				req.body.username = req.session.mobile_number;
+			}
+			console.log(req.body);
+			User.register(req.body, function(err, record){
+				
+				console.log("------------------------------");
+				console.log(err);
+				console.log(record);
+				console.log("------------------------------");
+				
+				if(record){
+					var accessToken = UserLib.generateAccessToken(record);
+					res.session.user = record;
+					delete req.session.mobile_number;
+					return res.redirect('/dashboard');//TODO redirect to previous url
+				}
+
+				req.session.error = [];
+				req.session.error.push(err);
+					
+				if (err == 'Duplicate Entry') {
+					req.session.error.push('Dublicate Entry');
+				}else{
+					req.session.error.push('An unknown error occured');
+				}
+				return res.redirect('/register'); //TODO get previous redirect
+			});
+		}
 	});
 	
 	app.get('/register/business',function (req, res, next) {
