@@ -50,9 +50,10 @@ module.exports = function (app) {
 				} else if (respBody.email) {
 					view.email_addr = respBody.email.address;
 				}
+				// response.session = {} 
 				response.send(view);
 	    	}); //End Request
-	    });; //End Request
+	    }); //End Request
 	});
 	
 	app.get('/register',function (req, res, next) {
