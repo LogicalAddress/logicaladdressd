@@ -253,6 +253,7 @@ process.on('location_created', function(location){
 });
 
 process.on('user_created', function(user){
+	if(user.account_type == 'personal') return;
 	homeContext.createRecord(user, function(err, response){
 		if (err) {
 			// console.log(err);
@@ -261,6 +262,7 @@ process.on('user_created', function(user){
 });
 
 process.on('user_deleted', function(user){
+	if(user.account_type == 'personal') return;
 	HomeModel.remove({user_ref: user._id.toString()}).exec();
 });
 
