@@ -2,6 +2,9 @@ var accountKit = require('../../config/accountKit')();
 var Querystring  = require('querystring');
 var Request = require('request');
 var crypto = require('crypto');
+var UserLib = require('../lib/user');
+var User = require('../models/user');
+var _ = require('underscore');
 
 module.exports = function (app) {
 
@@ -25,33 +28,31 @@ module.exports = function (app) {
 		});
 	});
 	
-	app.post('/login',function (request, response, next) {
+	app.post('/login',function (req, res, next) {
 
-		if(request.body.csrf_nonce !== request.body._csrf){
-			response.send(500);	
-		}
-			
+		if(req.body.csrf_nonce !== req.body._csrf) return res.send(500);	
 		var app_access_token = ['AA', accountKit.app_id, accountKit.app_secret].join('|');
-		var params = { grant_type: 'authorization_code', code: request.body.code, access_token: app_access_token};
-		    // exchange tokens
+		var params = { grant_type: 'authorization_code', code: req.body.code, access_token: app_access_token};
 		var token_exchange_url = accountKit.token_exchange_base_url + '?' + Querystring.stringify(params);
 		Request.get({url: token_exchange_url, json: true}, function(err, resp, respBody) {
-			console.log(respBody);
-			var view = { user_access_token: respBody.access_token, expires_at: respBody.expires_at,
-			user_id: respBody.id, };
+			if (!_.has(respBody, 'access_token')) return res.send(404);
 			// security had to be turned off since this stupid appsecre_proof is not accepted
 			// var appsecret_proof= crypto.createHmac('sha256', accountKit.app_secret).update(respBody.access_token).digest('base64');
 			var params = {access_token: respBody.access_token/*, appsecret_proof: appsecret_proof,*/};
 			var me_endpoint_url = accountKit.me_endpoint_base_url + '?' + Querystring.stringify(params);
-
 			Request.get({url: me_endpoint_url, json:true }, function(err, resp, respBody) {
-				if (respBody.phone) {
-					view.mobile_number = respBody.phone.number;
-				} else if (respBody.email) {
-					view.email_addr = respBody.email.address;
-				}
-				// response.session = {} 
-				response.send(view);
+				if (err) return res.send(err);
+				User.findById(respBody.phone.number, function(err, record){
+					if(record){
+						var accessToken = UserLib.generateAccessToken(record);
+						res.session.user = record;
+						res.status(200);
+						return res.send({status: true, access_token: accessToken, user: record});
+					}else{
+						req.session.partialRegistration = respBody.phone.number;
+						res.redirect('/register');
+					}
+				});
 	    	}); //End Request
 	    }); //End Request
 	});

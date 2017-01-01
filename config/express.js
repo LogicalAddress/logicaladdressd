@@ -29,8 +29,13 @@ module.exports = function(app, config) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-  app.use(cookieParser());
-  app.use(session({secret:'lovely secrete code'}));
+  app.use(cookieParser('S3CRE7'));
+  app.use(session({
+    secret:'lovely secrete code',
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+  }));
   app.use(csrf({ cookie: true }));
   app.use(compress());
   app.use(express.static(config.root + '/public'));

@@ -185,7 +185,7 @@ User.prototype.auth = function(user, callback, context) {
 	}
 };*/
 
-User.prototype.find = function(username, callback, context) {
+User.prototype.findById = function(username, callback, context) {
 	context = (context ? context : this);
 	if (_.isString(username) && !_.isEmpty(username.trim())) {
 		
@@ -197,6 +197,7 @@ User.prototype.find = function(username, callback, context) {
 				row = _.omit(record[0].toObject(), ['password','q_book','q_space','q_mother','q_animal']);
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
+				console.log(err);
 				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
 			}
 		});
