@@ -18,6 +18,15 @@
                         <% if(mobile_number){ %><h1>Complete Registration</h1><% } else{ %>  <h1>Register</h1><% } %>
                     </section
                     <!--end page-title-->
+                    <% if (messages !== undefined) { %>
+                    <div class="alert-error">
+                        <ul>
+                            <% messages.forEach(function(error) { %>
+                                <li><%= error %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <% } %>
                     <section>
                         <form class="form inputs-underline" action="/register" method="post">
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">

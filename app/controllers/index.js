@@ -58,13 +58,13 @@ module.exports = function (app) {
 	});
 	
 	app.get('/register',function (req, res, next) {
-		console.log(req.session.error);
 		res.render('pages/register', {
 			title: "Logical Address | Register your Logical Address",
 			page: 'register',
 			csrfToken: req.csrfToken(),
 			app_title: "Logical Address",
 			mobile_number: _.has(req.session, 'mobile_number') ? req.session.mobile_number : '',
+			messages: req.flash('error'),
 		});
 	});
 	
@@ -83,8 +83,6 @@ module.exports = function (app) {
 				req.body.username = req.body.mobile_number;
 			}
 			
-			console.log(req.body);
-			
 			User.register(req.body, function(err, record){
 			
 				if(record){
@@ -93,16 +91,21 @@ module.exports = function (app) {
 					delete req.session.mobile_number;
 					return res.redirect('/');//TODO redirect to previous url
 				}
-
-				req.session.error = [];
 				
 				if (err == 'Duplicate Entry') {
-					req.session.error.push('Dublicate Entry');
+					req.flash('error', 'Dublicate Entry');
 				}else{
-					req.session.error.push('An unknown error occured' + err);
+					req.flash('error', 'An unknown error occured' + err);
 				}
 				return res.redirect('/register'); //TODO get previous redirect
 			});
+		}else{
+			if(_.has(req.session, 'mobile_number')) {
+				req.flash('error', 'first name and password are required.');
+			}else{
+				req.flash('error', 'first name, mobile number and password are required.');	
+			}
+			return res.redirect('/register');
 		}
 	});
 	

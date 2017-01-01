@@ -12,6 +12,7 @@ var csrf = require('csurf');
 
 var cor = require('../app/lib/cors');
 var MongoStore = require('connect-mongo')(session);
+var flash = require('connect-flash');
 
 module.exports = function(app, config) {
   
@@ -42,6 +43,7 @@ module.exports = function(app, config) {
     }),
     cookie: { secure: false, maxAge: 600000 },
   }));
+  app.use(flash());
   app.use(csrf({ cookie: true }));
   app.use(compress());
   app.use(express.static(config.root + '/public'));
