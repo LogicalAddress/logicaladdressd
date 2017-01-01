@@ -12,11 +12,14 @@ module.exports = function (app) {
 		res.render('pages/index', {
 			title: "Logical Address | Welcome to Logical Address",
 			page: 'home',
-			app_title: "Logical Address"
+			app_title: "Logical Address",
+			user: _.has(req.session, 'user') ? req.session.user : false
 		});
 	});
 	
 	app.get('/login',function (req, res, next) {
+		
+		if(_.has(req.session, 'user')) return res.redirect('/');
 		
 		res.render('pages/login', {
 			title: "Logical Address | Login to Logical Address",
@@ -25,11 +28,14 @@ module.exports = function (app) {
 			FACEBOOK_APP_ID: accountKit.app_id,
 			ACCOUNT_KIT_API_VERSION: accountKit.api_version,
 			app_title: "Logical Address",
+			user: _.has(req.session, 'user') ? req.session.user : false
 		});
 	});
 	
 	app.post('/login',function (req, res, next) {
-
+		
+		if(_.has(req.session, 'user')) return res.redirect('/');
+		
 		if(req.body.csrf_nonce !== req.body._csrf) return res.send(500);	
 		var app_access_token = ['AA', accountKit.app_id, accountKit.app_secret].join('|');
 		var params = { grant_type: 'authorization_code', code: req.body.code, access_token: app_access_token};
@@ -58,6 +64,9 @@ module.exports = function (app) {
 	});
 	
 	app.get('/register',function (req, res, next) {
+		
+		if(_.has(req.session, 'user')) return res.redirect('/');
+		
 		res.render('pages/register', {
 			title: "Logical Address | Register your Logical Address",
 			page: 'register',
@@ -65,10 +74,13 @@ module.exports = function (app) {
 			app_title: "Logical Address",
 			mobile_number: _.has(req.session, 'mobile_number') ? req.session.mobile_number : '',
 			messages: req.flash('error'),
+			user: _.has(req.session, 'user') ? req.session.user : false
 		});
 	});
 	
 	app.post('/register',function (req, res, next) {
+		
+		if(_.has(req.session, 'user')) return res.redirect('/');
 		
 		if ( ( (_.has(req.body, 'mobile_number') && !_.isEmpty(req.body.mobile_number.trim())) || 
 		_.has(req.session, 'mobile_number') ) && _.has(req.body, 'first_name') && 
@@ -113,7 +125,8 @@ module.exports = function (app) {
 		res.render('pages/register-business', {
 			title: "Logical Address | Logical Address for Business",
 			page: 'register-business',
-			app_title: "Logical Address"
+			app_title: "Logical Address",
+			user: _.has(req.session, 'user') ? req.session.user : false
 		});
 	});
 	
@@ -121,7 +134,8 @@ module.exports = function (app) {
 		res.render('pages/forgot-password', {
 			title: "Logical Address | Password Recovery",
 			page: 'forgot-password',
-			app_title: "Logical Address"
+			app_title: "Logical Address",
+			user: _.has(req.session, 'user') ? req.session.user : false
 		});
 	});
 };

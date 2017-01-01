@@ -8,41 +8,33 @@
                 <div class="primary-nav has-mega-menu">
                     <ul class="navigation">
                         <li class="active"><a href="/">Home</a></li>
-                        <li class="has-child"><a href="#nav-identity">Identiy</a>
-                            <div class="wrapper">
-                                <div id="nav-identity" class="nav-wrapper">
-                                    <ul>
-                                        <li><a href="#">Anti Identity Theft</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="has-child"><a href="#nav-verification">Address Verification</a>
-                            <div class="wrapper">
-                                <div id="nav-verification" class="nav-wrapper">
-                                    <ul>
-                                        <li><a href="#">Get Verified</a></li>
-                                        <li><a href="#">Banking</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
+                        <li><a href="#nav-identity">Secure Your Identity</a></li>
+                        <li><a href="#nav-verification">Address Verification Service</a></li>
                     </ul>
                     <!--end navigation-->
                 </div>
                 <!--end primary-nav-->
+                <% if (!user) { %>
                 <div class="secondary-nav">
                     <a href="/login">Sign In</a>
                     <!--<a href="#" data-modal-external-file="/login" data-target="modal-sign-in">Sign In</a>-->
                     <a href="/register" class="promoted">Register</a>
                 </div>
+                <% } %>
                 <!--end secondary-nav-->
-                <a href="/register/business" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-plus"></i><span>Register Business</span></a>
-                <div class="nav-btn">
+                <% if (user) { %>
+                <a href="#" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-user"></i>
+                <span><%= user.first_name user.last_name %></span></a>
+                <% } %>
+                <% if (!user) { %>
+                <a href="/register/business" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-plus"></i>
+                <span>Register Business</span></a>
+                <% } %>
+                <!--<div class="nav-btn">
                     <i></i>
                     <i></i>
                     <i></i>
-                </div>
+                </div>-->
                 <!--end nav-btn-->
             </div>
             <!--end right-->
