@@ -79,7 +79,11 @@ module.exports = function (app) {
 			if(_.has(req.session, 'mobile_number')) {
 				req.body.mobile_number = req.session.mobile_number;
 				req.body.username = req.session.mobile_number;
+			}else{
+				req.body.username = req.body.mobile_number;
 			}
+			
+			console.log(req.body);
 			
 			User.register(req.body, function(err, record){
 			
@@ -95,7 +99,7 @@ module.exports = function (app) {
 				if (err == 'Duplicate Entry') {
 					req.session.error.push('Dublicate Entry');
 				}else{
-					req.session.error.push('An unknown error occured');
+					req.session.error.push('An unknown error occured' + err);
 				}
 				return res.redirect('/register'); //TODO get previous redirect
 			});
