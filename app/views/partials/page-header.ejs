@@ -24,7 +24,7 @@
                 <!--end secondary-nav-->
                 <% if (user) { %>
                 <a href="#" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-user"></i>
-                <span><%= user.first_name user.last_name %></span></a>
+                <span><%= user.first_name + " " +user.last_name %></span></a>
                 <% } %>
                 <% if (!user) { %>
                 <a href="/register/business" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-plus"></i>
