@@ -7,18 +7,18 @@
             <div class="right">
                 <div class="primary-nav has-mega-menu">
                     <ul class="navigation">
-                        <li class="active"><a href="/">Home</a></li>
-                        <li><a href="#nav-identity">Secure Your Identity</a></li>
-                        <li><a href="#nav-verification">Address Verification Service</a></li>
+                        <li class="<% if (page == "home") { %>active<% } %>"><a href="/">Home</a></li>
+                        <li class="<% if (page == "address-verification-service") { %>active<% } %>"><a href="/address-verification-service">Secure Your Identity</a></li>
+                        <li class="<% if (page == "identity") { %>active<% } %>"><a href="/identity">Address Verification Service</a></li>
                     </ul>
                     <!--end navigation-->
                 </div>
                 <!--end primary-nav-->
                 <% if (!user) { %>
                 <div class="secondary-nav">
-                    <a href="/login">Sign In</a>
+                    <a  class="<% if (page == "login") { %>promoted<% } %>" href="/login">Sign In</a>
                     <!--<a href="#" data-modal-external-file="/login" data-target="modal-sign-in">Sign In</a>-->
-                    <a href="/register" class="promoted">Create Account</a>
+                    <a   class="<% if (page == "register") { %>promoted<% } %>" href="/register" class="promoted">Create Account</a>
                 </div>
                 <% } %>
                 <!--end secondary-nav-->
