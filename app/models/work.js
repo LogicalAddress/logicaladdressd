@@ -253,7 +253,7 @@ process.on('user_created', function(user){
 });
 
 process.on('user_deleted', function(user){
-	if(user.account_type == 'personal') return;
+	if(user.account_type != 'personal') return;
 	WorkModel.remove({user_ref: user._id.toString()}).exec();
 });
 

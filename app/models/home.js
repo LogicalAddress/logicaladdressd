@@ -253,7 +253,7 @@ process.on('location_created', function(location){
 });
 
 process.on('user_created', function(user){
-	if(user.account_type == 'personal') return;
+	if(user.account_type != 'personal') return;
 	homeContext.createRecord(user, function(err, response){
 		if (err) {
 			// console.log(err);
