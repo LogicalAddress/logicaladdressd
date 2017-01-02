@@ -4,6 +4,8 @@ var AccountKitGetMobileNumber = require('../lib/accountKit');
 var User = require('../models/user');
 var UserLib = require('../lib/user');
 var Business = require('../models/business');
+var csrf = require('csurf');
+var csrfProtection = csrf({ cookie: true });
 
 module.exports = function (app) {
 
@@ -16,7 +18,7 @@ module.exports = function (app) {
 		});
 	});
 	
-	app.get('/login',function (req, res, next) {
+	app.get('/login', csrfProtection, function (req, res, next) {
 		
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		
@@ -31,7 +33,7 @@ module.exports = function (app) {
 		});
 	});
 	
-	app.post('/login',function (req, res, next) {
+	app.post('/login', function (req, res, next) {
 		
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		
@@ -51,7 +53,7 @@ module.exports = function (app) {
 		
 	});
 	
-	app.get('/register',function (req, res, next) {
+	app.get('/register', csrfProtection, function (req, res, next) {
 		
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		
@@ -111,7 +113,7 @@ module.exports = function (app) {
 		}
 	});
 	
-	app.get('/register/business',function (req, res, next) {
+	app.get('/register/business', csrfProtection, function (req, res, next) {
 		res.render('pages/register-business', {
 			title: "Logical Address | Logical Address for Business",
 			page: 'register-business',
@@ -132,7 +134,8 @@ module.exports = function (app) {
 		
 		switch(req.session.regstate) {
 		    case 1:
-		        if (!_.has(req.body, 'first_name') && !_.has(req.body, 'password')){
+		        if (!_.has(req.body, 'first_name') || !_.has(req.body, 'password') ||
+		        _.isEmpty(req.body.password) || _.isEmpty(req.body.first_name)){
 		        	req.flash('error', 'First name and password are required.');
 		        	return res.redirect('/register/business');
 		        }
@@ -150,6 +153,7 @@ module.exports = function (app) {
 					        req.session.contact_person.last_name = req.body.last_name || '';
 					        req.session.contact_person.mobile_number = req.session.mobile_number;
 					        req.session.contact_person.username = req.session.mobile_number;
+					        req.session.contact_person.account_type = 'business';
 					        req.session.regstate++;
 					        return res.redirect('/register/business');
 			        	}
@@ -167,13 +171,10 @@ module.exports = function (app) {
 		        }
 		        break;
 		    case 2:
-		    	console.log(req.session.contact_person);
 		    	User.register(req.session.contact_person, function(err, user){
 					if(user){
 		        		req.body.tags = req.body.tags.split(", ");
 						Business.createRecord(user, req.body, function(err, business){
-							console.log(business);
-							console.log(req.body);
 							if (business) {
 								Business.updateLocation(user, business._id.toString(), {
 									gps: { longitude: req.body.longitude, latitude: req.body.latitude},
