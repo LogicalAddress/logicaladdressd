@@ -16,7 +16,7 @@ $(document).ready(function($) {
     }
 
     if( customizerEnabled == 1 ){
-        $.getScript( "assets/misc/customizer.js", function( data, textStatus, jqxhr ) {
+        $.getScript( "/assets/misc/customizer.js", function( data, textStatus, jqxhr ) {
             loadColor("load_default_color");
         });
     }
@@ -67,7 +67,7 @@ $(document).ready(function($) {
 // Render hero search form ---------------------------------------------------------------------------------------------
 
     $("select").on("rendered.bs.select", function () {
-        $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', 'assets/css/bootstrap-select.min.css') );
+        $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', '/assets/css/bootstrap-select.min.css') );
         if( !viewport.is('xs') ){
             $(".search-form.vertical").css( "top", ($(".hero-section").height()/2) - ($(".search-form .wrapper").height()/2) );
         }
@@ -246,7 +246,7 @@ $(document).ready(function($) {
             $('.calendar-wrapper').append('<div id="month_'+i+'" class="month"></div>');
             $("#month_"+i).zabuto_calendar({
                 ajax: {
-                    url: "assets/php/calendar.php",
+                    url: "/assets/php/calendar.php",
                     modal: true
                 },
                 action: function () {
@@ -282,7 +282,7 @@ $(document).ready(function($) {
         button.prepend("<div class='status'></div>");
         form.validate({
             submitHandler: function() {
-                $.post("assets/external/email.php", form.serialize(),  function(response) {
+                $.post("/assets/external/email.php", form.serialize(),  function(response) {
                     //console.log(response);
                     button.find(".status").append(response);
                     form.addClass("submitted");
@@ -325,13 +325,13 @@ function openModal(target, modalPath){
         var _this = $(this);
         lastModal = _this;
         $.ajax({
-            url: "assets/external/" + modalPath,
+            url: "/assets/external/" + modalPath,
             method: "POST",
             //dataType: "html",
             data: { id: target },
             success: function(results){
                 _this.append(results);
-                $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', 'assets/css/bootstrap-select.min.css') );
+                $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', '/assets/css/bootstrap-select.min.css') );
                 $(".selectpicker").selectpicker();
                 _this.find(".gallery").addClass("owl-carousel");
                 ratingPassive(".modal");
@@ -404,9 +404,9 @@ function ratingPassive(element){
 function socialShare(){
     var socialButtonsEnabled = 1;
     if ( socialButtonsEnabled == 1 ){
-        $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', 'assets/css/jssocials.css') );
-        $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', 'assets/css/jssocials-theme-minima.css') );
-        $.getScript( "assets/js/jssocials.min.js", function( data, textStatus, jqxhr ) {
+        $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', '/assets/css/jssocials.css') );
+        $('head').append( $('<link rel="stylesheet" type="text/css">').attr('href', '/assets/css/jssocials-theme-minima.css') );
+        $.getScript( "/assets/js/jssocials.min.js", function( data, textStatus, jqxhr ) {
             $(".social-share").jsSocials({
                 shares: ["twitter", "facebook", "googleplus", "linkedin", "pinterest"]
             });
@@ -650,7 +650,7 @@ function initializeReadMore(){
 
     $.ajax({
         type: "GET",
-        url: "assets/js/readmore.min.js",
+        url: "/assets/js/readmore.min.js",
         success: readMoreCallBack,
         dataType: "script",
         cache: true

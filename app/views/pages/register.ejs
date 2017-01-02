@@ -17,17 +17,9 @@
                 <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
                     <section class="page-title">
                         <% if(mobile_number){ %><h1>Complete Registration</h1><% } else{ %>  <h1>Register</h1><% } %>
-                    </section
+                    </section>
                     <!--end page-title-->
-                    <% if (messages !== undefined) { %>
-                    <div class="alert-error">
-                        <ul>
-                            <% messages.forEach(function(error) { %>
-                                <li><%= error %></li>
-                            <% }); %>
-                        </ul>
-                    </div>
-                    <% } %>
+                    <% include ../partials/flash %>
                     <section>
                         <form class="form inputs-underline" action="/register" method="post">
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">

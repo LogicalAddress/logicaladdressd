@@ -5734,7 +5734,7 @@ section:not(.block) h2 {
   left: 0;
 }
 .text-element.event .date-icon:before {
-  background-image: url("../../assets/img/calendar-spring.png");
+  background-image: url("/assets/img/calendar-spring.png");
   width: 37px;
   height: 6px;
   position: absolute;
@@ -7131,7 +7131,7 @@ select, select.form-control {
   padding: 13px 9px;
   width: 100%;
   position: relative;
-  background-image: url("../../assets/img/carret-down.png");
+  background-image: url("/assets/img/carret-down.png");
   background-repeat: no-repeat;
   background-position: 96% 50%;
 }

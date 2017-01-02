@@ -3,6 +3,7 @@ var _ = require('underscore');
 var AccountKitGetMobileNumber = require('../lib/accountKit');
 var User = require('../models/user');
 var UserLib = require('../lib/user');
+var Business = require('../models/business');
 
 module.exports = function (app) {
 
@@ -114,9 +115,109 @@ module.exports = function (app) {
 		res.render('pages/register-business', {
 			title: "Logical Address | Logical Address for Business",
 			page: 'register-business',
+			csrfToken: req.csrfToken(),
+			FACEBOOK_APP_ID: AccountKitConfig.app_id,
+			ACCOUNT_KIT_API_VERSION: AccountKitConfig.api_version,
 			app_title: "Logical Address",
+			mobile_number: _.has(req.session, 'mobile_number') ? req.session.mobile_number : '',
+			messages: req.flash('error'),
+			regstate: req.session.regstate || 0,
 			user: _.has(req.session, 'user') ? req.session.user : false
 		});
+	});
+	
+	app.post('/register/business',function (req, res, next) {
+		
+		if(_.has(req.session, 'user')) return res.redirect('/');
+		
+		switch(req.session.regstate) {
+		    case 1:
+		        if (!_.has(req.body, 'first_name') && !_.has(req.body, 'password')){
+		        	req.flash('error', 'First name and password are required.');
+		        	return res.redirect('/register/business');
+		        }
+		        //email is not required
+		        if(_.has(req.body, 'email') && req.body.email.length > 0){
+			        User.findById(req.body.email, function(err, record){
+			        	if(record){
+					        req.session.contact_person = req.session.contact_person || {};
+					        req.session.contact_person.email = req.body.email;
+					        req.session.contact_person.first_name = req.body.first_name;
+					        req.session.contact_person.password = req.body.password;
+					        req.session.contact_person.last_name = req.body.last_name || '';
+					        req.session.contact_person.mobile_number = req.session.mobile_number;
+					        req.session.contact_person.username = req.session.mobile_number;
+					        req.session.regstate++;
+					        return res.redirect('/register/business');
+			        	}else{
+			        		req.flash('error', 'This email cannot be used, choose a different one.');
+			        		return res.redirect('/register/business');
+			        	}
+			        });
+		        }else{
+					req.session.contact_person = req.session.contact_person || {};
+					req.session.contact_person.first_name = req.body.first_name;
+					req.session.contact_person.password = req.body.password;
+					req.session.contact_person.last_name = req.body.last_name || '';
+					req.session.contact_person.mobile_number = req.session.mobile_number;
+					req.session.contact_person.username = req.session.mobile_number;
+					req.session.contact_person.account_type = 'business';
+					req.session.regstate++;
+			        return res.redirect('/register/business');
+		        }
+		        break;
+		    case 2:
+		    	User.register(req.session.contact_person, function(err, user){
+					if(user){
+		        		req.body.tags = req.body.tags.split(", ");
+						Business.createRecord(user, req.body, function(err, business){
+							if (business) {
+								Business.updateLocation(user, business._id, {
+									gps: { longitude: req.longitude, latitude: req.latitude},
+								}, function(err, record){
+									if(record){
+										var accessToken = UserLib.generateAccessToken(user);
+										req.session.user = user;
+										delete req.session.contact_person;
+						        		delete req.session.mobile_number;
+						        		delete req.session.regstate;
+										req.flash('info', 'Registration Successful');
+										return res.redirect('/');
+									}else{
+										User.delete(user); //undo all above and restart step II
+										req.flash('error', 'Something went wrong, Unable to create location.');
+										return res.redirect('/register/business');
+									}
+								});
+							}else{
+								User.delete(user); //undo all above and restart step II
+								req.flash('error', 'Something went wrong, Unable to create business.');
+								return res.redirect('/register/business');
+							}
+						});
+					}else{
+						req.flash('error', 'Something went wrong. Unable to create user.');
+						return res.redirect('/register/business');
+					}
+				});
+		        break;
+		    default:
+		    AccountKitGetMobileNumber(req, function(err, mobile_number){
+				if (err) return res.send(err);
+				User.findById(mobile_number, function(err, record){
+					if(record){
+						var accessToken = UserLib.generateAccessToken(record);
+						req.session.user = record;
+						return res.redirect('/');
+					}else{
+						req.session.regstate = 1;
+						req.session.mobile_number = mobile_number;
+						return res.redirect('/register/business');
+					}
+				});
+			});
+		}
+			
 	});
 	
 	app.get('/password/recovery',function (req, res, next) {

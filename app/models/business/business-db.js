@@ -19,6 +19,18 @@ var BusinessSchema = new Schema({
 	city: { type: String, default: ''},
 	address: { type: String, default: ''},
 	tags: Array, // {wedding, bank, money, market}
+	
+	category: {String, default: ''},
+	description: {String, default: ''},
+	email: {String, default: ''},
+	website: {String, default: ''},
+	// for all business types
+	open_hours: Array,
+	close_hours: Array,
+	// for restaurants
+	menu_title: Array,
+	menu_description: Array,
+	menu_type: Array,
 
 	expires_at: Date,
 	enabled: { type: Boolean, default: true},

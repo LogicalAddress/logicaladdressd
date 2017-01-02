@@ -1,0 +1,9 @@
+                    <% if (messages !== undefined) { %>
+                    <div class="alert-error">
+                        <ul>
+                            <% messages.forEach(function(error) { %>
+                                <li><%= error %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <% } %>

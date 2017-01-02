@@ -3,7 +3,7 @@
 <script type="text/javascript" src="/assets/js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/assets/js/bootstrap-select.min.js"></script>
-<% if (page == "home") { %>
+<% if (page == "home" || page == "register-business") { %>
 <% if (ENV_DEVELOPMENT) { %>
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBkLJb74qeWgeP--MxL3n1SavO0TcJIkbA&libraries=places"></script>
 <% }else{ %>
@@ -34,6 +34,16 @@
     var mapDefaultZoom = 6; // default zoom
     heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarget, showMarkerLabels, mapDefaultZoom);
 </script>
+<% } %>
+
+<% if (page == "register-business") { %>
+<script type="text/javascript" src="/assets/js/maps.js"></script>
+<script>
+        var _latitude = 40.7344458;
+        var _longitude = -73.86704922;
+        var element = "map-submit";
+        simpleMap(_latitude,_longitude, element, true);
+    </script>
 <% } %>
 
 </body>
