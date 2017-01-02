@@ -33,7 +33,7 @@ module.exports = function (app) {
 		});
 	});
 	
-	app.post('/login', function (req, res, next) {
+	app.post('/login', csrfProtection, function (req, res, next) {
 		
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		
@@ -70,7 +70,7 @@ module.exports = function (app) {
 		});
 	});
 	
-	app.post('/register',function (req, res, next) {
+	app.post('/register', csrfProtection, function (req, res, next) {
 		
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		
@@ -128,7 +128,7 @@ module.exports = function (app) {
 		});
 	});
 	
-	app.post('/register/business',function (req, res, next) {
+	app.post('/register/business', csrfProtection, function (req, res, next) {
 		
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		

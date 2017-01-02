@@ -86,15 +86,14 @@ module.exports = function(app, config) {
   //       title: 'error'
   //     });
   // });
-  // app.use(function (err, req, res, next) {
-  //   if (err.code !== 'EBADCSRFTOKEN'){
-  //     console.log("bad token");
-  //     return next(err);
-  //   } 
-  //   // handle CSRF token errors here
-  //   res.status(403);
-  //   console.log('Form tampered with');
-  //   res.send('Form tampered with')
-  // })
+  
+  app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN'){
+      return next(err);
+    } 
+    // handle CSRF token errors here
+    res.status(403);
+    res.send('Form tampered with')
+  })
 
 };
