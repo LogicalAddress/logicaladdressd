@@ -20,10 +20,10 @@ var BusinessSchema = new Schema({
 	address: { type: String, default: ''},
 	tags: Array, // {wedding, bank, money, market}
 	
-	category: {String, default: ''},
-	description: {String, default: ''},
-	email: {String, default: ''},
-	website: {String, default: ''},
+	category: { type: String, default: ''},
+	description: { type: String, default: ''},
+	email: { type: String, default: ''},
+	website: { type: String, default: ''},
 	// for all business types
 	open_hours: Array,
 	close_hours: Array,

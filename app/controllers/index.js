@@ -140,7 +140,10 @@ module.exports = function (app) {
 		        if(_.has(req.body, 'email') && req.body.email.length > 0){
 			        User.findById(req.body.email, function(err, record){
 			        	if(record){
-					        req.session.contact_person = req.session.contact_person || {};
+					        req.flash('error', 'This email cannot be used, choose a different one.');
+			        		return res.redirect('/register/business');
+			        	}else{
+			        		req.session.contact_person = req.session.contact_person || {};
 					        req.session.contact_person.email = req.body.email;
 					        req.session.contact_person.first_name = req.body.first_name;
 					        req.session.contact_person.password = req.body.password;
@@ -149,9 +152,6 @@ module.exports = function (app) {
 					        req.session.contact_person.username = req.session.mobile_number;
 					        req.session.regstate++;
 					        return res.redirect('/register/business');
-			        	}else{
-			        		req.flash('error', 'This email cannot be used, choose a different one.');
-			        		return res.redirect('/register/business');
 			        	}
 			        });
 		        }else{
@@ -167,13 +167,16 @@ module.exports = function (app) {
 		        }
 		        break;
 		    case 2:
+		    	console.log(req.session.contact_person);
 		    	User.register(req.session.contact_person, function(err, user){
 					if(user){
 		        		req.body.tags = req.body.tags.split(", ");
 						Business.createRecord(user, req.body, function(err, business){
+							console.log(business);
+							console.log(req.body);
 							if (business) {
-								Business.updateLocation(user, business._id, {
-									gps: { longitude: req.longitude, latitude: req.latitude},
+								Business.updateLocation(user, business._id.toString(), {
+									gps: { longitude: req.body.longitude, latitude: req.body.latitude},
 								}, function(err, record){
 									if(record){
 										var accessToken = UserLib.generateAccessToken(user);

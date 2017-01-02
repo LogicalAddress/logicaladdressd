@@ -34,8 +34,4 @@ var config = {
   }
 };
 
-config[env].special_users = [{username: 'logicaladdress', handle: "Logical Address"},
-{username: 'retnan', handle: 'Retnan'},{username: 'daser', handle: "Daser"},
-{username: 'lasociale', handle: 'Lasociale'}];
-
 module.exports = config[env];
