@@ -119,8 +119,8 @@ HTTP/1.1 400 Bad Request
 									enabled: lRecord[i].enabled,
 									created_at: lRecord[i].created_at,
 									updated_at: lRecord[i].updated_at,
-									location_ref: lRecord[i]
-								}
+									location_ref: lRecord[i],
+								};
 							}
 							return res.json({status: true, data: data});
 						}

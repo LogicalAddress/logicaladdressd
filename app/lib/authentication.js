@@ -41,10 +41,12 @@ module.exports = function (req, res, next)
     	req.paygis.user = req.session.user;
     	next();
     }else {
+    	if(req.originalUrl.substring(0, 17) == "/api/v1/universe/") return next();
 	    res.status(400);
 	    return res.json({
 	      "status": false,
-	      "message": "Invalid Access Token or Key"
+	      "message": "Invalid Access Token or Key",
+	      url: req.originalUrl,
 	    });
   	} 
 
