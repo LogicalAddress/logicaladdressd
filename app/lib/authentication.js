@@ -36,6 +36,10 @@ module.exports = function (req, res, next)
 				"message": "Access Token Expired"
 			});
     	}
+    }else if(_.has(req.session, 'user')){
+    	req.paygis = req.paygis || {};
+    	req.paygis.user = req.session.user;
+    	next();
     }else {
 	    res.status(400);
 	    return res.json({

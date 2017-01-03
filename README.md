@@ -2,9 +2,10 @@
 
 ### Optional Environment Variables
 
-+ APPLICATION_SECRET
-+ PRODUCTION_DB_CONNECTION
++ APPLICATION_SECRET (/config/secret.js) for JWT
++ PRODUCTION_DB_CONNECTION (/config/config.js) for Database
 + GAPIKEY
++ ACCOUNT_KIT_APP_SECRET (/config/accountkit.js) for Account Kit
 
 ### Test
 

@@ -126,7 +126,7 @@ User.prototype.auth = function(user, callback, context) {
 		function(err, record){
 			
 			if (err || record.length > 0) {
-				row = _.omit(record[0].toObject(), ['password','q_book','q_space','q_mother','q_animal']);
+				var row = _.omit(record[0].toObject(), ['password','q_book','q_space','q_mother','q_animal']);
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
 				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
@@ -194,7 +194,27 @@ User.prototype.findById = function(username, callback, context) {
 		function(err, record){
 			
 			if (err || record.length > 0) {
-				row = _.omit(record[0].toObject(), ['password','q_book','q_space','q_mother','q_animal']);
+				var row = _.omit(record[0].toObject(), ['password','q_book','q_space','q_mother','q_animal']);
+				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
+			}else{
+				console.log(err);
+				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+			}
+		});
+	}else{
+		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
+	}
+};
+
+User.prototype.findByGlobalLA = function(globalLa, callback, context) {
+	context = (context ? context : this);
+	if (_.isString(globalLa) && !_.isEmpty(globalLa.trim())) {
+		
+		UserModel.findOne({global_logical_address: globalLa}, 
+		function(err, record){
+			
+			if (_.has(record, 'username')) {
+				var row = _.omit(record.toObject(), ['password','q_book','q_space','q_mother','q_animal']);
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
 				console.log(err);

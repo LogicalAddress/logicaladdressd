@@ -1,4 +1,5 @@
 var UserLib = require('../lib/user');
+var User = require('../models/user');
 var ShortCode = require('../models/shortcode');
 var _ = require('underscore');
 var Async = require('async');
@@ -78,39 +79,56 @@ HTTP/1.1 400 Bad Request
 
 		// Nous avons besoin de savoir qu'on est membre. C'est tous!
 		
-		ShortCode.findRecordByLongShortCode(req.params.lscode, 
-			function(err, record){
-
+		ShortCode.findRecordByLongShortCode(req.params.lscode, function(err, record){
 			if (_.isObject(record) && _.has(record, 'trace_id')) {
 				res.status(200);
 				return res.json({status: true, data: record});
-			}else{
-
-				Location.findRecord({ trace_id: req.params.lscode.trim() }, 
-					function(err, lRecord){
-
-						if(_.isObject(lRecord) && _.has(lRecord, 'trace_id')){
+			}
+			Location.findRecord({ trace_id: req.params.lscode.trim() }, function(err, lRecord){
+				if(_.isObject(lRecord) && _.has(lRecord, 'trace_id')){
+					res.status(200);
+					// Make the API Consistent
+					return res.json({status: true, data: {
+						_id: lRecord._id,
+						trace_id: lRecord.trace_id,
+						user_ref: lRecord.user_ref,
+						short_code: '',
+						enabled: lRecord.enabled,
+						created_at: lRecord.created_at,
+						updated_at: lRecord.updated_at,
+						location_ref: lRecord
+						} 
+					});
+				}
+				User.findByGlobalLA(req.params.lscode, function(err, user){
+					if(!user){
+						res.status(404);
+						return res.json({status: false, reason: 'An unknown error occured'});
+					}
+					Location.findRecords({ user_ref: user._id }, function(err, lRecord){
+						if(_.isArray(lRecord) && lRecord.length > 0){
 							res.status(200);
 							// Make the API Consistent
-							return res.json({status: true, data: {
-								_id: lRecord._id,
-								trace_id: lRecord.trace_id,
-								user_ref: lRecord.user_ref,
-								short_code: '',
-								enabled: lRecord.enabled,
-								created_at: lRecord.created_at,
-								updated_at: lRecord.updated_at,
-								location_ref: lRecord
-								} 
-							});
-						}else{
-							res.status(404);
-							return res.json({status: false, reason: 'An unknown error occured'});
+							var data = [];
+							for(var i = 0; i < lRecord.length; i++){
+								data[i] = {
+									_id: lRecord[i]._id,
+									trace_id: lRecord[i].trace_id,
+									user_ref: lRecord[i].user_ref,
+									short_code: '',
+									enabled: lRecord[i].enabled,
+									created_at: lRecord[i].created_at,
+									updated_at: lRecord[i].updated_at,
+									location_ref: lRecord[i]
+								}
+							}
+							return res.json({status: true, data: data});
 						}
+						res.status(404);
+						return res.json({status: false, reason: 'An unknown error occured'});
 					});
-			}
-
+				});
+			});
 		});
 	});
-	
 };

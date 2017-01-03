@@ -120,6 +120,33 @@ Location.prototype.findRecord = function(query, callback, context) {
 
 };
 
+Location.prototype.findRecords = function(query, callback, context) {
+
+	context = (context ? context : this);
+
+	if (_.isObject(query)) {
+
+		LocationModel.find(query).lean().exec(function(err, rows){
+			if (rows) {
+				for(var i = 0; i < rows.length; i++){
+					var gps = {longitude: rows.gps[i], latitude: rows.gps[i]};
+					rows[i].gps = gps;	
+				}
+				
+				return (_.isFunction(callback) ? callback.apply(context, 
+					[null, rows]) : null);
+			}else{
+				return (_.isFunction(callback) ? callback.apply(context, 
+					['No records Found']) : null);
+			}
+		});
+	}else{
+		return (_.isFunction(callback) ? callback.apply(context, 
+			['Invalid Parameters']) : null);
+	}
+
+};
+
 
 /*
 * TODO: Not Tested
