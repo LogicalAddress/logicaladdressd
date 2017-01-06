@@ -430,32 +430,17 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
             markerCluster.clearMarkers();
             loadData(dataFile, ajaxData);
         });
-        
-        $("#searchBtn").on("click", function(e){
-            e.preventDefault();
-            searchClicked = 1;
-            loadData("/api/v1/universe/"+$('#keysearch').val(), null);
-        });
 
         function loadData(url, ajaxData){
             $.ajax({
                 url: url,
                 dataType: "json",
-                method: "GET",
+                method: "POST",
                 data: ajaxData,
                 cache: false,
                 success: function(results){
                     for( var i=0; i <newMarkers.length; i++ ){
                         newMarkers[i].setMap(null);
-                    }
-                    if(results.status && typeof results.data == Object){
-                        console.log("object");
-                     return console.log(results);
-                    }else if(results.status && typeof results.data == Array){
-                        console.log("array");
-                     return console.log(results);
-                    }else{
-                        return alert("Error");
                     }
                     allMarkers = results;
                     placeMarkers(results);
