@@ -455,6 +455,7 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
                         console.log("array");
                      return console.log(results);
                     }else{
+                        console.log(typeof results.data);
                         return alert("Error");
                     }
                     allMarkers = results;
