@@ -212,12 +212,10 @@ User.prototype.findByGlobalLA = function(globalLa, callback, context) {
 		
 		UserModel.findOne({global_logical_address: globalLa}, 
 		function(err, record){
-			
-			if (_.has(record, 'username')) {
+			if (record && record.username) {
 				var row = _.omit(record.toObject(), ['password','q_book','q_space','q_mother','q_animal']);
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
 			}else{
-				console.log(err);
 				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
 			}
 		});

@@ -129,7 +129,7 @@ Location.prototype.findRecords = function(query, callback, context) {
 		LocationModel.find(query).lean().exec(function(err, rows){
 			if (rows) {
 				for(var i = 0; i < rows.length; i++){
-					var gps = {longitude: rows.gps[i], latitude: rows.gps[i]};
+					var gps = {longitude: rows[i].gps[0], latitude: rows[i].gps[1]};
 					rows[i].gps = gps;	
 				}
 				

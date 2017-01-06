@@ -48,13 +48,13 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
                     if( markerCluster != undefined ){
                         markerCluster.clearMarkers();
                     }
-                    loadData("/assets/external/data.php", ajaxData);
+                    // loadData("/assets/external/data.php", ajaxData);
                 }
             });
         }
         else {
             google.maps.event.addListenerOnce(map, 'idle', function(){
-                loadData("/assets/external/data.php");
+                // loadData("/assets/external/data.php");
             });
         }
 
@@ -151,12 +151,15 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
                     google.maps.event.addListener(marker, 'click', (function(marker, i) {
                         return function() {
                             if( markerTarget == "sidebar"){
+                                return console.log("open sidebar - implemented - but unreachable by return statement");
                                 openSidebarDetail( $(this.content.firstChild).attr("data-id") );
                             }
                             else if( markerTarget == "infobox" ){
+                                return console.log("open infobox - implemented - but unreachable by return statement");
                                 openInfobox( $(this.content.firstChild).attr("data-id"), this, i );
                             }
                             else if( markerTarget == "modal" ){
+                                return console.log("open modal - implemented - but unreachable by return statement");
                                 openModal($(this.content.firstChild).attr("data-id"), "modal_item.php");
                             }
                         }
@@ -361,7 +364,8 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
 
                 // Ajax load data for sidebar results after markers are placed
 
-                $.ajax({
+                console.log("Render Page view when markers have been rendered for faster response");
+                /* $.ajax({
                     url: "/assets/external/sidebar_results.php",
                     method: "POST",
                     data: { markers: visibleMarkersId },
@@ -403,10 +407,10 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
                     error : function (e) {
                         console.log(e);
                     }
-                });
+                }); */
 
             }
-        }
+        } //END placeMarkers
 
         /*
         $("[data-ajax-live='location']").on("changed.bs.select", function (e) {
@@ -434,29 +438,60 @@ function heroMap(_latitude,_longitude, element, markerTarget, sidebarResultTarge
         $("#searchBtn").on("click", function(e){
             e.preventDefault();
             searchClicked = 1;
-            loadData("/api/v1/universe/"+$('#keysearch').val(), null);
+            // markerCluster.clearMarkers();
+            getData("/api/v1/universe/"+$('#keysearch').val(), null);
         });
+        
+        function getData(url, ajaxData){
+            $.ajax({
+                url: url,
+                dataType: "json",
+                method: "GET",
+                data: null,
+                cache: false,
+                success: function(results){
+                    for( var i=0; i <newMarkers.length; i++ ){
+                        //clear markers. if there are markers already on map
+                        newMarkers[i].setMap(null);
+                    }
+                    allMarkers = results; //not used
+                    var newResults = [];
+                    if(results.status &&  !results.data instanceof Array){
+                        newResults[0] = {
+                            id: results.data._id,
+                            title: results.data.location_ref.location_type,
+                            longitude: results.data.location_ref.gps.longitude,
+                            latitude: results.data.location_ref.gps.longitude,
+                        }
+                    }else if(results.status &&  results.data instanceof Array){
+                        for(var i = 0; i < results.data.length; i++){
+                            newResults[i] = {
+                                id: results.data[i]._id,
+                                title: results.data[i].location_ref.location_type,
+                                longitude: results.data[i].location_ref.gps.longitude,
+                                latitude: results.data[i].location_ref.gps.longitude,
+                            }
+                        }
+                    }
+                    console.log(newResults);
+                    placeMarkers(newResults);
+                },
+                error : function (e) {
+                    console.log(e);
+                }
+            });
+        }
 
         function loadData(url, ajaxData){
             $.ajax({
                 url: url,
                 dataType: "json",
-                method: "GET",
+                method: "POST",
                 data: ajaxData,
                 cache: false,
                 success: function(results){
                     for( var i=0; i <newMarkers.length; i++ ){
                         newMarkers[i].setMap(null);
-                    }
-                    if(results.status && typeof results.data == Object){
-                        console.log("object");
-                     return console.log(results);
-                    }else if(results.status && typeof results.data == Array){
-                        console.log("array");
-                     return console.log(results);
-                    }else{
-                        console.log(typeof results.data);
-                        return alert("Error");
                     }
                     allMarkers = results;
                     placeMarkers(results);

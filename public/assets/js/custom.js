@@ -3,8 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var resizeId;
 var lastModal;
-var customizerEnabled = 1;
-var defaultColor;
 $(document).ready(function($) {
     "use strict";
 
@@ -13,12 +11,6 @@ $(document).ready(function($) {
     }
     else {
         fixedNavigation(false);
-    }
-
-    if( customizerEnabled == 1 ){
-        $.getScript( "/assets/misc/customizer.js", function( data, textStatus, jqxhr ) {
-            loadColor("load_default_color");
-        });
     }
 
     if( $(".tse-scrollable").length ){

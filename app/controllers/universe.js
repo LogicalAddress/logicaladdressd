@@ -103,7 +103,7 @@ HTTP/1.1 400 Bad Request
 				User.findByGlobalLA(req.params.lscode, function(err, user){
 					if(!user){
 						res.status(404);
-						return res.json({status: false, reason: 'An unknown error occured'});
+						return res.json({status: false, reason: 'An unknown error occuredX'});
 					}
 					Location.findRecords({ user_ref: user._id }, function(err, lRecord){
 						if(_.isArray(lRecord) && lRecord.length > 0){
