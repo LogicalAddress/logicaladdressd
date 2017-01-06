@@ -6,6 +6,7 @@ var UserLib = require('../lib/user');
 var Business = require('../models/business');
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
+var hash = require('md5');
 
 module.exports = function (app) {
 
@@ -253,8 +254,61 @@ module.exports = function (app) {
 		return res.redirect('/verification_code');
 	});
 	
+	app.get('/profile', csrfProtection, function (req, res, next) {
+
+		if(!_.has(req.session, 'user')) return res.redirect('/');
+		
+		res.render('pages/user-profile', {
+			title: "Logical Address | Your Profile",
+			page: 'verification_code',
+			csrfToken: req.csrfToken(),
+			app_title: "Logical Address",
+			user: _.has(req.session, 'user') ? req.session.user : false
+		});
+	});
+	
 	app.get('/logout',function (req, res, next) {
 		delete req.session.user;
 		res.redirect('/');
 	});
+	
+	app.put('/user/update', csrfProtection, function (req, res, next) {
+		if(!_.has(req.session, 'user')) return res.redirect('/');
+		User.update(req.session.user, req.body, function(err, updatedUser){
+			if(updatedUser){
+				req.session.user = updatedUser;
+				req.flash('message', 'Updated.');
+				return res.redirect('/profile');
+			}else{
+				req.flash('error', 'Something went wrong, Unable to update.');
+				return res.redirect('/profile');
+			}
+		});
+	});
+	
+	app.put('/password/update', csrfProtection, function (req, res, next) {
+		if(!_.has(req.session, 'user')) return res.redirect('/');
+		if(!_.has(req.body, 'new_password') || !_.has(req.body, 'confirm_new_password') || 
+		req.body.new_password.trim().length === 0 || req.body.new_password !== req.body.confirm_new_password){
+			req.flash('error', 'Something went wrong, Unable to update password.');
+			return res.redirect('/profile');
+		}
+		if(_.has(req.body, 'current_password') && req.session.user.password == hash(req.body.current_password)){
+			User.updatePassword(req.session.user, {password: hash(req.body.new_password)}, function(err, updatedUser){
+				if(updatedUser){
+					req.session.user = updatedUser;
+					req.flash('message', 'Updated.');
+					return res.redirect('/profile');
+				}else{
+					req.flash('error', 'Something went wrong, Unable to update password.');
+					return res.redirect('/profile');
+				}
+			});
+		}else{
+			req.flash('error', 'Something went wrong, Unable to update password.');
+			return res.redirect('/profile');
+		}
+			
+	});
+
 };

@@ -18,7 +18,14 @@ var UserSchema = new Schema({
 	q_book: { type: String, default: 'Digital Fortress'},
 
 	created_at: { type: Date, default: Date.now},
-	updated_at: { type: Date, default: Date.now}
+	updated_at: { type: Date, default: Date.now},
+	
+	/*Social Life*/
+	about: { type: String, default: ''},
+	facebook: { type: String, default: ''},
+	twitter: { type: String, default: ''},
+	pinterest: { type: String, default: ''},
+	youtube: { type: String, default: ''},
 });
 
 UserSchema.methods.maskPassword = function () {

@@ -23,8 +23,23 @@
                 <% } %>
                 <!--end secondary-nav-->
                 <% if (user) { %>
-                <a href="#" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-user"></i>
-                <span><%= user.first_name + " " +user.last_name %></span></a>
+                <div class="secondary-nav">
+                    <ul class="navigation">
+                        <li class="has-child">
+                            <div class="image"><div class="bg-transfer"><img src="/assets/img/avater.png" alt=""></div></div>
+                            <a href="#" class="invisible-on-mobile"><%= user.first_name + " " +user.last_name %></a>
+                            <div class="wrapper">
+                                <div class="nav-wrapper">
+                                    <ul>
+                                        <li><a href="/profile"><i class="fa fa-user"></i>View Profile</a></li>
+                                        <!--<li><a href="reset-password.html"><i class="fa fa-refresh"></i>Change Password</a></li>-->
+                                        <li><a href="/logout"><i class="fa fa-sign-out"></i>Log Out</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <% } %>
                 <% if (!user) { %>
                 <a href="/register/business" class="btn btn-primary btn-small btn-rounded icon shadow add-listing"><i class="fa fa-plus"></i>

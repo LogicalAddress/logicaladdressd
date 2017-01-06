@@ -36,17 +36,25 @@ module.exports = function(app, config) {
     saveUninitialized: true,
     store: new MongoStore({
         url: require('./config').db,
-        ttl: 14 * 24 * 60 * 60,
+        ttl: 24 * 60 * 60 * 1000 * 365, //1yr
         // mongoOptions: advancedOptions
     }),
-    cookie: { secure: false, maxAge: 600000 },
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, //1yr
   }));
   app.use(flash());
   app.use(compress());
   app.use(express.static(config.root + '/public'));
   app.use('/internaldocs', express.static(config.root + '/docs'));
   app.use('/apidoc', express.static(config.root + '/apidoc'));
-  app.use(methodOverride());
+  // app.use(methodOverride());
+  app.use(methodOverride(function (req, res) {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+      // look in urlencoded POST bodies and delete it
+      var method = req.body._method
+      delete req.body._method
+      return method
+    }
+  }));
 
   // Auth Middleware - This will check if the token is valid
   // Only the requests that start with /api/v1/* will be checked for the token.

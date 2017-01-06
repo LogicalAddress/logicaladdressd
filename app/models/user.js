@@ -224,6 +224,29 @@ User.prototype.findByGlobalLA = function(globalLa, callback, context) {
 	}
 };
 
+User.prototype.update = function(user, data, callback, context){
+	context = (context ? context : this);
+	data = _.omit(data, ['global_logical_address','first_name','last_name', 'password', 'account_type']);
+	UserModel.findOneAndUpdate({_id: user._id}, data, {new: true}, function(err, raw){
+		if (raw && !err) {
+			return (_.isFunction(callback) ? callback.apply(context, [err, raw]) : null);
+		}else{
+			return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+		}
+	});
+};
+
+User.prototype.updatePassword = function(user, data, callback, context){
+	context = (context ? context : this);
+	UserModel.findOneAndUpdate({_id: user._id}, data, {new: true}, function(err, raw){
+		if (raw && !err) {
+			return (_.isFunction(callback) ? callback.apply(context, [err, raw]) : null);
+		}else{
+			return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+		}
+	});
+};
+
 
 User.prototype.delete = function(user) {
 	UserModel.remove({_id: user._id}).exec();

@@ -119,7 +119,6 @@ Business.prototype.createRecord = function(user, businessData, callback, context
 Business.prototype.findRecordsByUserId = function(user, callback, context) {
 	
 	context = (context ? context : this);
-
 	if (_.isObject(user) && _.has(user,'_id')) {
 		BusinessModel.find(
 			{user_ref: user._id}).populate('location_ref').lean().exec(
@@ -131,7 +130,6 @@ Business.prototype.findRecordsByUserId = function(user, callback, context) {
 								latitude: rows[i].location_ref.gps[1]};
 					rows[i].location_ref.gps = gps;
 				}
-
 				return (_.isFunction(callback) ? callback.apply(context, 
 					[null, rows]) : null);
 			}else{
