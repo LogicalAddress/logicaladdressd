@@ -25,7 +25,7 @@
                 <% if (user) { %>
                 <div class="secondary-nav">
                     <% if (user.account_type == 'business') { %>
-                    <a class="promoted" href="/employee">Employees</a>
+                    <a class="<% if (page == "employee-list") { %>promoted<% } %>" href="/employee">Employees</a>
                     <% } %>
                     <ul class="navigation">
                         <li class="has-child">
