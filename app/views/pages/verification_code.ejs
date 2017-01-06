@@ -1,0 +1,54 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li class="active">Address Verification Code</li>
+            </ol>
+            
+            <section class="center page-title">
+                <h1>Address Verification Code</h1>
+                <h3 class="subtitle">Enter the code on the post card we sent to your address</h3>
+            </section>
+            
+            <!--end page-title-->
+            <section>
+                <div class="row">
+                    <div class="col-md-8 cols-m-8 col-md-offset-2">
+                        <section>
+                        <form class="form inputs-underline" method="/verification_code" action="post">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <div class="form-group">
+                                <label for="code">code</label>
+                                <input type="text" class="form-control" name="code" id="code" placeholder="Your Verification Code">
+                            </div>
+                            <!--end form-group-->
+                            <div class="form-group center">
+                                <button type="submit" class="btn btn-primary width-100">Verify My Address</button>
+                            </div>
+                            <!--end form-group-->
+                        </form>
+                        <!--end form-->
+                    </section>
+                    </div>
+                    <!--end col-md-8-->
+                </div>
+                <!--end row-->
+            </section>
+            <hr>
+        </div>
+        <!--end container-->
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<!--end page-wrapper-->
+<% include ../partials/footer %>

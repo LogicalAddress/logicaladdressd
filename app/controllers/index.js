@@ -233,6 +233,26 @@ module.exports = function (app) {
 		});
 	});
 	
+	app.get('/verification_code', csrfProtection, function (req, res, next) {
+
+		if(!_.has(req.session, 'user')) return res.redirect('/');
+		
+		res.render('pages/verification_code', {
+			title: "Logical Address | Verify Your Physical Address",
+			page: 'verification_code',
+			csrfToken: req.csrfToken(),
+			app_title: "Logical Address",
+			user: _.has(req.session, 'user') ? req.session.user : false
+		});
+	});
+	
+	app.post('/verification_code', csrfProtection, function (req, res, next) {
+		
+		if(_.has(req.session, 'user')) return res.redirect('/');
+		req.flash('message', 'Invalid code');
+		return res.redirect('/verification_code');
+	});
+	
 	app.get('/logout',function (req, res, next) {
 		delete req.session.user;
 		res.redirect('/');
