@@ -24,6 +24,9 @@
                 <!--end secondary-nav-->
                 <% if (user) { %>
                 <div class="secondary-nav">
+                    <% if (user.account_type == 'business') { %>
+                    <a class="promoted" href="/employee">Employees</a>
+                    <% } %>
                     <ul class="navigation">
                         <li class="has-child">
                             <div class="image"><div class="bg-transfer"><img src="/assets/img/avater.png" alt=""></div></div>

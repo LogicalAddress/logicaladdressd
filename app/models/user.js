@@ -224,6 +224,24 @@ User.prototype.findByGlobalLA = function(globalLa, callback, context) {
 	}
 };
 
+User.prototype.findByGlobalLAAndAccountType = function(data, callback, context) {
+	context = (context ? context : this);
+	if (_.isObject(data) && _.has(data, 'global_logical_address') && _.has(data, 'account_type')) {
+		
+		UserModel.findOne({global_logical_address: data.global_logical_address, account_type: data.account_type}, 
+		function(err, record){
+			if (record && record.username) {
+				var row = _.omit(record.toObject(), ['password','q_book','q_space','q_mother','q_animal']);
+				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
+			}else{
+				return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+			}
+		});
+	}else{
+		return (_.isFunction(callback) ? callback.apply(context, ['Invalid Parameters']) : null);
+	}
+};
+
 User.prototype.update = function(user, data, callback, context){
 	context = (context ? context : this);
 	data = _.omit(data, ['global_logical_address','first_name','last_name', 'password', 'account_type']);

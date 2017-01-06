@@ -7,6 +7,7 @@ var Business = require('../models/business');
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
 var hash = require('md5');
+var Employee = require('../models/employee');
 
 module.exports = function (app) {
 
@@ -258,13 +259,28 @@ module.exports = function (app) {
 
 		if(!_.has(req.session, 'user')) return res.redirect('/');
 		
-		res.render('pages/user-profile', {
-			title: "Logical Address | Your Profile",
-			page: 'verification_code',
-			csrfToken: req.csrfToken(),
-			app_title: "Logical Address",
-			user: _.has(req.session, 'user') ? req.session.user : false
-		});
+		if(req.session.user.account_type == "personal"){
+			res.render('pages/user-profile', {
+				title: "Logical Address | Your Profile",
+				page: 'user-profile',
+				csrfToken: req.csrfToken(),
+				app_title: "Logical Address",
+				user: _.has(req.session, 'user') ? req.session.user : false
+			});
+		}else{
+			Business.findRecordsByUserId(req.session.user, function(err, businesses){
+				res.render('pages/business-profile', {
+					title: "Logical Address | Your Profile",
+					page: 'business-profile',
+					csrfToken: req.csrfToken(),
+					app_title: "Logical Address",
+					user: _.has(req.session, 'user') ? req.session.user : false,
+					business: businesses[0],
+				});	
+			});
+		}
+		
+			
 	});
 	
 	app.get('/logout',function (req, res, next) {
@@ -309,6 +325,63 @@ module.exports = function (app) {
 			return res.redirect('/profile');
 		}
 			
+	});
+	
+	
+	app.get('/employee', csrfProtection, function (req, res, next) {
+
+		if(!_.has(req.session, 'user')) return res.redirect('/');
+		if(req.session.user.account_type != "business") return res.redirect('/');
+		Business.findRecordsByUserId(req.session.user, function(err, record){
+			if (record) {
+        		Employee.findByBusId(record[0]._id, function(err, record){
+        			if (record) {
+        				return res.render('pages/employee-list', {
+							title: "Logical Address | Employee List",
+							page: 'employee-list',
+							csrfToken: req.csrfToken(),
+							app_title: "Logical Address",
+							user: _.has(req.session, 'user') ? req.session.user : false,
+							employees: record
+						});
+        			}else{
+        				 return res.redirect('/');
+        			}
+        
+        		});
+    		}else{
+				return res.redirect('/');
+			}
+		});
+	});
+	
+	app.post('/employee', function (req, res, next) {
+		if(!_.has(req.session, 'user')) return res.redirect('/');
+		if(req.session.user.account_type != 'business'){
+		    req.flash('error', 'Only business account can make this call');
+			return res.redirect('/employee');
+		}
+		if(!_.has(req.body, 'global_logical_address')){
+		    req.flash('error', 'Please supply the employee\'s global logical address');
+			return res.redirect('/employee');
+		}
+		Business.findRecordsByUserId(req.session.user, function(err, records){
+			if (records) {
+			    records[0].global_logical_address = req.body.global_logical_address;
+        		Employee.createRecord(records[0], function(err, record){
+        			if (record) {
+        				req.flash('message', 'Employee added');
+						return res.redirect('/employee');
+        			}else{
+        				req.flash('error', 'Unable to add employee, ensure it\'s not a business account');
+						return res.redirect('/employee');
+        			}
+        		});
+			}else{
+			    req.flash('error', 'An unknown error occured');
+				return res.redirect('/employee');
+			}
+		});
 	});
 
 };

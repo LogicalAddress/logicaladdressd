@@ -31,14 +31,16 @@ Employee.prototype.createRecord = function(data, callback, context) {
 
 	if (_.isObject(data) && _.has(data, 'location_ref') && 
 		_.has(data, 'global_logical_address')  && _.has(data, 'trace_id')) {
+			
+			console.log(data);
 
-		UserModel.findByGlobalLA({global_logical_address: data.global_logical_address}, 
+		UserModel.findByGlobalLAAndAccountType({account_type: 'personal', global_logical_address: data.global_logical_address}, 
 			function (err, record) {
 			if (record) {
 				var record_model = new EmployeeModel();
 				record_model.user_ref = record._id;
 				record_model.location_ref = data.location_ref;
-				record_model.business_ref = data.business_ref;
+				record_model.business_ref = data._id;
 				record_model.global_logical_address = data.global_logical_address;
 				
 				record_model.save(function(err, record){

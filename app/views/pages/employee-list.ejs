@@ -1,0 +1,78 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Employee List</li>
+            </ol>
+            <!--end breadcrumb-->
+            <section class="page-title center">
+                <h1>Your Employees</h1>
+            </section>
+            <!--end page-title-->
+            <section>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3">
+                        <form class="form inputs-underline" action="/employee" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <section>
+                                <!--end form-group-->
+                                <div class="form-group">
+                                    <label for="global_logical_address">Employee Logical Address</label>
+                                    <input type="text" class="form-control" name="global_logical_address" id="global_logical_address" placeholder="Global Logical Address">
+                                </div>
+                                <!--end form-group-->
+                                <div class="form-group center">
+                                    <button type="submit" class="btn btn-primary btn-rounded">Add Employee</button>
+                                </div>
+                                <!--end form-group-->
+                            </section>
+                        </form>
+                        <!--end form-->
+                            <section>
+                                <h3>Employee List</h3>
+                                <div class="row table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Mobile Number</th>
+                                            <th>Global Logical Address</th>
+                                        </thead>
+                                        <tbody>
+                                            <% for(var i=0; i< employees.length; i++) {%>
+                                            <tr>
+                                                <td><%= employees[i].user_ref.first_name %></td>
+                                                <td><%= employees[i].user_ref.last_name %></td>
+                                                <td><%= employees[i].user_ref.mobile_number %></td>
+                                                <td><%= employees[i].user_ref.global_logical_address %></td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                    <!--end col-md-6-->
+                                </div>
+                                <!--end row-->
+                            </section>
+                    </div>
+                    <!--end col-md-6-->
+                </div>
+                <!--end row-->
+            </section>
+            <!--end ro-->
+        </div>
+        <!--end container-->
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<!--end page-wrapper-->
+<% include ../partials/footer %>
