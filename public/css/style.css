@@ -18,3 +18,35 @@
 #page-footer .footer-navigation a {
     color: #0097d8;
 }
+.hero-section.has-map .form.horizontal form {
+    padding: 0px;/* 25px 5px 25px;*/
+}
+
+.form.horizontal.position-bottom form {
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -webkit-transform: translateY(-100%);
+    transform: translateY(-100%);
+    position: relative;
+    bottom: 40px;
+}
+.form.horizontal form {
+    background-color: transparent;
+    box-shadow: 0px 0px 0px #fff;
+}
+.form.horizontal form#search .input-group-addon {
+    background: transparent;
+    padding: 0px;
+}
+.form.horizontal form#search .form-control, .form.horizontal form#search .input-group-addon {
+    border: 2px solid #0097d8;
+}
+.form.horizontal form#search .form-control {
+    border-radius: 30px 0px 0px 30px;
+    border-right-width: 0;
+}
+.form.horizontal form#search .input-group-addon, .form.horizontal form#search .btn {
+    border-radius: 0px 30px 30px 0px;
+    border-left-width: 0;
+    color: #0097d8;
+}
