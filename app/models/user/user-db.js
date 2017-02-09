@@ -9,8 +9,9 @@ var UserSchema = new Schema({
 	first_name: {type:String},
 	last_name: {type:String},
 	mobile_number: {type:String, required : true, unique : true, index: true},
-	global_logical_address: {type:String, required : true, unique : true, index: true},
+	global_logical_address: {type: String, required : true, unique : true, index: true},
 	account_type: { type: String, default: 'personal'}, //or business
+	account_status: { type: String, default: 'unverified' }, //or verified
 
 	q_animal: { type: String, default: 'Goat'},
 	q_mother: { type: String, default: 'B'},
@@ -26,6 +27,11 @@ var UserSchema = new Schema({
 	twitter: { type: String, default: ''},
 	pinterest: { type: String, default: ''},
 	youtube: { type: String, default: ''},
+	
+	/*Work */
+	work_phone: { type: [String], default: []},
+	work_email: { type: [String], default: []},
+	
 });
 
 UserSchema.methods.maskPassword = function () {

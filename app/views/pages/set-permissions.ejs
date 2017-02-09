@@ -1,0 +1,67 @@
+<!-- views/pages/set-permissions.ejs -->
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Logical Address Inc">
+    <title>Logical Address | Set Permissions</title>
+    <script type="text/javascript" src="/assets/js/jquery-2.2.1.min.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="/assets/fonts/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="/assets/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/components/css-toggle-switch/dist/toggle-switch.css">
+    <link rel="stylesheet" type="text/scss" href="/components/css-toggle-switch/src/themes/ios.scss">
+    
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <form method="get" action="/3rdparty/set-permissions/" class="form-horizontal">
+                <div class="col-xs-offset-1 col-xs-11">
+                    <div class="col-xs-4 control-label tm">
+                        Location
+                    </div>
+                    <div class="col-xs-8">
+                        <div class="form-group">
+                            <div class="switch-light switch-ios">
+                                <input name="view3" type="radio" checked>
+                                <label for="hour3" onclick="">Hour</label>
+                                
+                                <input id="day3" name="view3" type="radio">
+                                <label for="day3" onclick="">Day</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <input checked data-toggle="toggle" data-on="Allow" data-off="Deny" data-onstyle="success" data-offstyle="danger" data-style="ios" type="checkbox">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label class="checkbox-inline">
+                                <input checked data-toggle="toggle" data-on="Allow" data-off="Deny" data-onstyle="success" data-offstyle="danger" data-style="ios" type="checkbox"> Personal Email
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <style type="text/css">
+      .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+      .toggle.ios .toggle-handle { border-radius: 20px; }
+      .tm { display: table-cell; vertical-align: middle; }
+    </style>
+    <script type="text/javascript">
+        window.onunload = function() {
+            var win = window.opener;
+            if (!win.closed) {
+                win.logical_address_finalyzer(null, {'la': '0091234566'});
+            }
+        };
+    </script>
+</body>
+</html>

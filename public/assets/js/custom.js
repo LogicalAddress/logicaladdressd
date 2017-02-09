@@ -288,6 +288,10 @@ $(document).ready(function($) {
     ratingPassive("body");
     bgTransfer();
     responsiveNavigation();
+    
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 
 });
 
