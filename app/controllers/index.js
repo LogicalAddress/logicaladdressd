@@ -12,12 +12,14 @@ var Employee = require('../models/employee');
 module.exports = function (app) {
 
 	app.get('/',function (req, res, next) {
-		res.render('pages/index', {
+		var data = {
 			title: "Logical Address | Welcome to Logical Address",
 			page: 'home',
 			app_title: "Logical Address",
 			user: _.has(req.session, 'user') ? req.session.user : false
-		});
+		};
+		return res.render('pages/index', data);
+		// res.render('pages/search-result', data);
 	});
 	
 	app.get('/login', csrfProtection, function (req, res, next) {

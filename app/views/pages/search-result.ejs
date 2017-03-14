@@ -1,0 +1,46 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        
+            <div class="results-wrapper">
+                <div class="sidebar-detail">
+                    <div class="tse-scrollable">
+                        <div class="tse-content">
+                            <div class="sidebar-wrapper"></div>
+                            <!-- end sidebar-detail-content-->
+                        </div>
+                        <!--end tse-content-->
+                    </div>
+                    <!--end tse-scrollable-->
+                </div>
+                <!--end sidebar-detail-->
+                <div class="results">
+                    <div class="tse-scrollable">
+                        <div class="tse-content">
+                            <div class="section-title">
+                                <h2>Search Results<span class="results-number"></span></h2>
+                            </div>
+                            <!--end section-title-->
+                            <div class="results-content"></div>
+                            <!--end results-content-->
+                        </div>
+                        <!--end tse-content-->
+                    </div>
+                    <!--end tse-scrollable-->
+                </div>
+                <!--end results-->
+            </div>
+            <!--end results-wrapper-->
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<!--end page-wrapper-->
+<% include ../partials/footer %>
