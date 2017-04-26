@@ -37,7 +37,7 @@ module.exports = function (grunt) {
       options: {
         multistr: true,
       },
-      all: ['app/controllers/*', 'app/models', 'app/lib', 'spec/*']
+      all: ['app/controllers/**/*', 'app/models', 'app/lib', 'spec/*', 'app/middlewares/**/*']
     },
     watch: {
       options: {
