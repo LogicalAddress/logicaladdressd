@@ -32,6 +32,9 @@ var UserSchema = new Schema({
 	work_phone: { type: [String], default: []},
 	work_email: { type: [String], default: []},
 	
+	/*Custom URL like logicaladdress.com/nhub like facebook.com/LogicalAddress default is your la*/
+	custom_url: {type: String, unique: true, index: true},
+	custom_url_updated_at: { type: Date },
 });
 
 UserSchema.methods.maskPassword = function () {
