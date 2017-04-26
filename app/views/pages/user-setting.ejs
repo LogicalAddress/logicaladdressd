@@ -1,0 +1,53 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">User Setting</li>
+            </ol>
+            <!--end breadcrumb-->
+            <section class="page-title center">
+                <h1>Your Setting</h1>
+            </section>
+            <!--end page-title-->
+            <section>
+                <section>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
+                            <h3 class="center">Set Profile ID</h3>
+                            <p>Your current profile url is <br/><%= ENV === "production" ? "https://logicaladdress.com" : "https://logicaladdressd-dretnan.c9users.io" %>/<%= user.custom_url ? user.custom_url : user.global_logical_address %></p>
+                            <%- user.custom_url_updated_at ? '' : '<p>Note that you can only change your profile ID once and spaces are not allowed</p>' %>
+                            <form class="form inputs-underline" action="/user/seturl" method="POST">
+                            <input type="hidden" name="_method" value="put">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <div class="form-group">
+                                    <label for="custom_url">Current Profile ID</label>
+                                    <input type="text" class="form-control" name="custom_url" id="custom_url" value="<%= user.custom_url ? user.custom_url : user.global_logical_address %>" <%= user.custom_url_updated_at ? 'disabled' : '' %>>
+                                </div>
+                                <!--end form-group-->
+                                <div class="form-group center">
+                                    <button type="submit" class="btn btn-primary btn-framed btn-rounded btn-light-frame" <%= user.custom_url_updated_at ? 'disabled' : '' %>>Change Profile ID</button>
+                                </div>
+                                <!--end form-group-->
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </section>
+            <!--end ro-->
+        </div>
+        <!--end container-->
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<!--end page-wrapper-->
+<% include ../partials/footer %>
