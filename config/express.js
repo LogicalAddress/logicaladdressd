@@ -61,6 +61,11 @@ module.exports = function(app, config) {
   // Any URL's that do not follow the below pattern should be avoided unless you 
   // are sure that authentication is not needed
   app.all('/api/v1/*', require('../app/lib/authentication.js'));
+  
+  var middlewares = glob.sync(config.root + '/middlewares/**/*.js');
+	middlewares.forEach(function (middleware) { 
+		require(middleware)(app);
+	});
 
   var controllers = glob.sync(config.root + '/app/controllers/*.js');
   controllers.forEach(function (controller) {
