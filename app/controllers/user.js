@@ -147,6 +147,7 @@ HTTP/1.1 401 Unauthorized
 
 				if (record) {
 					var accessToken = UserLib.generateAccessToken(record);
+					req.session.user = record;
 					res.status(200);
 					return res.json({status: true, access_token: accessToken, 
 						user: record});

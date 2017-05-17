@@ -3,7 +3,7 @@
 <script type="text/javascript" src="/assets/js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/assets/js/bootstrap-select.min.js"></script>
-<% if (page == "home" || page == "register-business") { %>
+<% if (page == "home" || page == "register-business" || "register") { %>
 <% if (ENV_DEVELOPMENT) { %>
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBkLJb74qeWgeP--MxL3n1SavO0TcJIkbA&libraries=places"></script>
 <% }else{ %>
@@ -36,7 +36,7 @@
 </script>
 <% } %>
 
-<% if (page == "register-business") { %>
+<% if (page == "register-business" || page == "register") { %>
 <script type="text/javascript" src="/assets/js/maps.js"></script>
 <script>
         var _latitude = 40.7344458;

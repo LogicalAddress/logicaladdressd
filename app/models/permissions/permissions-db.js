@@ -3,10 +3,12 @@ var Schema = mongoose.Schema;
 
 var PermissionsSchema = Schema({
     
-    allowed_la: { type: String, required: true }, //The allowed user or business LA
+    global_logical_address: { type: String, required: true },
+    app_id: { type: String, required: true, index: true },
     allowed_at: { type: Date, default: Date.now() },
     account_type: { type: String, default: 'personal' },
-    name: { type: Boolean, default: false },
+    first_name: { type: Boolean, default: false },
+    last_name: { type: Boolean, default: false },
     mobile_number: { type: Boolean, default: false },
     email: { type: Boolean, default: false },
     location: { type: Boolean, default: false },
@@ -18,6 +20,6 @@ var PermissionsSchema = Schema({
 }); 
 
 PermissionsSchema.set('autoIndex', true);
-var PermissionsModel = mongoose.model('Permissions', PermissionsSchema);
+var Permissions = mongoose.model('Permissions', PermissionsSchema, 'permissions');
 
-module.exports.PermissionsModel = PermissionsModel;
+module.exports.PermissionsModel = Permissions;

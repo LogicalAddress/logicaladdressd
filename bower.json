@@ -1,12 +1,43 @@
 {
-  "name": "LogicalAddressD",
+  "name": "LogicalAddress",
   "version": "0.0.1",
   "ignore": [
     "**/.*",
     "node_modules",
-    "components"
+    "components",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
   ],
   "dependencies": {
-    "css-toggle-switch": "~4.0.2"
-  }
+  },
+  "homepage": "http://logicaladdress.com",
+  "authors": [
+    "Logical Address <hello@logicaladdress.com>"
+  ],
+  "description": "The stay-in touch app",
+  "main": "app.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node",
+    "yui"
+  ],
+  "keywords": [
+    "location",
+    "logical",
+    "address",
+    "find",
+    "people",
+    "contact",
+    "number",
+    "gps",
+    "me",
+    "house",
+    "work"
+  ],
+  "license": "MIT",
+  "private": true
 }

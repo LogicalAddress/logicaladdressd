@@ -8,8 +8,21 @@ var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
 var hash = require('md5');
 var Employee = require('../models/employee');
+var Apps = require('../models/apps.js');
+var Home = require("../models/home");
 
 module.exports = function (app) {
+	
+	// app.use(function(req, res, next) {
+	// 	req.app.locals.furl = function(resource) {
+	// 		resource = resource ? resource : '';
+	// 		//var proto = req.connection.encrypted ? 'https' : 'http';
+	// 		return "//" + req.headers.host + '/' + resource;
+	// 	};
+	// 	req.app.locals.app_title = "LogicalAddress";
+	// 	return next();
+	// });
+	
 
 	app.get('/',function (req, res, next) {
 		var data = {
@@ -21,6 +34,7 @@ module.exports = function (app) {
 		return res.render('pages/index', data);
 		// res.render('pages/search-result', data);
 	});
+	
 	
 	app.get('/login', csrfProtection, function (req, res, next) {
 		
@@ -79,7 +93,7 @@ module.exports = function (app) {
 		if(_.has(req.session, 'user')) return res.redirect('/');
 		
 		if ( ( (_.has(req.body, 'mobile_number') && !_.isEmpty(req.body.mobile_number.trim())) || 
-		_.has(req.session, 'mobile_number') ) && _.has(req.body, 'first_name') && 
+		_.has(req.session, 'mobile_number') ) && _.has(req.body, 'first_name') && _.has(req.body, 'address') && 
 		_.has(req.body, 'last_name') && _.has(req.body, 'password') && 
 		!_.isEmpty(req.body.first_name.trim()) && 
 			!_.isEmpty(req.body.password.trim())) {
@@ -91,21 +105,42 @@ module.exports = function (app) {
 				req.body.username = req.body.mobile_number;
 			}
 			
-			User.register(req.body, function(err, record){
-			
-				if(record){
-					var accessToken = UserLib.generateAccessToken(record);
-					req.session.user = record;
+			User.register(req.body, function(err, user){
+				if (err){
+					if(err == 'Duplicate Entry') {
+						req.flash('error', 'Dublicate Entry');
+					}else{
+						req.flash('error', 'An unknown error occured' + err);	
+					}
+					return res.redirect('/register'); //TODO get previous redirect
+				}
+				if(user){
+					req.session.user = user;
 					delete req.session.mobile_number;
-					return res.redirect('/');//TODO redirect to previous url
+					res.redirect('/');//TODO redirect to previous url
 				}
-				
-				if (err == 'Duplicate Entry') {
-					req.flash('error', 'Dublicate Entry');
-				}else{
-					req.flash('error', 'An unknown error occured' + err);
-				}
-				return res.redirect('/register'); //TODO get previous redirect
+				setTimeout(function(){
+					Home.update(user, {
+						address: req.body.address
+					}, function(err, home){
+						if (home) {
+							console.log(home);
+							Home.updateLocation(user, {
+								gps: { longitude: req.body.longitude || 0, latitude: req.body.latitude || 0},
+							}, function(err, record){
+								if(record){
+									console.log(record);
+								}else{
+									console.log("unable to update home location");
+									console.log(err);
+								}
+							});
+						}else{
+							console.log("unable to update home location");
+							console.log(err);
+						}
+					});
+				},4000);
 			});
 		}else{
 			if(_.has(req.session, 'mobile_number')) {
@@ -309,22 +344,22 @@ module.exports = function (app) {
 		if(!_.has(req.body, 'new_password') || !_.has(req.body, 'confirm_new_password') || 
 		req.body.new_password.trim().length === 0 || req.body.new_password !== req.body.confirm_new_password){
 			req.flash('error', 'Something went wrong, Unable to update password.');
-			return res.redirect('/profile');
+			return res.redirect('/profile?r=9x8');
 		}
-		if(_.has(req.body, 'current_password') && req.session.user.password == hash(req.body.current_password)){
-			User.updatePassword(req.session.user, {password: hash(req.body.new_password)}, function(err, updatedUser){
+		if(_.has(req.body, 'current_password') && req.session.user.password == hash(req.body.current_password.trim()).toLowerCase()){
+			User.updatePassword(req.session.user, {password: hash(req.body.new_password.trim()).toLowerCase()}, function(err, updatedUser){
 				if(updatedUser){
 					req.session.user = updatedUser;
 					req.flash('message', 'Updated.');
-					return res.redirect('/profile');
+					return res.redirect('/profile?r=9x9');
 				}else{
 					req.flash('error', 'Something went wrong, Unable to update password.');
-					return res.redirect('/profile');
+					return res.redirect('/profile?r=9xA');
 				}
 			});
 		}else{
 			req.flash('error', 'Something went wrong, Unable to update password.');
-			return res.redirect('/profile');
+			return res.redirect('/profile?r=9xB');
 		}
 			
 	});
@@ -371,7 +406,7 @@ module.exports = function (app) {
 			if (records) {
 			    records[0].global_logical_address = req.body.global_logical_address;
         		Employee.createRecord(records[0], function(err, record){
-        			if (record) {
+        			if (record && !err) {
         				req.flash('message', 'Employee added');
 						return res.redirect('/employee');
         			}else{
@@ -383,6 +418,61 @@ module.exports = function (app) {
 			    req.flash('error', 'An unknown error occured');
 				return res.redirect('/employee');
 			}
+		});
+	});
+	
+	app.get('/developers', function(req, res, next) {
+		if(!_.has(req.session, 'user')) return res.redirect(req.app.locals.furl('login?next=developers'));
+	    var render = function(my_apps) {
+	    	my_apps = my_apps ? my_apps : null;
+	    	res.render('pages/developers', {
+		    	title: 'Developers',
+		    	app_title: 'LogicalAddress',
+		    	page: 'developers',
+				user: _.has(req.session, 'user') ? req.session.user : false,
+				my_apps: my_apps
+	    	});
+	    };
+		Apps.findRecordsByUser(req.session.user, function(err, results) {
+			if(results) {
+				render(results);// = results;
+			} else render();
+		});
+	});
+	
+	app.post('/developers/new-app', function(req, res, next) {
+		 if(!_.has(req.session, 'user')) return res.redirect('/login?next=/developers/');
+		 if(_.has(req.body, 'app_name') && _.has(req.body, 'callback_url') && _.has(req.body, 'app_url') && !_.isEmpty(req.body.app_name.trim()) && !_.isEmpty(req.body.app_url.trim()) && !_.isEmpty(req.body.callback_url.trim())) {
+		 	Apps.create(req.session.user, req.body, function(err, record) {
+		 		if(!err && record) {
+		 			req.flash('info', 'App created successfully');
+		 			return res.redirect('/developers/');
+		 		} else {
+		 			req.flash('error', 'An unknown error occured');
+		 			return res.send(err);
+		 		}
+		 	});
+		 } else {
+		 	req.flash('error', 'Invalid parameters');
+		 	res.redirect('/developers/?c=invalid');
+		 }
+	});
+	
+	app.get('/developers/app/:appId', function(req, res, next) {
+		Apps.findById(req.params.appId, function(err, record) {
+			if(!_.has(req.session, 'user')) return res.redirect('/login?next=/developers/app/' + req.params.appId);
+		    if(!err && record.user_ref == req.session.user._id) {
+		    	return res.render('pages/app-details', {
+			    	title:			record.app_name,
+			    	app_title:		'Logical Address',
+			    	page:			'app-details',
+			    	app_details:	record,
+			    	user:			_.has(req.session, 'user') ? req.session.user : false,
+			    });
+		    } else {
+		    	res.status(404);
+		    	return res.json({status: false, reason: 'Invalid request'});
+		    }
 		});
 	});
 

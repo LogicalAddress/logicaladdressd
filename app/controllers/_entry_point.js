@@ -1,3 +1,14 @@
+// var chkProfileId = require("../lib/chkProfileId");
+var underscore = require("underscore");
+var User = require("../models/user");
+
+var filterFieldsByPerm = function(req, res, next){
+	next();
+}
+var chkLocation = function(req, res, next){
+	next();
+}
+
 module.exports = function(app){
     
     /*
@@ -23,9 +34,23 @@ module.exports = function(app){
     * will not resolve. This is why we name the file to begin with _ (lower ascii value, first loaded)
     */ 
     
-    app.get( "/:businessName", function(req, res, next){
-		console.log("Check for named page, if found dont next()");
-		next();
+    app.get( "/:profileId", chkLocation, filterFieldsByPerm, function(req, res, next){
+    	User.findOne({
+			custom_url: req.params.profileId,
+		}, function(error, response){
+			if(response){
+				req.profileDetails = response;
+			}
+			if(req.profileDetails){
+	    		return res.render('pages/public-business-profile', {
+	    			title: "Logical Address | Account Setting",
+					page: 'user-setting',
+					profileDetails: req.profileDetails,
+					user: req.session.user ? req.session.user : false,
+	    		});
+    		}
+    		next();
+		});
 	});
 	
 };

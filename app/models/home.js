@@ -179,14 +179,15 @@ Home.prototype.update = function(user, data, callback, context) {
 		data.updated_at = new Date();
 		HomeModel.findOneAndUpdate({user_ref: user._id}, data, {new: true}, 
 			function (err, record) {
+			if(err){
+				return (_.isFunction(callback) ? callback.apply(context, 
+					["Can't Save: " + err]) : null );	
+			}
 			if (record) {
 				var row = record.toObject();
 				// row = _.omit(row, [/*'location_ref',*/'user_ref']);
 				return (_.isFunction(callback) ? callback.apply(context, 
 					[null, row]) : null);
-			}else{
-				return (_.isFunction(callback) ? callback.apply(context, 
-					["Can't Save: " + err]) : null );
 			}
 		});
 	}else{

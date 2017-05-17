@@ -1,0 +1,75 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    <div id="page-content">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="<%= furl('') %>">Home</a></li>
+                <li><a href="<%= furl('developers/') %>">Developers</a></li>
+                <li><a href="<%= furl('developers/apps/') %>">Apps</a></li>
+                <li class="active"><%= app_details.app_name %></li>
+            </ol>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 col-sm-7">
+                    <section class="page-title">
+                        <h1><%= app_details.app_name %></h1>
+                        <form class="clearfix form inputs-underline">
+                            <div class="box">
+                                <div class="comment">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="comment-title">
+                                                <h4>App Details</h4>
+                                            </div>
+                                            <!--end title-->
+                                            <div class="form-group">
+                                                <label for="name">App ID</label>
+                                                <input type="text" class="form-control focus-select" readonly="readonly" value="<%= app_details.app_id %>">
+                                            </div>
+                                            <!--end title-->
+                                            <div class="form-group">
+                                                <label for="name">App Secret</label>
+                                                <input type="text" class="form-control focus-select" readonly="readonly" value="<%= app_details.secret_key %>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message">Link to authorization code</label>
+                                                <textarea class="form-control focus-select" id="message" rows="4"readonly="readonly"><%= ENV === "production" ? "https://logicaladdress.com" : "https://logicaladdressd-dretnan.c9users.io" %>/v1/oauth/authorize?response_type=code&app_id=<%= app_details.app_id %>&callback_url=<%= encodeURIComponent(app_details.callback_url) %></textarea>
+                                            </div>
+                                            <!--end form-group-->
+                                        </div>
+                                        <!--end col-md-8-->
+                                    </div>
+                                    <!--end row-->
+                                </div>
+                                <!--end comment-->
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            <!--end page-title-->
+            <a href="/" class="btn btn-danger btn-framed btn-rounded btn-light-frame icon pull-right">Disabled App</a>
+        </div>
+        </div>
+    </div>
+    <!--end page-content-->
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<script type="text/javascript" src="<%= furl('assets/js/initial.min.js') %>"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.focus-select').focus(function(e) {
+            $(this).select();
+        });
+        
+        $('.profile').initial();
+    });
+</script>
+<% include ../partials/footer %>

@@ -50,9 +50,9 @@ module.exports = function(app, config) {
   app.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
-      var method = req.body._method
-      delete req.body._method
-      return method
+      var method = req.body._method;
+      delete req.body._method;
+      return method;
     }
   }));
 
@@ -61,6 +61,16 @@ module.exports = function(app, config) {
   // Any URL's that do not follow the below pattern should be avoided unless you 
   // are sure that authentication is not needed
   app.all('/api/v1/*', require('../app/lib/authentication.js'));
+  
+  app.use(function(req, res, next) {
+      req.app.locals.furl = function(resource) {
+          resource = resource ? resource : '';
+          //var proto = req.connection.encrypted ? 'https' : 'http';
+          return "//" + req.headers.host + '/' + resource;
+      };
+      req.app.locals.app_title = "LogicalAddress";
+      return next();
+  });
   
   var middlewares = glob.sync(config.root + '/middlewares/**/*.js');
 	middlewares.forEach(function (middleware) { 

@@ -1,67 +1,129 @@
-<!-- views/pages/set-permissions.ejs -->
-
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Logical Address Inc">
-    <title>Logical Address | Set Permissions</title>
-    <script type="text/javascript" src="/assets/js/jquery-2.2.1.min.js"></script>
-    
-    <link rel="stylesheet" type="text/css" href="/assets/fonts/font-awesome.css">
-    <link rel="stylesheet" type="text/css" href="/assets/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/components/css-toggle-switch/dist/toggle-switch.css">
-    <link rel="stylesheet" type="text/scss" href="/components/css-toggle-switch/src/themes/ios.scss">
-    
+    <title><%= title %></title>
+    <style>
+    body { font-family: "proxima-nova", "proxima nova", "helvetica neue", "helvetica", "arial", sans-serif;}
+    </style>
+    <meta content='width=device-width' name='viewport'>
+    <link color='#0069ff' href='/mask_icon.svg' rel='mask-icon'>
+    <link href="<%= furl('assets/img/lalogo-fav.png') %>" rel='shortcut icon' type='image/png'>
+    <link href="<%= furl('assets/img/lalogo-fav.png') %>" rel='apple-touch-icon'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="<%= furl('assets/uikit/css/uikit.min.css') %>" />
+    <link rel="stylesheet" href="<%= furl('assets/css/style2.css') %>" />
+    <link rel="stylesheet" href="<%= furl('assets/css/login_page.min.css') %>" />
+
+    <script type="text/javascript" src="<%= furl('assets/js/jquery-2.2.1.min.js') %>"></script>
+    <script type="text/javascript" src="<%= furl('assets/uikit/js/uikit.min.js') %>"></script>
+    <script type="text/javascript" src="<%= furl('assets/uikit/js/uikit-icons.min.js') %>"></script>
 </head>
-<body>
-    <div class="container">
-        <div class="row">
-            <form method="get" action="/3rdparty/set-permissions/" class="form-horizontal">
-                <div class="col-xs-offset-1 col-xs-11">
-                    <div class="col-xs-4 control-label tm">
-                        Location
-                    </div>
-                    <div class="col-xs-8">
-                        <div class="form-group">
-                            <div class="switch-light switch-ios">
-                                <input name="view3" type="radio" checked>
-                                <label for="hour3" onclick="">Hour</label>
-                                
-                                <input id="day3" name="view3" type="radio">
-                                <label for="day3" onclick="">Day</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input checked data-toggle="toggle" data-on="Allow" data-off="Deny" data-onstyle="success" data-offstyle="danger" data-style="ios" type="checkbox">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label class="checkbox-inline">
-                                <input checked data-toggle="toggle" data-on="Allow" data-off="Deny" data-onstyle="success" data-offstyle="danger" data-style="ios" type="checkbox"> Personal Email
-                            </label>
-                        </div>
-                    </div>
+<body class="login_page">
+
+    <div class="login_page_wrapper">
+        <div class="md-card" id="login_card">
+            <div class="md-card-content large-padding" id="login_form">
+                <div class="login_heading">
+                    <img class="user_avatar" data-name="<%= app_details.app_name %>" />
                 </div>
-            </form>
+                <form action="<%= furl('v1/oauth/authorize/') %>" method="post" id="permissions">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <div class="uk-form-row">
+                        <div uk-alert class="uk-alert-primary">
+                            <p class="uk-text-small"><%= app_details.app_name %> is requesting access to your LogicalAddress. Please tick the boxes corresponding to the section you wish to give <%= app_details.app_name %> access to</p>
+                        </div>
+                    </div>
+                    <ul class="md-list md-list-addon md-list-right">
+                        <%
+                        scopes.forEach(function(key) {
+                            var e = key.replace(/_/g, " ");
+                        %>
+                        <li>
+                            <div class="md-list-content">
+                                <span class="md-list-heading"><%= e.charAt(0).toUpperCase() + e.slice(1) %></span>
+                                <span class="uk-text-small uk-text-muted">
+                                    <%= app_details.app_name %> will have access to your <%= e %>
+                                </span>
+                            </div>
+                            <div class="md-list-addon-element">
+                                <span class="icheck-inline">
+                                    <input type="checkbox" name="permissions[]" value="<%= key %>" id="<%= key %>" data-md-icheck />
+                                </span>
+                            </div>
+                        </li>
+                        <%  }) %>
+                    </ul>
+                    <div class="uk-margin-medium-top">
+                        <button type="submit" class="md-btn md-btn-primary md-btn-block md-btn-large">Allow</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="uk-margin-top uk-text-center">
+            <a href="<%= furl('permissions') %>">Mange Permissions</a>
         </div>
     </div>
-    <style type="text/css">
-      .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
-      .toggle.ios .toggle-handle { border-radius: 20px; }
-      .tm { display: table-cell; vertical-align: middle; }
-    </style>
+
+    <!-- common functions -->
+    <script src="<%= furl('assets/js/common.min.js') %>"></script>
+    <!-- uikit functions -->
+    <script src="<%= furl('assets/js/uikit_custom.min.js') %>"></script>
+    <!-- altair core functions -->
+    <script src="<%= furl('assets/js/altair_admin_common.min.js') %>"></script>
+
+    <!-- altair login page functions -->
+    <script src="<%= furl('assets/js/pages/login.min.js') %>"></script>
+    
+    <script src="<%= furl('assets/js/helpers.js') %>"></script>
+    <script type="text/javascript" src="<%= furl('assets/js/initial.min.js') %>"></script>
     <script type="text/javascript">
-        window.onunload = function() {
-            var win = window.opener;
-            if (!win.closed) {
-                win.logical_address_finalyzer(null, {'la': '0091234566'});
-            }
-        };
-    </script>
+    $(document).ready(function() {
+        $('.user_avatar').initial({seed: 50, fontWeight: 400});
+        
+        // var div = document.createElement('div');
+        // div.innerHTML = '<%= decodeURIComponent(after) %>';
+        // var after = div.first/Child.nodeValue;
+        
+        var after_data = <%- after_data ? JSON.stringify(after_data) : false %>;
+        var url = '?';
+        if(after_data) {
+            Object.keys(after_data).forEach(function(e,i) {
+                url += e + "=" + after_data[e] + "&";
+            });
+            console.log(url);
+        }
+        
+        var form = $("#permissions");
+        form.unbind().submit(function(e) {
+            $.ajax({
+                url: form.attr('action') + url,
+                data: form.serialize(),
+                method: form.attr('method'),
+                processData: false,
+                dataType: "JSON",
+                success: function(res, status) {
+                    if(res.status) {
+                        var permited = "";
+                        Object.keys(res.permited).forEach(function(key) { permited += res.permited[key] + "," });
+                        permited = rtrim(permited, ',');
+                        // UIkit.notification({
+                        //     message: '<%= app_details.app_name %> now has access to your LogicalAddress',
+                        //     status: 'primary',
+                        //     pos: 'top-right',
+                        //     timeout: 5000
+                        // });
+                        window.location = '<%= after %>?logical_address=<%= user.global_logical_address %>&permited=' + permited;
+                     
+                        console.log(res);
+                    }
+                },
+                error: function(xhr, res, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+            e.preventDefault();
+        });
+    });
+</script>
 </body>
 </html>

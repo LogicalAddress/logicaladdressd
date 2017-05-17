@@ -1,0 +1,98 @@
+<!-- views/pages/index.ejs -->
+
+<% include ../partials/header %>
+<div class="page-wrapper">
+    <% include ../partials/page-header %>
+    <!--end page-header-->
+    
+    <div id="page-content">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Developers</li>
+            </ol>
+            <!--end breadcrumb-->
+            
+            <div class="row">
+                <div class="col-md-7 col-sm-6">
+                    <div class="section-title">
+                        <h2>Apps</h2>
+                    </div>
+                    <% for(i in my_apps) { %>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="item" data-id="1">
+                            <figure class="price">690</figure>
+                            <figure class="circle featured sale">-25%</figure>
+                            <figure class="ribbon">Top</figure>
+                            <a href="/developers/app/<%= my_apps[i].app_id %>">
+                                <div class="description">
+                                    <div class="label label-default">App</div>
+                                    <h3><%= my_apps[i].app_name %></h3>
+                                    <h4><%= my_apps[i].description %></h4>
+                                </div>
+                                <!--end description-->
+                                <div class="image bg-transfer">
+                                    <img data-name="<%= my_apps[i].app_name %>" class="profile" alt="<%= my_apps[i].app_name %>">
+                                </div>
+                                <!--end image-->
+                            </a>
+                            <div class="additional-info">
+                                <div class="rating-passive" data-rating="4">
+                                    <span class="stars"></span>
+                                    <span class="reviews">6</span>
+                                </div>
+                                <div class="controls-more">
+                                    <ul>
+                                        <li><a href="<%= furl('developers/app/' + my_apps[i].app_id) %>">See App</a></li>
+                                    </ul>
+                                </div>
+                                <!--end controls-more-->
+                            </div>
+                            <!--end additional-info-->
+                        </div>
+                        <!--end item-->
+                    </div>
+                    <% } %>
+                </div>
+                <div class="col-md-5 col-sm-6">
+                    <div class="section-title">
+                        <h2>Create A New App</h2>
+                    </div>
+                    <form class="form" action="/developers/new-app" method="post">
+                        <div class="form-group">
+                            <label for="app_name">App Name</label>
+                            <input type="text" class="form-control" name="app_name" id="app_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="app_url">URL</label>
+                            <input type="text" class="form-control" name="app_url" id="app_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="callback_url">Default Callback URL</label>
+                            <textarea class="form-control" id="callback_url" rows="4" name="callback_url"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" rows="4" name="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary icon shadow">Create App<i class="fa fa-caret-right"></i></button>
+                        </div>
+                        <!--end form-group-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page-content-->
+    
+    <% include ../partials/page-footer %>
+    <!--end page-footer-->
+</div>
+<script type="text/javascript" src="/assets/js/initial.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.profile').initial({seed: 1});
+    });
+</script>
+<% include ../partials/footer %>

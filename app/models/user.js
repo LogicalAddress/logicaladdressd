@@ -75,8 +75,7 @@ User.prototype.register = function(user, callback, context) {
 User.prototype.findOne = function(query, callback, context) {
 	context = (context ? context : this);
 	if (_.isObject(query)) {
-		UserModel.find(query, 
-		function(err, record) {
+		UserModel.findOne(query, function(err, record) {
 			if (record && record.username) {
 				var row = record.toObject();
 				return (_.isFunction(callback) ? callback.apply(context, [err, row]) : null);
