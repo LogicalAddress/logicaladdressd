@@ -28,7 +28,8 @@
     "parse": "^1.8.1",
     "redis": "*",
     "serve-favicon": "~2.2.0",
-    "underscore": "*"
+    "underscore": "*",
+    "underscore.string": "^3.3.4"
   },
   "devDependencies": {
     "frisby": "latest",

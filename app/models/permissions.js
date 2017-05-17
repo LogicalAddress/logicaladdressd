@@ -15,16 +15,16 @@ Permissions.prototype.permit = function(user, app_id, permissions, callback, con
     context = (context ? context : this);
     if(_.isObject(user) && _.has(user, '_id') && _.has(user, 'global_logical_address'))
     {
-        var permissionsModel = new PermissionsModel();
-        permissionsModel.global_logical_address = user.global_logical_address;
-        permissionsModel.app_id = app_id;
+        var permissionsObj = {};
+        permissionsObj.global_logical_address = user.global_logical_address;
+        permissionsObj.app_id = app_id;
         permissions.forEach(function(e,i) {
             if(_.has(user, e))
             {
-                permissionsModel[e] = true;
+                permissionsObj[e] = true;
             }
         });
-        permissionsModel.save(function(err, record) {
+        PermissionsModel.findOneAndUpdate({}, permissionsObj, { upsert: true, new: true, setDefaultsOnInsert: true }, function(err, record) {
             if(err)
             {
                 return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
@@ -59,6 +59,19 @@ Permissions.prototype.findPermissions = function(app_id, logical_address, callba
            return (_.isFunction(callback) ? callback.apply(context, [null, record]) : null);
         });
     }
+};
+
+Permissions.prototype.checkPermission = function(app_id, logical_address, permission, callback, context) {
+    context = (context ? context : this);
+    var permissions = {app_id: app_id.trim(), global_logical_address: logical_address}, result = false;
+    permissions[permission] = true;
+    PermissionsModel.find(permissions, function(err, record)
+    {
+        //console.log('PermissionsModel', record);
+        if(err) return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
+        if(record.length) result = true;
+        return (_.isFunction(callback) ? callback.apply(context, [null, result]) : null);
+    });
 };
 
 var permissionsContext = new Permissions();

@@ -1,5 +1,6 @@
 var AccountKitConfig = require('../../config/accountKit')();
 var _ = require('underscore');
+var _s = require("underscore.string");
 var AccountKitGetMobileNumber = require('../lib/accountKit');
 var User = require('../models/user');
 var UserLib = require('../lib/user');
@@ -27,43 +28,60 @@ module.exports = function(app)
                 Apps.findById(params.app_id, function(err, record) {
                     if(!err && record)
                     {
-                        //if(_.has(params, 'scope'))
+                        var after = (_.has(req.query, 'callback_url')) ? decodeURIComponent(req.query.callback_url) : record.callback_url;
                         var allowed_scopes = [
                             'first_name', 'last_name', 'mobile_number', 'email',
                             'location', 'work_email', 'work_phone',
                         ];
                         
-                        var scopes = [];
-                        if(_.has(params, 'scope'))
-                        {
-                            scopes = params.scope.split(',');
-                            scopes.forEach(function(e,i) {
-                                if(allowed_scopes.indexOf(e) == -1 || !_.has(req.session.user, e))
-                                {
-                                    scopes.splice(i, 1);
+                        var scopes = _.has(params, 'scope') ? params.scope.split(',') : allowed_scopes, scopex = scopes;
+                        Async.forEachOf(scopes, function(scope, key, callback) {
+                            Permissions.checkPermission(params.app_id, req.session.user.global_logical_address, scope, function(err, result) {
+                                if((!err && result) || allowed_scopes.indexOf(scope) == -1 || !_.has(req.session.user, scope)){
+                                    //console.log(result);
+                                    scopex.splice(scopex.indexOf(scope), 1);
                                 }
+                                callback(null);
                             });
-                        } else scopes = allowed_scopes;
-                        res.setHeader('X-Frame-Options', 'DENY');
-                        res.render('pages/set-permissions', {
-            		        title: record.app_name + " is Requesting Permissions to Access Your LogicalAddress",
-            		        page: 'set-permissions',
-            		        user: req.session.user,
-            		        app_details: record,
-            		        scopes: scopes,
-        		        	csrfToken: req.csrfToken(),
-                			after: (_.has(req.query, 'callback_url')) ? decodeURIComponent(req.query.callback_url) : record.callback_url,
-                			after_data: req.query,
-            		    });
+                        }, function() {
+                            //console.log(scopex);
+                            if(!scopex.length)
+                            {
+                                Permissions.findPermissions(req.query.app_id, req.session.user.global_logical_address, function(err, records) {
+                                    if(!err)
+                                    {
+                                        var permitted = "permitted=";
+                                        //console.log('ui', records);
+                                        for (var key in records[0])
+                                        {
+                                            if(allowed_scopes.indexOf((key)) != -1 && records[0][key] === true)
+                                            {
+                                                permitted += key + ",";
+                                            }
+                                        }
+                                        return res.redirect(after + "?logical_address=" + req.session.user.global_logical_address + "&permitted=" + _s.rtrim(permitted, ','));
+                                    }
+                                });
+                            } else {
+                                res.setHeader('X-Frame-Options', 'DENY');
+                                res.render('pages/set-permissions', {
+                    		        title: record.app_name + " is Requesting Permissions to Access Your LogicalAddress",
+                    		        page: 'set-permissions',
+                    		        user: req.session.user,
+                    		        app_details: record,
+                    		        scopes: scopes,
+                		        	csrfToken: req.csrfToken(),
+                        			after: after,
+                        			after_data: req.query,
+                    		    });
+                            }
+                        });
                     } else {
                         res.status(403);
                         res.json({status: false, message: 'App does not exist', reason: ''});
                     }
                 });
             } else {
-                // var after_data = []
-                // Object.keys(req.query).forEach(function(key) { after_data[key] = req.query[key] });
-                // console.log(after_data);
                 res.render('pages/min-login', {
         			title: "Login to Logical Address to Continue to " + "",
         			page: 'login',
@@ -83,21 +101,22 @@ module.exports = function(app)
     app.post("/v1/oauth/authorize/", csrfProtection, function(req, res) {
         if(!_.has(req.session, 'user')) return res.redirect('/login?next=' + '');
         if(!_.isEmpty(req.body.permissions)) {
-            console.log(req.query);
+            // console.log(req.query);
             Permissions.permit(req.session.user, req.query.app_id, req.body.permissions, function(err, record) {
-                if(!err && record)
-                {
-                    var permObj = {};
-                    for (var i=0; i < req.body.permissions.length; i++) {
-                        permObj[req.body.permissions[i]] = req.body.permissions[i];
+                Permissions.findPermissions(req.query.app_id, req.session.user.global_logical_address, function(err, p_record) {
+                    if(!err && p_record)
+                    {
+                        var permObj = {};
+                        for (var i in p_record[0]) {
+                            permObj[i] = i;
+                        }
+                        res.status(200);
+                        return res.json({status: true, permitted: permObj});
+                    } else {
+                        res.status(403);
+                        return res.json({status: false, reason: 'App does not exist'});
                     }
-
-                    res.status(200);
-                    return res.json({status: true, permited: permObj});
-                } else {
-                    res.status(403);
-                    return res.json({status: false, reason: 'App does not exist'});
-                }
+                });
             });
         }
         else {
@@ -107,7 +126,7 @@ module.exports = function(app)
     });
     
     app.post('/v1/oauth/request/:logical_address', function(req, res) {
-        console.log(req.body);
+        // console.log(req.body);
         
         if(_.has(req.body, 'app_secret') && (req.params.logical_address.length == 10 || req.params.logical_address == "all") && (req.body.app_secret.length >= 62)) {
             var app_sec = req.body.app_secret;
@@ -121,10 +140,10 @@ module.exports = function(app)
                         //console.log(records);
                         if(!err && records && records.length)
                         {
-                            console.log(records);
+                            // console.log(records);
                             var users_details = [];
-                            Async.forEachOfSeries(records, function(record, key, callback){
-                                console.log(record);
+                            Async.forEachOf(records, function(record, key, callback){
+                                // console.log(record);
                                 
                                 User.findByGlobalLA(record.global_logical_address, function(err, user_record){
                                     var user_details = {};
@@ -132,11 +151,11 @@ module.exports = function(app)
                                     {
                                         for(var j in record)
                                         {
-                                        console.log(typeof record[j]);
+                                        // console.log(typeof record[j]);
                                             if(typeof record[j] === 'boolean' && record[j] === true)
                                             {
                                                 user_details[j] = user_record[j];
-                                                console.log(user_details);
+                                                // console.log(user_details);
                                             }
                                         }
                                         users_details.push(user_details);
