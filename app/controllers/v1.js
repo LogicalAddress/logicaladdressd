@@ -59,7 +59,8 @@ module.exports = function(app)
                                     }
                                 });
                             } else {
-                                return res.setHeader('X-Frame-Options', 'DENY').render('pages/set-permissions', {
+                                res.setHeader('X-Frame-Options', 'DENY');
+                                return res.render('pages/set-permissions', {
                     		        title: record.app_name + " is Requesting Permissions to Access Your LogicalAddress",
                     		        page: 'set-permissions',
                     		        user: req.session.user,
@@ -76,7 +77,8 @@ module.exports = function(app)
                     }
                 });
             } else {
-                return res.status(200).render('pages/min-login', {
+                res.status(200);
+                return res.render('pages/min-login', {
         			title: "Login to Logical Address to Continue to " + "",
         			page: 'login',
         			csrfToken: req.csrfToken(),
