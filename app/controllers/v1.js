@@ -16,6 +16,10 @@ var Async = require("async");
 
 module.exports = function(app)
 {
+    var allowed_scopes = [
+        'first_name', 'last_name', 'mobile_number', 'email',
+        'location', 'work_email', 'work_phone',
+    ];
     app.get('/v1/oauth/authorize/:resType/:clientId/:redirectUri/', function(req, res) {
         res.send(req.params);
     });
@@ -28,33 +32,25 @@ module.exports = function(app)
                 Apps.findById(params.app_id, function(err, record) {
                     if(!err && record)
                     {
-                        var after = (_.has(req.query, 'callback_url')) ? decodeURIComponent(req.query.callback_url) : record.callback_url;
-                        var allowed_scopes = [
-                            'first_name', 'last_name', 'mobile_number', 'email',
-                            'location', 'work_email', 'work_phone',
-                        ];
-                        
-                        var scopes = _.has(params, 'scope') ? params.scope.split(',') : allowed_scopes, scopex = scopes;
+                        var after = (_.has(req.query, 'callback_url')) ? decodeURIComponent(req.query.callback_url) : record.callback_url,
+                            scopes = _.has(params, 'scope') ? params.scope.split(',') : allowed_scopes, scopex = scopes;
                         Async.forEachOf(scopes, function(scope, key, callback) {
                             Permissions.checkPermission(params.app_id, req.session.user.global_logical_address, scope, function(err, result) {
                                 if((!err && result) || allowed_scopes.indexOf(scope) == -1 || !_.has(req.session.user, scope)){
-                                    //console.log(result);
                                     scopex.splice(scopex.indexOf(scope), 1);
                                 }
                                 callback(null);
                             });
                         }, function() {
-                            //console.log(scopex);
                             if(!scopex.length)
                             {
                                 Permissions.findPermissions(req.query.app_id, req.session.user.global_logical_address, function(err, records) {
                                     if(!err)
                                     {
-                                        var permitted = "permitted=";
-                                        //console.log('ui', records);
+                                        var permitted = "";
                                         for (var key in records[0])
                                         {
-                                            if(allowed_scopes.indexOf((key)) != -1 && records[0][key] === true)
+                                            if(allowed_scopes.indexOf(key) != -1 && records[0][key] === true)
                                             {
                                                 permitted += key + ",";
                                             }
@@ -63,8 +59,7 @@ module.exports = function(app)
                                     }
                                 });
                             } else {
-                                res.setHeader('X-Frame-Options', 'DENY');
-                                res.render('pages/set-permissions', {
+                                return res.setHeader('X-Frame-Options', 'DENY').render('pages/set-permissions', {
                     		        title: record.app_name + " is Requesting Permissions to Access Your LogicalAddress",
                     		        page: 'set-permissions',
                     		        user: req.session.user,
@@ -77,12 +72,11 @@ module.exports = function(app)
                             }
                         });
                     } else {
-                        res.status(403);
-                        res.json({status: false, message: 'App does not exist', reason: ''});
+                        return res.status(403).json({status: false, message: 'App does not exist', reason: ''});
                     }
                 });
             } else {
-                res.render('pages/min-login', {
+                return res.status(200).render('pages/min-login', {
         			title: "Login to Logical Address to Continue to " + "",
         			page: 'login',
         			csrfToken: req.csrfToken(),
@@ -93,35 +87,33 @@ module.exports = function(app)
         		});
             }
         } else {
-            res.status(400);
-            return res.json({status: false, reason: 'Invalid request'});
+            return res.status(400).json({status: false, reason: 'Invalid request'});
         }
     });
     
     app.post("/v1/oauth/authorize/", csrfProtection, function(req, res) {
         if(!_.has(req.session, 'user')) return res.redirect('/login?next=' + '');
         if(!_.isEmpty(req.body.permissions)) {
-            // console.log(req.query);
+            console.log(req.body.permissions);
             Permissions.permit(req.session.user, req.query.app_id, req.body.permissions, function(err, record) {
                 Permissions.findPermissions(req.query.app_id, req.session.user.global_logical_address, function(err, p_record) {
                     if(!err && p_record)
                     {
                         var permObj = {};
-                        for (var i in p_record[0]) {
-                            permObj[i] = i;
+                        p_record = p_record[0].toObject();
+                        for (var i in p_record) {
+                            if(allowed_scopes.indexOf(i) != -1 && p_record[i] === true)
+                                permObj[i] = i;
                         }
-                        res.status(200);
-                        return res.json({status: true, permitted: permObj});
+                        return res.status(200).json({status: true, permitted: permObj});
                     } else {
-                        res.status(403);
-                        return res.json({status: false, reason: 'App does not exist'});
+                        return res.status(403).json({status: false, reason: 'App does not exist'});
                     }
                 });
             });
         }
         else {
-            res.status(400);
-            return res.json({status: false, reason: 'Invalid request'});
+            return res.status(400).json({status: false, reason: 'Invalid request'});
         }
     });
     
@@ -137,13 +129,10 @@ module.exports = function(app)
                     var app_id = record.app_id;
                     Permissions.findPermissions(app_id, logical_address, function(err, records)
                     {
-                        //console.log(records);
                         if(!err && records && records.length)
                         {
-                            // console.log(records);
                             var users_details = [];
                             Async.forEachOf(records, function(record, key, callback){
-                                // console.log(record);
                                 
                                 User.findByGlobalLA(record.global_logical_address, function(err, user_record){
                                     var user_details = {};
@@ -151,11 +140,9 @@ module.exports = function(app)
                                     {
                                         for(var j in record)
                                         {
-                                        // console.log(typeof record[j]);
                                             if(typeof record[j] === 'boolean' && record[j] === true)
                                             {
                                                 user_details[j] = user_record[j];
-                                                // console.log(user_details);
                                             }
                                         }
                                         users_details.push(user_details);

@@ -67,7 +67,6 @@ Permissions.prototype.checkPermission = function(app_id, logical_address, permis
     permissions[permission] = true;
     PermissionsModel.find(permissions, function(err, record)
     {
-        //console.log('PermissionsModel', record);
         if(err) return (_.isFunction(callback) ? callback.apply(context, [err]) : null);
         if(record.length) result = true;
         return (_.isFunction(callback) ? callback.apply(context, [null, result]) : null);

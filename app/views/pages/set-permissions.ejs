@@ -113,10 +113,8 @@
                         //     timeout: 5000
                         // });
                         window.location = '<%= after %>?logical_address=<%= user.global_logical_address %>&permitted=' + permitted;
-                     
-                        // console.log(res);
                     }
-                },//IoTWeb2017
+                },
                 error: function(xhr, res, error) {
                     console.log(xhr.responseText);
                 }
